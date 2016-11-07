@@ -67,7 +67,9 @@
         "perf",
         "test",
         "chore",
-        "revert"
+        "revert",
+        "build",
+        "ci"
       ],
       "warnOnFail": false,
       "maxSubjectLength": 100
