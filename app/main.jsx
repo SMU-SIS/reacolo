@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import App from './components/App';
 import ModelSync from './dirty-model-sync';
 
-const modelSync = new ModelSync(`http://${location.hostname}:3000/socket`);
-const setData = modelSync.set.bind(modelSync);
 const contentDiv = document.getElementById('content');
+const modelSync = new ModelSync(`http://${location.hostname}:3000/socket`);
+const setData = (...args) => modelSync.set(...args);
 
 modelSync.onUpdate = (model) => {
   ReactDOM.render(
