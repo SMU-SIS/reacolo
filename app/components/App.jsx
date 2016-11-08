@@ -1,18 +1,22 @@
 import React from 'react';
 import './App.css';
 
-export default () => <h1>Hello World</h1>;
 
-/*
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
+    const name = this.props.appData.name || 'Anonymous';
     return (
-      <h1>Hello World</h1>
+      <div>
+        <h1>Hello {name}!</h1>
+      </div>
     );
   }
+
 }
-*/
+
+App.propTypes = {
+  appData: React.PropTypes.shape({
+    name: React.PropTypes.string
+  }).isRequired
+};
