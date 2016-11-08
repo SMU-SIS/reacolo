@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App.jsx';
-import ModelSync from './dirty-model-sync.js';
+import App from './components/App';
+import ModelSync from './dirty-model-sync';
 
 const modelSync = new ModelSync(`http://${location.hostname}:3000/socket`);
 const setData = modelSync.set.bind(modelSync);
