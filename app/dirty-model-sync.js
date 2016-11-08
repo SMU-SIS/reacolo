@@ -26,7 +26,6 @@ export default class ModelSync {
       default:
         console.log(`Unknown message type: ${messageType}`);
     }
-    this.onUpdate(JSON.parse(message.data));
   }
 
   _onSocketOpen() {
