@@ -15,7 +15,17 @@ export default class ModelSync {
     this._socket.onClose = this._onSocketClose.bind(this);
   }
 
-  _onSocketMessage(message) {
+  _onSocketMessage(originalMessage) {
+    const message = JSON.parse(originalMessage.data);
+    const messageType = message.type;
+    const messageData = message.data;
+    switch (messageType) {
+      case 'data':
+        this.onUpdate(messageData);
+        break;
+      default:
+        console.log(`Unknown message type: ${messageType}`);
+    }
     this.onUpdate(JSON.parse(message.data));
   }
 
@@ -28,7 +38,10 @@ export default class ModelSync {
   }
 
   set(appData) {
-    this._socket.send(JSON.stringify(appData));
+    this._socket.send(JSON.stringify({
+      type: 'set_app_data',
+      data: appData
+    }));
   }
 
 }
