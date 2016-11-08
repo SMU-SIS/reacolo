@@ -11,8 +11,11 @@
   ],
   "extends": "airbnb",
   "rules": {
+    "no-underscore-dangle": 0,
     "comma-dangle": 0,
     "semi": 2,
-    "import/extensions": 0
+    "import/extensions": 0,
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+    "react/prefer-stateless-function": 0
   }
 }
