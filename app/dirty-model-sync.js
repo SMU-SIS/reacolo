@@ -11,8 +11,8 @@ export default class ModelSync {
 
     this._socket = new SockJS(serverAddress);
     this._socket.onmessage = this._onSocketMessage.bind(this);
-    this._socket.onOpen = this._onSocketOpen.bind(this);
-    this._socket.onClose = this._onSocketClose.bind(this);
+    this._socket.onopen = this._onSocketOpen.bind(this);
+    this._socket.onclose = this._onSocketClose.bind(this);
   }
 
   _onSocketMessage(originalMessage) {
