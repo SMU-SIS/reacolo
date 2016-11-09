@@ -4,7 +4,9 @@ const nullFunc = () => {};
 
 export default class ModelSync {
 
-  constructor(serverAddress = `http://${location.host}${ModelSync._PREFIX}`) {
+  constructor(serverAddress = `http://${location.host}${ModelSync._PREFIX}`, role) {
+    this._role = role;
+
     this.onUpdate = nullFunc;
     this.onConnected = nullFunc;
     this.onDisconnected = nullFunc;
@@ -28,7 +30,14 @@ export default class ModelSync {
     }
   }
 
+  set(appData) {
+    this._socketSend('set_app_data', appData);
+  }
+
   _onSocketOpen() {
+    if (this._role) {
+      this._socketSend('set_socket_role', this._role);
+    }
     this.onConnected();
   }
 
@@ -36,11 +45,8 @@ export default class ModelSync {
     this.onDisconnected();
   }
 
-  set(appData) {
-    this._socket.send(JSON.stringify({
-      type: 'set_app_data',
-      data: appData
-    }));
+  _socketSend(type, data) {
+    this._socket.send(JSON.stringify({ type, data }));
   }
 
 }

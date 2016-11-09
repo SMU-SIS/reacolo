@@ -4,7 +4,7 @@ import App from './components/App';
 import ModelSync from './dirty-model-sync';
 
 const contentDiv = document.getElementById('content');
-const modelSync = new ModelSync(`http://${location.hostname}:3000/socket`);
+const modelSync = new ModelSync(`http://${location.hostname}:3000/socket`, 'app');
 const setData = (...args) => modelSync.set(...args);
 
 modelSync.onUpdate = (model) => {
