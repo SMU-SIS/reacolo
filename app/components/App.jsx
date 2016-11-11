@@ -3,12 +3,12 @@ import './App.css';
 
 const App = props => (
   <div>
-    <h1>Hello {props.appData.name || 'Anonymous'}!</h1>
+    <h1>Hello {props.data.name || 'Anonymous'}!</h1>
   </div>
 );
 
 App.propTypes = {
-  appData: React.PropTypes.shape({
+  data: React.PropTypes.shape({
     name: React.PropTypes.string
   }).isRequired
 };

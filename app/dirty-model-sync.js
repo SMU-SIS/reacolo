@@ -7,6 +7,9 @@ export default class ModelSync {
   constructor(serverAddress = `http://${location.host}${ModelSync._PREFIX}`, role) {
     this._role = role;
 
+    this._appData = null;
+    this._context = null;
+
     this.onUpdate = nullFunc;
     this.onConnected = nullFunc;
     this.onDisconnected = nullFunc;
@@ -17,28 +20,41 @@ export default class ModelSync {
     this._socket.onclose = this._onSocketClose.bind(this);
   }
 
-  _onSocketMessage(originalMessage) {
-    const message = JSON.parse(originalMessage.data);
-    const messageType = message.type;
-    const messageData = message.data;
-    switch (messageType) {
-      case 'data':
-        this.onUpdate(messageData);
-        break;
-      default:
-        console.log(`Unknown message type: ${messageType}`);
-    }
+  setAppData(appData) {
+    this._socketSend('set_app_data', appData);
   }
 
-  set(appData) {
-    this._socketSend('set_app_data', appData);
+  get role() {
+    return this._role;
   }
 
   _onSocketOpen() {
     if (this._role) {
       this._socketSend('set_socket_role', this._role);
     }
+    this._socketSend('app_data_request', this._role);
     this.onConnected();
+  }
+
+  _onSocketMessage(originalMessage) {
+    const message = JSON.parse(originalMessage.data);
+    const messageType = message.type;
+    const messageData = message.data;
+    switch (messageType) {
+      case 'app_data':
+        this._appData = messageData;
+        this.onUpdate(this._appData, this._context);
+        break;
+      case 'meta_data':
+        this._context = {
+          role: this._role,
+          roleAssignations: messageData.clientRoles
+        };
+        this.onUpdate(this._appData, this._context);
+        break;
+      default:
+        console.warn(`Unknown message type: ${messageType}`);
+    }
   }
 
   _onSocketClose() {

@@ -5,15 +5,17 @@ import ModelSync from './dirty-model-sync';
 
 const contentDiv = document.getElementById('content');
 const modelSync = new ModelSync(`http://${location.hostname}:3000/socket`, 'app');
-const setData = (...args) => modelSync.set(...args);
+const setData = (...args) => modelSync.setAppData(...args);
 
-modelSync.onUpdate = (model) => {
-  ReactDOM.render(
-    <App
-      appData={model.appData}
-      metaData={model.metaData}
-      setData={setData}
-    />,
-    contentDiv
-  );
+modelSync.onUpdate = (data, context) => {
+  if (data) {
+    ReactDOM.render(
+      <App
+        data={data}
+        context={context}
+        setData={setData}
+      />,
+      contentDiv
+    );
+  }
 };
