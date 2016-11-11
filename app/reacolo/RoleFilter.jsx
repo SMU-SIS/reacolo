@@ -12,7 +12,7 @@ export default function RoleFilter(props) {
   }
   return (
     <ComponentFilter rendered={shouldRender}>
-      {props.children}
+      {React.Children.only(props.children)}
     </ComponentFilter>
   );
 }

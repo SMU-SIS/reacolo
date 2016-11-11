@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function ComponentFilter(props) {
-  return props.rendered ? props.children : null;
+  return props.rendered ? React.Children.only(props.children) : null;
 }
 
 ComponentFilter.propTypes = {
