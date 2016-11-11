@@ -47,12 +47,13 @@
     "webpack-dev-server": "^1.16.2"
   },
   "keywords": [
-    "es6",
-    "web app",
-    "boilerplate"
+    "ecology",
+    "cross-devices"
   ],
-  "author": "Ruan Yifeng",
-  "license": "MIT",
+  "author": "Quentin Roy <quentinroy@smu.edu.sg>",
+  "license": "UNLICENSED",
+  "private": false,
+  "repository": "bitbucket:quentinroy/reacolo-client",
   "config": {
     "ghooks": {
       "pre-commit": "npm run lint",
