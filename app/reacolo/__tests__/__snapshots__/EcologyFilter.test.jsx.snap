@@ -1,0 +1,25 @@
+exports[`test By default, EcologyFilter does not render if there is one target role that is not taken. 1`] = `
+<div
+  id="container" />
+`;
+
+exports[`test In strict mode, EcologyFilter does not render if there is a taken role that is not in target. 1`] = `
+<div
+  id="container" />
+`;
+
+exports[`test In strict mode, EcologyFilter renders if all target roles are taken and there is no extraneous roles. 1`] = `
+<div
+  id="container">
+  <div
+    id="child" />
+</div>
+`;
+
+exports[`test by default, EcologyFilter renders if all target roles are taken. 1`] = `
+<div
+  id="container">
+  <div
+    id="child" />
+</div>
+`;
