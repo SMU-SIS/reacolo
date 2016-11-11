@@ -1,14 +1,12 @@
 import React from 'react';
 import ComponentFilter from './ComponentFilter';
 
-const arrayIncludes = Array.prototype.includes;
-
 export default function RoleFilter(props) {
   let shouldRender;
   if (typeof props.target === 'string') {
     shouldRender = props.target === props.context.role;
   } else {
-    shouldRender = arrayIncludes.call(props.target, props.context.role);
+    shouldRender = props.target.includes(props.context.role);
   }
   return (
     <ComponentFilter rendered={shouldRender}>
