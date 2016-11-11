@@ -25,5 +25,5 @@ RoleFilter.propTypes = {
   children: React.PropTypes.element.isRequired,
   context: React.PropTypes.shape({
     role: React.PropTypes.string.isRequired
-  })
+  }).isRequired
 };
