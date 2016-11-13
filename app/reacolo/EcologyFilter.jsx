@@ -1,18 +1,18 @@
 import React from 'react';
 import ComponentFilter from './ComponentFilter';
 
-const atLeastFilter = (target, context) => (
-  target.every(role => context.roleAssignations[role] > 0)
-);
-
-const strictFilter = (target, context) => (
-  Object.keys(context.roleAssignations).length === target.length
-    && atLeastFilter(target, context)
-);
+const filters = {
+  atLeast(target, context) {
+    return target.every(role => context.roleAssignations[role] > 0);
+  },
+  strict(target, context) {
+    return Object.keys(context.roleAssignations).length === target.length
+      && filters.atLeast(target, context);
+  }
+};
 
 const EcologyFilter = (props) => {
-  const shouldRender = props.method === 'atLeast' ? atLeastFilter(props.target, props.context)
-                                                  : strictFilter(props.target, props.context);
+  const shouldRender = filters[props.method](props.target, props.context);
   return (
     <ComponentFilter rendered={shouldRender}>
       {React.Children.only(props.children)}
