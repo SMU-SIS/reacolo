@@ -11,8 +11,16 @@ const filters = {
   }
 };
 
+const filter = (method, targetOrTargets, context) => {
+  const methodFilter = filters[method];
+  if (typeof targetOrTargets[0] === 'string') {
+    return methodFilter(targetOrTargets, context);
+  }
+  return targetOrTargets.some(target => methodFilter(target, context));
+};
+
 const EcologyFilter = (props) => {
-  const shouldRender = filters[props.method](props.target, props.context);
+  const shouldRender = filter(props.method, props.target, props.context);
   return (
     <ComponentFilter rendered={shouldRender}>
       {React.Children.only(props.children)}
@@ -23,9 +31,10 @@ const EcologyFilter = (props) => {
 EcologyFilter.propTypes = {
   target: React.PropTypes.oneOfType([
     React.PropTypes.arrayOf(React.PropTypes.string),
+    React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.string))
     // TODO:
-    // - React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.string))
     // - React.PropTypes.objectOf(React.PropTypes.number)
+    // - React.PropTypes.arrayOf(React.PropTypes.objectOf(React.PropTypes.number))
   ]).isRequired,
   method: React.PropTypes.oneOf(['atLeast', 'strict']),
   children: React.PropTypes.element.isRequired,

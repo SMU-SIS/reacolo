@@ -81,3 +81,62 @@ test('In strict mode, EcologyFilter does not render if there is a taken role tha
   const tree = component.toJSON();
   expect(tree).toMatchSnapshot();
 });
+
+test('If an array of ecologies is provided, EcologyFilter renders if one of these ecologies complies.', () => {
+  const target = [['role1', 'role2'], ['role2', 'role3']];
+  const context = {
+    roleAssignations: {
+      role2: 2,
+      role3: 2
+    }
+  };
+  const component = renderer.create(
+    <div id="container">
+      <EcologyFilter target={target} context={context} method="strict" >
+        <div id="child" />
+      </EcologyFilter>
+    </div>
+  );
+  const tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
+});
+
+test('If an array of ecologies is provided, EcologyFilter does not render if none of these ecologies comply.', () => {
+  const target = [['role1', 'role2'], ['role2', 'role3']];
+  const context = {
+    roleAssignations: {
+      role2: 1,
+      role4: 2
+    }
+  };
+  const component = renderer.create(
+    <div id="container">
+      <EcologyFilter target={target} context={context} method="atLeast" >
+        <div id="child" />
+      </EcologyFilter>
+    </div>
+  );
+  const tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
+});
+
+
+test('If an array of ecologies is provided, EcologyFilter renders if more than one of these ecologies comply.', () => {
+  const target = [['role1', 'role2'], ['role2', 'role3']];
+  const context = {
+    roleAssignations: {
+      role2: 3,
+      role3: 2,
+      role1: 1
+    }
+  };
+  const component = renderer.create(
+    <div id="container">
+      <EcologyFilter target={target} context={context} method="atLeast" >
+        <div id="child" />
+      </EcologyFilter>
+    </div>
+  );
+  const tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
+});

@@ -3,6 +3,27 @@ exports[`test By default, EcologyFilter does not render if there is one target r
   id="container" />
 `;
 
+exports[`test If an array of ecologies is provided, EcologyFilter does not render if none of these ecologies comply. 1`] = `
+<div
+  id="container" />
+`;
+
+exports[`test If an array of ecologies is provided, EcologyFilter renders if more than one of these ecologies comply. 1`] = `
+<div
+  id="container">
+  <div
+    id="child" />
+</div>
+`;
+
+exports[`test If an array of ecologies is provided, EcologyFilter renders if one of these ecologies complies. 1`] = `
+<div
+  id="container">
+  <div
+    id="child" />
+</div>
+`;
+
 exports[`test In strict mode, EcologyFilter does not render if there is a taken role that is not in target. 1`] = `
 <div
   id="container" />
