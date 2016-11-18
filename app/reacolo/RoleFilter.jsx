@@ -1,19 +1,18 @@
 import React from 'react';
 import ComponentFilter from './ComponentFilter';
 
-export default function RoleFilter(props) {
-  let shouldRender;
-  if (typeof props.target === 'string') {
-    shouldRender = props.target === props.context.role;
-  } else {
-    shouldRender = props.target.includes(props.context.role);
+const filter = (targetOrTargets, role) => {
+  if (typeof target === 'string') {
+    return targetOrTargets === role;
   }
-  return (
-    <ComponentFilter rendered={shouldRender}>
-      {React.Children.only(props.children)}
-    </ComponentFilter>
-  );
-}
+  return targetOrTargets.includes(role);
+};
+
+const RoleFilter = props => (
+  <ComponentFilter rendered={filter(props.target, props.context.role)}>
+    { props.children }
+  </ComponentFilter>
+);
 
 RoleFilter.propTypes = {
   target: React.PropTypes.oneOfType([
@@ -25,3 +24,5 @@ RoleFilter.propTypes = {
     role: React.PropTypes.string.isRequired
   }).isRequired
 };
+
+export default RoleFilter;
