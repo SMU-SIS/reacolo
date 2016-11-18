@@ -6,7 +6,7 @@ import ModelSync from './dirty-model-sync';
 
 const pageArgs = querystring.parse(window.location.search.substring(1));
 const contentDiv = document.getElementById('content');
-const modelSync = new ModelSync(`http://${location.hostname}:3000/socket`, pageArgs.role);
+const modelSync = new ModelSync(`http://${location.hostname}:3000/socket`, pageArgs.role || 'main');
 const setData = (...args) => modelSync.setAppData(...args);
 
 modelSync.onUpdate = (data, context) => {
