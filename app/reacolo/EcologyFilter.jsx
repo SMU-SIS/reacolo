@@ -23,7 +23,7 @@ const EcologyFilter = (props) => {
   const shouldRender = filter(props.method, props.target, props.context);
   return (
     <ComponentFilter rendered={shouldRender}>
-      {React.Children.only(props.children)}
+      { props.children }
     </ComponentFilter>
   );
 };
@@ -37,7 +37,7 @@ EcologyFilter.propTypes = {
     // - React.PropTypes.arrayOf(React.PropTypes.objectOf(React.PropTypes.number))
   ]).isRequired,
   method: React.PropTypes.oneOf(['atLeast', 'strict']),
-  children: React.PropTypes.element.isRequired,
+  children: React.PropTypes.node.isRequired,
   context: React.PropTypes.shape({
     roleAssignations: React.PropTypes.objectOf(React.PropTypes.number).isRequired
   }).isRequired

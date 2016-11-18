@@ -19,9 +19,9 @@ RoleFilter.propTypes = {
     React.PropTypes.string,
     React.PropTypes.arrayOf(React.PropTypes.string)
   ]).isRequired,
-  children: React.PropTypes.element.isRequired,
+  children: React.PropTypes.node.isRequired,
   context: React.PropTypes.shape({
-    role: React.PropTypes.string.isRequired
+    role: React.PropTypes.string
   }).isRequired
 };
 
