@@ -11,16 +11,20 @@ exports[`test If an array of ecologies is provided, EcologyFilter does not rende
 exports[`test If an array of ecologies is provided, EcologyFilter renders if more than one of these ecologies comply. 1`] = `
 <div
   id="container">
-  <div
-    id="child" />
+  <div>
+    <div
+      id="child" />
+  </div>
 </div>
 `;
 
 exports[`test If an array of ecologies is provided, EcologyFilter renders if one of these ecologies complies. 1`] = `
 <div
   id="container">
-  <div
-    id="child" />
+  <div>
+    <div
+      id="child" />
+  </div>
 </div>
 `;
 
@@ -32,15 +36,19 @@ exports[`test In strict mode, EcologyFilter does not render if there is a taken 
 exports[`test In strict mode, EcologyFilter renders if all target roles are taken and there is no extraneous roles. 1`] = `
 <div
   id="container">
-  <div
-    id="child" />
+  <div>
+    <div
+      id="child" />
+  </div>
 </div>
 `;
 
 exports[`test by default, EcologyFilter renders if all target roles are taken. 1`] = `
 <div
   id="container">
-  <div
-    id="child" />
+  <div>
+    <div
+      id="child" />
+  </div>
 </div>
 `;

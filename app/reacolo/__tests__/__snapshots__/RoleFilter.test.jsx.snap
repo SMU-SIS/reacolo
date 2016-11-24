@@ -11,15 +11,19 @@ exports[`test RoleFilter does not render if the context's role is not the target
 exports[`test RoleFilter renders if the context's role is the target role. 1`] = `
 <div
   id="container">
-  <div
-    id="child" />
+  <div>
+    <div
+      id="child" />
+  </div>
 </div>
 `;
 
 exports[`test RoleFilter renders if the context's role same is one of the targets. 1`] = `
 <div
   id="container">
-  <div
-    id="child" />
+  <div>
+    <div
+      id="child" />
+  </div>
 </div>
 `;
