@@ -2,8 +2,8 @@ var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
-  devtool: "source-map",
-  entry: [ path.resolve(__dirname, 'lib/index.js') ],
+  devtool: 'source-map',
+  entry: path.resolve(__dirname, 'lib/index.js'),
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'reacolo.js',
@@ -20,7 +20,7 @@ module.exports = {
       }
   },
   module: {
-    loaders:[
+    rules: [
       {
         test: /\.js[x]?$/,
         include: path.resolve(__dirname, 'lib'),
@@ -30,6 +30,6 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['.js', '.jsx'],
   }
 };
