@@ -1,3 +1,8 @@
+exports[`test ComponentFilter does not wrap its child if its wrap attribute is false. 1`] = `
+<div
+  id="child" />
+`;
+
 exports[`test ComponentFilter is not rendered when rendered is false 1`] = `
 <div
   id="container" />
