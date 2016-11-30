@@ -1,0 +1,15 @@
+exports[`test ValueFilter does not render if the value role is not one of the targets. 1`] = `null`;
+
+exports[`test ValueFilter does not render if the value role is not the target. 1`] = `null`;
+
+exports[`test ValueFilter renders if the value is one of the targets. 1`] = `
+<div>
+  child
+</div>
+`;
+
+exports[`test ValueFilter renders if the value is the target. 1`] = `
+<div>
+  child
+</div>
+`;

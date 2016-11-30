@@ -1,17 +1,10 @@
 import React from 'react';
-import ComponentFilter from './ComponentFilter';
-
-const filter = (targetOrTargets, role) => {
-  if (typeof target === 'string') {
-    return targetOrTargets === role;
-  }
-  return targetOrTargets.includes(role);
-};
+import ValueFilter from './ValueFilter';
 
 const RoleFilter = props => (
-  <ComponentFilter rendered={filter(props.target, props.context.role)}>
+  <ValueFilter value={props.context.role} target={props.target}>
     { props.children }
-  </ComponentFilter>
+  </ValueFilter>
 );
 
 RoleFilter.propTypes = {
