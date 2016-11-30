@@ -7,7 +7,7 @@
     "lint": "eslint 'app/**/*.@(js|jsx)'",
     "lint:msg": "validate-commit-msg",
     "test": "jest",
-    "build": "webpack --config webpack.config.js -p",
+    "build": "NODE_ENV=production webpack --config webpack.config.js -p",
     "validate": "npm ls",
     "commit": "git cz",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 1"
