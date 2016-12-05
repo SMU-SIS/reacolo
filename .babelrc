@@ -1,8 +1,18 @@
 {
   "presets": [
-    ["es2015", {"modules": false}],
+    ["es2015", { "modules": false }],
     "es2016",
     "react"
+  ],
+
+  "plugins": [
+    "syntax-async-functions",
+    "transform-regenerator",
+    ["transform-runtime", {
+      "helpers": false,
+      "polyfill": false,
+      "regenerator": true
+    }]
   ],
 
   "env": {
