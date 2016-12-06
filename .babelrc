@@ -8,6 +8,10 @@
   "plugins": [
     "syntax-async-functions",
     "transform-regenerator",
+    ["babel-plugin-transform-builtin-extend", {
+        "globals": ["Error"],
+        "approximate": true
+    }],
     ["transform-runtime", {
       "helpers": false,
       "polyfill": false,
