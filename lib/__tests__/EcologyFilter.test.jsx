@@ -2,7 +2,7 @@
 
 import React from 'react';
 import renderer from 'react-test-renderer';
-import EcologyFilter from '../EcologyFilter';
+import EcologyFilter from '../reacolo/EcologyFilter';
 
 test('by default, EcologyFilter renders if all target roles are taken.', () => {
   const target = ['role1', 'role2'];

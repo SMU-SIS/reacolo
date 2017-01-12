@@ -2,7 +2,7 @@
 
 import React from 'react';
 import renderer from 'react-test-renderer';
-import RoleFilter from '../RoleFilter';
+import RoleFilter from '../reacolo/RoleFilter';
 
 test('RoleFilter renders if the context\'s role is the target role.', () => {
   const component = renderer.create(

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import renderer from 'react-test-renderer';
-import ValueFilter from '../ValueFilter';
+import ValueFilter from '../reacolo/ValueFilter';
 
 test('ValueFilter renders if the value is the target.', () => {
   const component = renderer.create(
