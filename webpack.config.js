@@ -45,7 +45,7 @@ module.exports = [
       path: path.join(__dirname, 'dist'),
       filename: 'reacolo-dirty-model-sync.js',
       libraryTarget: 'umd',
-      library: 'ReacoloModelSync'
+      // library: 'ReacoloModelSync'
     },
     externals: {
       'sockjs-client': {
