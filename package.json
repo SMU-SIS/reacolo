@@ -10,7 +10,12 @@
     "build": "NODE_ENV=production webpack --config webpack.config.js -p",
     "validate": "npm ls",
     "commit": "git cz",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 1"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 1",
+    "postrewrite": "npm run git-hook",
+    "precommit": "npm run git-hook",
+    "prepush": "npm run git-hook",
+    "commitmsg": "npm run lint:msg",
+    "git-hook": "npm run lint"
   },
   "peerDependencies": {
     "react": "^15.4.2",
@@ -38,6 +43,7 @@
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.6.0",
     "ghooks": "^2.0.0",
+    "husky": "^0.12.0",
     "jest": "^18.1.0",
     "react": "^15.4.2",
     "react-dom": "^15.3.2",
@@ -54,10 +60,6 @@
   "private": true,
   "repository": "bitbucket:quentinroy/reacolo-client",
   "config": {
-    "ghooks": {
-      "pre-commit": "npm run lint",
-      "commit-msg": "npm run lint:msg"
-    },
     "validate-commit-msg": {
       "types": [
         "feat",
