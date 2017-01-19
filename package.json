@@ -42,14 +42,13 @@
     "eslint-plugin-import": "^2.1.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.6.0",
-    "ghooks": "^2.0.0",
     "husky": "^0.12.0",
     "jest": "^18.1.0",
     "react": "^15.4.2",
     "react-dom": "^15.3.2",
     "react-test-renderer": "^15.3.2",
     "validate-commit-msg": "^2.8.2",
-    "webpack": "^2.2.0-rc.4"
+    "webpack": "^2.2.0"
   },
   "keywords": [
     "ecology",
@@ -82,6 +81,7 @@
     }
   },
   "dependencies": {
+    "es6-error": "^4.0.1",
     "eslint-plugin-react": "^6.9.0",
     "react-dom": "^15.4.2",
     "react-test-renderer": "^15.4.2"

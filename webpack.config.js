@@ -40,10 +40,10 @@ module.exports = [
 
   // reacolo-dirty-model-sync
   Object.assign({}, base, {
-    entry: path.resolve(__dirname, 'lib/dirty-model-sync'),
+    entry: path.resolve(__dirname, 'lib/reacolo-model-sync-cjs-export'),
     output: {
       path: path.join(__dirname, 'dist'),
-      filename: 'reacolo-dirty-model-sync.js',
+      filename: 'reacolo-model-sync.js',
       libraryTarget: 'umd',
       library: 'ReacoloModelSync'
     },
