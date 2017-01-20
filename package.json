@@ -2,7 +2,7 @@
   "name": "reacolo",
   "version": "0.5.0",
   "description": "",
-  "main": "lib/index.js",
+  "main": "lib/reacolo",
   "scripts": {
     "lint": "eslint 'app/**/*.@(js|jsx)'",
     "lint:msg": "validate-commit-msg",
