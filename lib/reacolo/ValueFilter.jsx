@@ -21,8 +21,12 @@ ValueFilter.propTypes = {
     React.PropTypes.arrayOf(React.PropTypes.any.isRequired)
   ]).isRequired,
   children: React.PropTypes.node.isRequired,
-  value: React.PropTypes.any.isRequired
+  value: React.PropTypes.any
 };
 /* eslint-enable react/forbid-prop-types */
+
+ValueFilter.defaultProps = {
+  value: undefined
+};
 
 export default ValueFilter;
