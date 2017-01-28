@@ -81,7 +81,6 @@
     }
   },
   "dependencies": {
-    "es6-error": "^4.0.1",
-    "object-values": "^1.0.0"
+    "es6-error": "^4.0.1"
   }
 }
