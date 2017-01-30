@@ -1,0 +1,8 @@
+exports[`ReacoloFilter does not render if ReacoloFilter#wouldRender returns false 1`] = `null`;
+
+exports[`ReacoloFilter renders if ReacoloFilter#wouldRender returns true 1`] = `
+<div>
+  <div
+    id="child" />
+</div>
+`;
