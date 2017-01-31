@@ -2,22 +2,26 @@ import React, { PureComponent } from 'react';
 import ComponentFilter from './ComponentFilter';
 import contextPropType from './context-prop-type';
 import valueGroupsFilter from './filtering/value-groups-filter';
-import decodeValueGroups from './filtering/decode-targets';
+import targetParser from './filtering/target-grammar.pegjs';
+
+const parseTargets = (...args) => targetParser.parse(...args);
 
 class ReacoloFilter extends PureComponent {
   static wouldRender(context, targets) {
+    const { roles, activity, clientRole } = context;
     // Build the value / target map. Adapts the context values so that they are all an dictionary
     // of count.
     const valueTargetMap = [
-      [(context.roles ? context.roles : {}), targets.roles],
-      [(context.activity ? { [context.activity]: 1 } : {}), targets.activity],
-      [(context.clientRole ? { [context.clientRole]: 1 } : {}), targets.clientRole]
+      [(roles || {}), targets.roles],
+      [(activity ? { [activity]: 1 } : {}), targets.activity],
+      [(clientRole ? { [clientRole]: 1 } : {}), targets.clientRole]
     ];
     // If the decoded boolean is true,
     return valueTargetMap.every(([values, targetGroup]) => {
-      const coded = !targetGroup || typeof targetGroup === 'string';
+      if (targetGroup == null) return true;
+      const coded = typeof targetGroup === 'string';
       // If the target group is encoded, decode it.
-      const decodedTargetGroup = coded ? decodeValueGroups(targetGroup) : targetGroup;
+      const decodedTargetGroup = coded ? parseTargets(targetGroup) : targetGroup;
       // Check the filter on this target / value pair.
       return valueGroupsFilter(values, decodedTargetGroup);
     });
