@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import ReacoloFilter from '../reacolo/ReacoloFilter';
+import ReacoloFilter from '../ReacoloFilter';
 
 describe('ReacoloFilter#wouldRender with roles', () => {
   it('is rendered when all roles are here', () => {

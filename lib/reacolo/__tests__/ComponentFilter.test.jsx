@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import ComponentFilter from '../reacolo/ComponentFilter';
+import ComponentFilter from '../ComponentFilter';
 
 test('ComponentFilter renders itself and its children when rendered is true', () => {
   const component = renderer.create(
