@@ -1,0 +1,25 @@
+exports[`ReacoloGroup does not render if no filters would render and there is no default filter 1`] = `null`;
+
+exports[`ReacoloGroup renders the default filter if none would render 1`] = `
+<div>
+  Default Filter Content
+</div>
+`;
+
+exports[`ReacoloGroup renders the filter that would render even if there is a default filter 1`] = `
+<div>
+  To be rendered
+</div>
+`;
+
+exports[`ReacoloGroup renders the filter that would render even it comes after the default filter 1`] = `
+<div>
+  To be rendered
+</div>
+`;
+
+exports[`ReacoloGroup renders the first filters that passes 1`] = `
+<div>
+  To be rendered
+</div>
+`;
