@@ -27,11 +27,14 @@ class ReacoloFilter extends PureComponent {
     });
   }
   render() {
-    const { roles, activity, clientRole } = this.props;
-    const shouldRender = this.constructor.wouldRender(
-      this.props.context,
-      { roles, activity, clientRole }
-    );
+    const { roles, activity, clientRole, override } = this.props;
+    let shouldRender = override;
+    if (override == null) {
+      shouldRender = this.constructor.wouldRender(
+        this.props.context,
+        { roles, activity, clientRole }
+      );
+    }
     return (
       <ComponentFilter rendered={shouldRender}>
         { this.props.children }
@@ -42,18 +45,21 @@ class ReacoloFilter extends PureComponent {
 
 /* eslint-disable react/no-unused-prop-types */
 ReacoloFilter.propTypes = {
-  context: contextPropType.isRequired,
+  context: contextPropType,
   children: React.PropTypes.node.isRequired,
   roles: React.PropTypes.string,
   activity: React.PropTypes.string,
-  clientRole: React.PropTypes.string
+  clientRole: React.PropTypes.string,
+  override: React.PropTypes.bool
 };
 /* eslint-enable react/no-unused-prop-types */
 
 ReacoloFilter.defaultProps = {
+  context: undefined,
   roles: undefined,
   activity: undefined,
-  clientRole: undefined
+  clientRole: undefined,
+  override: undefined
 };
 
 export default ReacoloFilter;
