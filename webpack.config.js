@@ -11,6 +11,12 @@ const base = {
         exclude: /node_modules/,
         loader: 'babel-loader'
       },
+      {
+        test: /\.pegjs$/,
+        include: path.resolve(__dirname, 'lib'),
+        exclude: /node_modules/,
+        loader: ['babel-loader', 'pegjs-loader']
+      },
     ]
   },
   resolve: {

@@ -18,9 +18,9 @@
     "git-hook": "npm run lint"
   },
   "peerDependencies": {
+    "eventemitter3": "^2.0.2",
     "react": "^15.4.2",
-    "sockjs-client": "^1.1.1",
-    "eventemitter3": "^2.0.2"
+    "sockjs-client": "^1.1.1"
   },
   "devDependencies": {
     "babel-core": "^6.21.0",
@@ -41,14 +41,15 @@
     "eslint-config-airbnb": "^14.0.0",
     "eslint-plugin-import": "^2.1.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
-    "eslint-plugin-react": "^6.6.0",
-    "husky": "^0.12.0",
+    "eslint-plugin-react": "^6.9.0",
+    "husky": "^0.13.1",
     "jest": "^18.1.0",
+    "pegjs-loader": "^0.5.0",
     "react": "^15.4.2",
-    "react-dom": "^15.3.2",
-    "react-test-renderer": "^15.3.2",
+    "react-dom": "^15.4.2",
+    "react-test-renderer": "^15.4.2",
     "validate-commit-msg": "^2.8.2",
-    "webpack": "^2.2.0"
+    "webpack": "^2.2.1"
   },
   "keywords": [
     "ecology",
@@ -82,8 +83,14 @@
   },
   "dependencies": {
     "es6-error": "^4.0.1",
-    "eslint-plugin-react": "^6.9.0",
-    "react-dom": "^15.4.2",
-    "react-test-renderer": "^15.4.2"
+    "except": "^0.1.3",
+    "pegjs": "^0.10.0"
+  },
+  "jest": {
+    "moduleNameMapper": {},
+    "transform": {
+      "\\.jsx?$": "babel-jest",
+      "\\.pegjs$": "<rootDir>/jest-transforms/pegjs-transformer.js"
+    }
   }
 }
