@@ -7,13 +7,13 @@ const base = {
     rules: [
       {
         test: /\.js[x]?$/,
-        include: path.resolve(__dirname, 'lib'),
+        include: path.resolve(__dirname, 'src'),
         exclude: /node_modules/,
         loader: 'babel-loader'
       },
       {
         test: /\.pegjs$/,
-        include: path.resolve(__dirname, 'lib'),
+        include: path.resolve(__dirname, 'src'),
         exclude: /node_modules/,
         loader: ['babel-loader', 'pegjs-loader']
       },
@@ -27,12 +27,12 @@ const base = {
 module.exports = [
   // reacolo
   Object.assign({}, base, {
-    entry: path.resolve(__dirname, 'lib/reacolo'),
+    entry: path.resolve(__dirname, 'src/reacolo'),
     output: {
-      path: path.join(__dirname, 'dist'),
+      path: path.join(__dirname, 'lib'),
       filename: 'reacolo.js',
-      libraryTarget: 'umd',
-      library: 'reacolo'
+      srcraryTarget: 'umd',
+      srcrary: 'reacolo'
     },
     externals: {
       react: {
@@ -46,12 +46,12 @@ module.exports = [
 
   // reacolo-dirty-model-sync
   Object.assign({}, base, {
-    entry: path.resolve(__dirname, 'lib/reacolo-model-sync-cjs-export'),
+    entry: path.resolve(__dirname, 'src/reacolo-model-sync-cjs-export'),
     output: {
-      path: path.join(__dirname, 'dist'),
+      path: path.join(__dirname, 'lib'),
       filename: 'reacolo-model-sync.js',
-      libraryTarget: 'umd',
-      library: 'ReacoloModelSync'
+      srcraryTarget: 'umd',
+      srcrary: 'ReacoloModelSync'
     },
     externals: {
       'sockjs-client': {
