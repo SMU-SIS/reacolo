@@ -1,8 +1,12 @@
 {
   "presets": [
-    ["es2015", { "modules": false }],
-    "es2016",
-    "es2017",
+    ["env", {
+      "targets": {
+        "browsers": ">1%"
+      },
+      "modules": false,
+      "loose": true
+    }],
     "react"
   ],
 
