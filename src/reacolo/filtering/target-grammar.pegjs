@@ -19,14 +19,13 @@ targetsOr "target or target"
 
 targetsAnd "target and target"
   = t:target and ta:targetsAnd      {
-                                      return t.reduce((res, ti) => res.concat(
-                                          ta.map((tai) => Object.assign({}, ti, tai))
-                                      ),[]);
+                                      return t.map(ti => ta.map((tai) => ti.concat(tai)))
+                                              .reduce((res, tati) => res.concat(tati));
                                     }
   / target
 
 target "target"
-  = name:name os:optionalSuffix?    { return [{ [name]: { optional: !!os } }]; }
+  = name:name os:optionalSuffix?    { return [[{ name, optional: !!os }]]; }
   / "(" ws? to:targetsOr ws? ")"    { return to; }
 
 name "target name"

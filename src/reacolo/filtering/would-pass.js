@@ -5,33 +5,41 @@ import entries from '../../obj-entries';
 const wildcase = '*';
 
 export const valuesFilter = (values, targetGroup) => {
-  const requiredTargets = entries(targetGroup)
-    .filter(([name, { optional }]) => name !== wildcase && !optional)
-    .map(([value]) => value);
+  // Extract every targets strictly required except the wildcase.
+  const requiredTargets = targetGroup
+    .filter(({ name, optional }) => name !== wildcase && !optional)
+    .map(({ name }) => name);
 
-  // If they are missing required targets, we are already done.
-  if (!requiredTargets.every(t => values[t] && values[t] > 0)) {
+  // If they are missing required targets, the test already failed.
+  if (!requiredTargets.every(t => !!values[t])) {
     return false;
   }
 
   // If there is an optional wildcase, the only thing that matters is that the required
-  // targets are here.
-  if (targetGroup[wildcase] && targetGroup[wildcase].optional) {
+  // targets are here (every other values are acceptable). Hence, the test succeded.
+  const wildcaseTarget = targetGroup.find(({ name }) => name === wildcase);
+  if (wildcaseTarget && wildcaseTarget.optional) {
     return true;
   }
 
-  const presentTargetsNb = entries(targetGroup)
-    .filter(([name, { optional }]) => name !== wildcase && optional)
-    .map(([t]) => t)
-    .filter(t => values[t] && values[t] > 0)
-    .length + requiredTargets.length;
+  // Extract the number of targets that are present in values (wildcase and duplicate excepted).
+  const presentTargetsNb = new Set(
+    targetGroup
+      // To go a bit faster, because we know the required targets are all here, we do not check
+      // them again.
+      .filter(({ name, optional }) => name !== wildcase && optional)
+      .map(({ name }) => name)
+      .filter(t => !!values[t])
+      .concat(requiredTargets)
+  ).size;
 
+  // Extract the number of values.
   const presentValuesNb = entries(values)
     .filter(([, count]) => count > 0)
     .map(([val]) => val)
     .length;
 
-  if (targetGroup[wildcase]) {
+  if (wildcaseTarget) {
     // If the wildcase is not optional, extraneous values are required.
     // (We already now that if there is a wildcase, it is not optional or the function would have
     // already returned).
