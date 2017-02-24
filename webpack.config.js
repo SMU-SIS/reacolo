@@ -31,8 +31,8 @@ module.exports = [
     output: {
       path: path.join(__dirname, 'lib'),
       filename: 'reacolo.js',
-      srcraryTarget: 'umd',
-      srcrary: 'reacolo'
+      libraryTarget: 'umd',
+      library: 'reacolo'
     },
     externals: {
       react: {
@@ -50,8 +50,8 @@ module.exports = [
     output: {
       path: path.join(__dirname, 'lib'),
       filename: 'reacolo-model-sync.js',
-      srcraryTarget: 'umd',
-      srcrary: 'ReacoloModelSync'
+      libraryTarget: 'umd',
+      library: 'ReacoloModelSync'
     },
     externals: {
       'sockjs-client': {
