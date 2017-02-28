@@ -90,6 +90,8 @@ export default class ReacoloModelSync extends EventEmitter {
     }
   }
 
+  // TODO: stop.
+
   _onSocketMessage(message) {
     switch (message.type) {
       case MessageTypes.APP_DATA_MSG_TYPE:

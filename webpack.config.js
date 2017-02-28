@@ -44,14 +44,14 @@ module.exports = [
     }
   }),
 
-  // reacolo-dirty-model-sync
+  // reacolo-dev-model-sync
   Object.assign({}, base, {
-    entry: path.resolve(__dirname, 'src/reacolo-model-sync-cjs-export'),
+    entry: path.resolve(__dirname, 'src/reacolo-dev-model-sync/cjs-export'),
     output: {
       path: path.join(__dirname, 'lib'),
-      filename: 'reacolo-model-sync.js',
+      filename: 'reacolo-dev-model-sync.js',
       libraryTarget: 'umd',
-      library: 'ReacoloModelSync'
+      library: 'ReacoloDevModelSync'
     },
     externals: {
       'sockjs-client': {
