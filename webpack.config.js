@@ -67,5 +67,24 @@ module.exports = [
         commonjs2: 'eventemitter3'
       }
     }
+  }),
+
+  // reacology-model-sync
+  Object.assign({}, base, {
+    entry: path.resolve(__dirname, 'src/reacology-model-sync'),
+    output: {
+      path: path.join(__dirname, 'lib'),
+      filename: 'reacology-model-sync.js',
+      libraryTarget: 'umd',
+      library: 'ReacologyModelSync'
+    },
+    externals: {
+      eventemitter3: {
+        root: 'EventEmitter',
+        amd: 'eventemitter3',
+        commonjs: 'eventemitter3',
+        commonjs2: 'eventemitter3'
+      }
+    }
   })
 ];
