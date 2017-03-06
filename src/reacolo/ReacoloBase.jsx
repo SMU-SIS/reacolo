@@ -1,7 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
+import except from 'except';
 import contextPropType from './context-prop-type';
 
-export default class ReacoloBase extends PureComponent {
+export default class ReacoloBase extends Component {
 
   static _attachModelHandlers(model, handlers) {
     handlers.forEach(([evt, handler]) => {
@@ -63,6 +64,8 @@ export default class ReacoloBase extends PureComponent {
 
   render() {
     const { data, context, isConnected } = this.state;
+    // Extract any extra properties that should be passed to the wrapped component.
+    const extraProps = except(this.props, Object.keys(this.constructor.propTypes));
     const App = this.props.app;
     return (
       <App
@@ -70,6 +73,7 @@ export default class ReacoloBase extends PureComponent {
         context={context}
         isConnected={isConnected}
         setData={this._setData}
+        {...extraProps}
       />
     );
   }
