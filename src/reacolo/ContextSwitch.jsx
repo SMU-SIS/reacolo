@@ -6,6 +6,7 @@ import wouldPass from './filtering/would-pass';
 const OMITTED_CONTEXT_PROPS_FROM_TARGETS = ['default', 'children'];
 const getTargetsFromProps = props => except(props, OMITTED_CONTEXT_PROPS_FROM_TARGETS);
 
+// Try to find a filter that passes amongst the providen children.
 const lookupFilters = (children, context) => {
   // Look for the first filters that passes.
   const passingChild = children
@@ -31,7 +32,9 @@ const lookupFilters = (children, context) => {
   return undefined;
 };
 
-const Filter = ({ children, context }) => lookupFilters(React.Children.toArray(children), context)
-  || null;
+const ContextSwitch = ({ children, context }) => lookupFilters(
+  React.Children.toArray(children),
+  context
+) || null;
 
-export default Filter;
+export default ContextSwitch;

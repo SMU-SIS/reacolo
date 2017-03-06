@@ -1,4 +1,4 @@
-export { default as Filter } from './Filter';
+export { default as ContextSwitch } from './ContextSwitch';
 export { default as Context } from './Context';
 export { default as contextPropType } from './context-prop-type';
 export { default as ReacoloBase } from './ReacoloBase';

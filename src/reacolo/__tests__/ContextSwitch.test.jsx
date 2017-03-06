@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import Filter from '../Filter';
+import ContextSwitch from '../ContextSwitch';
 import Context from '../Context';
 import wouldPass from '../filtering/would-pass';
 
@@ -11,16 +11,16 @@ beforeEach(() => {
   wouldPass.mockImplementation(() => false);
 });
 
-describe('Filter with non nested Context', () => {
+describe('ContextSwitch with non nested Context', () => {
   it('properly calls wouldPass until it returns true', () => {
     wouldPass.mockReturnValueOnce(false)
              .mockReturnValueOnce(true);
     renderer.create(
-      <Filter context={{ contextProp: 'bar' }}>
+      <ContextSwitch context={{ contextProp: 'bar' }}>
         <Context prop1="val1" default><div>child1</div></Context>
         <Context prop2="val2"><div>child2</div></Context>
         <Context prop3="val3"><div>child3</div></Context>
-      </Filter>
+      </ContextSwitch>
     );
     expect(wouldPass.mock.calls).toEqual([
       [
@@ -35,68 +35,68 @@ describe('Filter with non nested Context', () => {
   it('renders the first context that passes', () => {
     wouldPass.mockImplementation((_, { pass }) => pass);
     const component = renderer.create(
-      <Filter context={{ roles: {} }}>
+      <ContextSwitch context={{ roles: {} }}>
         <Context><div>Not to be rendered</div></Context>
         <Context pass><div>To be rendered</div></Context>
         <Context pass><div>Not to be rendered</div></Context>
-      </Filter>
+      </ContextSwitch>
     );
     expect(component.toJSON()).toMatchSnapshot();
   });
   it('does not render if no contexts would pass and there is no default context', () => {
     wouldPass.mockReturnValue(false);
     const component = renderer.create(
-      <Filter context={{ roles: {} }}>
+      <ContextSwitch context={{ roles: {} }}>
         <Context><div>Not to be rendered</div></Context>
         <Context><div>Not to be rendered</div></Context>
-      </Filter>
+      </ContextSwitch>
     );
     expect(component.toJSON()).toMatchSnapshot();
   });
   it('renders the default context if no contexts would pass', () => {
     wouldPass.mockReturnValue(false);
     const component = renderer.create(
-      <Filter context={{ roles: {} }}>
+      <ContextSwitch context={{ roles: {} }}>
         <Context><div>Not to be rendered</div></Context>
-        <Context default><div>Default Filter Content</div></Context>
+        <Context default><div>Default ContextSwitch Content</div></Context>
         <Context><div>Not to be rendered</div></Context>
-      </Filter>
+      </ContextSwitch>
     );
     expect(component.toJSON()).toMatchSnapshot();
   });
   it('renders the context that passes even if there is a default context', () => {
     wouldPass.mockImplementation((_, { pass }) => pass);
     const component = renderer.create(
-      <Filter context={{ roles: {} }}>
+      <ContextSwitch context={{ roles: {} }}>
         <Context><div>Not to be rendered</div></Context>
         <Context pass><div>To be rendered</div></Context>
-        <Context default><div>Default Filter Content</div></Context>
+        <Context default><div>Default ContextSwitch Content</div></Context>
         <Context pass><div>Not to be rendered</div></Context>
         <Context><div>Not to be rendered</div></Context>
-      </Filter>
+      </ContextSwitch>
     );
     expect(component.toJSON()).toMatchSnapshot();
   });
   it('renders the context that passes even if it comes after the default context', () => {
     wouldPass.mockImplementation((_, { pass }) => pass);
     const component = renderer.create(
-      <Filter context={{ roles: {} }}>
+      <ContextSwitch context={{ roles: {} }}>
         <Context><div>Not to be rendered</div></Context>
-        <Context default><div>Default Filter Content</div></Context>
+        <Context default><div>Default ContextSwitch Content</div></Context>
         <Context pass><div>To be rendered</div></Context>
         <Context pass><div>Not to be rendered</div></Context>
-      </Filter>
+      </ContextSwitch>
     );
     expect(component.toJSON()).toMatchSnapshot();
   });
 });
 
-describe('Filter with nested Context components', () => {
+describe('ContextSwitch with nested Context components', () => {
   let component;
   beforeEach(() => {
     wouldPass.mockImplementation((_, { pass }) => pass);
     component = renderer.create(
-      <Filter context={{ contextProp: 'foo' }}>
+      <ContextSwitch context={{ contextProp: 'foo' }}>
         <Context prop1="val1" default>
           <Context prop11="val11"><div>child11</div></Context>
           <Context prop12="val12" pass><div>child12</div></Context>
@@ -111,7 +111,7 @@ describe('Filter with nested Context components', () => {
           <Context prop23="val23" pass><div>child23</div></Context>
         </Context>
         <Context prop3="val3"><div>child3</div></Context>
-      </Filter>
+      </ContextSwitch>
     );
   });
   it('properly calls wouldPass on nested contexts if their parent passed', () => {
