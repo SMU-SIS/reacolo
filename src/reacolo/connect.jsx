@@ -1,8 +1,8 @@
 import React from 'react';
-import ReacoloBase from './ReacoloBase';
+import ConnectHOC from './ConnectHOC';
 
-const connect = (appComponent, model) => (
-  <ReacoloBase model={model} app={appComponent} />
+const connect = (Component, model) => props => (
+  <ConnectHOC model={model} Component={Component} {...props} />
 );
 
 export default connect;

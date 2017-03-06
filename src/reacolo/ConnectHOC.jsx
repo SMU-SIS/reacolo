@@ -1,7 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
+import except from 'except';
 import contextPropType from './context-prop-type';
 
-export default class ReacoloBase extends PureComponent {
+export default class ConnectHOC extends Component {
 
   static _attachModelHandlers(model, handlers) {
     handlers.forEach(([evt, handler]) => {
@@ -33,14 +34,14 @@ export default class ReacoloBase extends PureComponent {
       [Symbol.for('data:update'), newData => this.setState({ data: newData })],
       [Symbol.for('context:update'), newContext => this.setState({ context: newContext })]
     ];
-    ReacoloBase._attachModelHandlers(model, this._modelHandlers);
+    ConnectHOC._attachModelHandlers(model, this._modelHandlers);
   }
 
   componentWillReceiveProps({ model }) {
     if (this.props.model !== model) {
-      ReacoloBase._detachModelHandlers(this.props.model, this._modelHandlers);
+      ConnectHOC._detachModelHandlers(this.props.model, this._modelHandlers);
       this._fullStateModelUpdate();
-      ReacoloBase._attachModelHandlers(model, this._modelHandlers);
+      ConnectHOC._attachModelHandlers(model, this._modelHandlers);
     }
   }
 
@@ -63,24 +64,27 @@ export default class ReacoloBase extends PureComponent {
 
   render() {
     const { data, context, isConnected } = this.state;
-    const App = this.props.app;
+    // Extract any extra properties that should be passed to the wrapped component.
+    const extraProps = except(this.props, Object.keys(ConnectHOC.propTypes));
+    const WrappedComponent = this.props.Component;
     return (
-      <App
+      <WrappedComponent
         data={data}
         context={context}
         isConnected={isConnected}
         setData={this._setData}
+        {...extraProps}
       />
     );
   }
 }
 
-ReacoloBase.propTypes = {
+ConnectHOC.propTypes = {
   model: React.PropTypes.shape({
     data: React.PropTypes.object,
     context: contextPropType.isRequired,
     isConnected: React.PropTypes.bool.isRequired,
     setAppData: React.PropTypes.func.isRequired
   }).isRequired,
-  app: React.PropTypes.func.isRequired
+  Component: React.PropTypes.func.isRequired
 };
