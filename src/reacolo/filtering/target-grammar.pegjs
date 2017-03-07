@@ -30,4 +30,4 @@ target "target"
 
 name "target name"
   = chars:[0-9a-zA-Z_]+             { return chars.join(''); }
-  / "*"
+  / "\."

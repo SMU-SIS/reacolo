@@ -1,8 +1,7 @@
 import targetParser from './target-grammar.pegjs';
 import entries from '../../obj-entries';
 
-
-const wildcase = '*';
+const wildcase = '.';
 
 export const valuesFilter = (values, targetGroup) => {
   // Extract every targets strictly required except the wildcase.

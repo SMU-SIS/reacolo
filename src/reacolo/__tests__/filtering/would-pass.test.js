@@ -4,7 +4,7 @@ import wouldPass, {
   decodeContextVal
 } from '../../filtering/would-pass';
 
-const wildcase = '*';
+const wildcase = '.';
 
 describe('simple values filter', () => {
   it('returns true when there is one value > 0 corresponding to the sole provided target', () => {
@@ -295,8 +295,8 @@ describe('values filter with facultative argument', () => {
   });
 });
 
-describe('values filter with * target', () => {
-  it('Returns true if there is one non target value and * is not optional', () => {
+describe('values filter with wildcase target', () => {
+  it('Returns true if there is one non target value and wildcase is not optional', () => {
     expect(valuesFilter({ foo: 1 }, [{ name: wildcase, optional: false }])).toBe(true);
 
     expect(
@@ -316,7 +316,7 @@ describe('values filter with * target', () => {
     expect(valuesFilter({ foo: 1, stuff: 0 }, [{ name: wildcase, optional: false }])).toBe(true);
   });
 
-  it('Returns true if there is more than one non target value and * is not optional', () => {
+  it('Returns true if there is more than one non target value and wildcase is not optional', () => {
     expect(valuesFilter({ foo: 1, foo2: 1 }, [{ name: wildcase, optional: false }])).toBe(true);
 
     expect(
@@ -338,7 +338,7 @@ describe('values filter with * target', () => {
     );
   });
 
-  it('Returns false if there is not any non target value and * is not optional', () => {
+  it('Returns false if there is not any non target value and wildcase is not optional', () => {
     expect(valuesFilter({}, [{ name: wildcase, optional: false }])).toBe(false);
 
     expect(valuesFilter({ foo: 0 }, [{ name: wildcase, optional: false }])).toBe(false);
@@ -375,7 +375,7 @@ describe('values filter with * target', () => {
 
     expect(valuesFilter({ stuff: 0 }, [{ name: wildcase, optional: false }])).toBe(false);
   });
-  it('Returns false if there is not any non target value and * is not optional', () => {
+  it('Returns false if there is not any non target value and wildcase is not optional', () => {
     expect(valuesFilter({}, [{ name: wildcase, optional: false }])).toBe(false);
 
     expect(valuesFilter({ foo: 0 }, [{ name: wildcase, optional: false }])).toBe(false);
@@ -414,7 +414,7 @@ describe('values filter with * target', () => {
   });
 
   it(
-    'Returns false if there is not any non target value (including optional targets) and * is' +
+    'Returns false if there is not any non target value (including optional targets) and wildcase is' +
       ' not optional',
     () => {
       expect(
@@ -427,7 +427,7 @@ describe('values filter with * target', () => {
     }
   );
 
-  it('Returns false if there is a target that is not here with non optional *', () => {
+  it('Returns false if there is a target that is not here with non optional wildcase', () => {
     expect(
       valuesFilter({ bar: 0, foo: 1 }, [
         { name: wildcase, optional: false },
@@ -454,7 +454,7 @@ describe('values filter with * target', () => {
     ).toBe(false);
   });
 
-  it('Returns true if * is optional and there is no additional targets', () => {
+  it('Returns true if wildcase is optional and there is no additional targets', () => {
     expect(valuesFilter({}, [{ name: wildcase, optional: true }])).toBe(true);
 
     expect(valuesFilter({ foo: 0 }, [{ name: wildcase, optional: true }])).toBe(true);
@@ -466,7 +466,7 @@ describe('values filter with * target', () => {
     expect(valuesFilter({ stuff: 1, foo: 1 }, [{ name: wildcase, optional: true }])).toBe(true);
   });
 
-  it('Returns true if * is optional and all targets are here', () => {
+  it('Returns true if wildcase is optional and all targets are here', () => {
     expect(
       valuesFilter({ bar: 1 }, [
         { name: wildcase, optional: true },
@@ -529,7 +529,7 @@ describe('values filter with * target', () => {
     ).toBe(true);
   });
 
-  it('Returns false if there is a target that is not here with optional *', () => {
+  it('Returns false if there is a target that is not here with optional wildcase', () => {
     expect(
       valuesFilter({ bar: 0, foo: 1 }, [
         { name: wildcase, optional: true },
@@ -639,7 +639,7 @@ describe('Doublons', () => {
       ])
     ).toBe(false);
   });
-  it('remain consistent for *', () => {
+  it('remain consistent for wildcase', () => {
     expect(
       valuesFilter({ foo: 0, stuff: 1 }, [
         { name: wildcase, optional: true },
@@ -796,7 +796,7 @@ describe('wouldPass', () => {
         },
         {
           contextProp1: 'prop1val',
-          contextProp2: '*'
+          contextProp2: wildcase
         }
       )
     ).toBe(false);
@@ -822,7 +822,7 @@ describe('wouldPass', () => {
         },
         {
           prop1: 'prop1val',
-          prop2: '*?'
+          prop2: `${wildcase}?`
         }
       )
     ).toBe(true);

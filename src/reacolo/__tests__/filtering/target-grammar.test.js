@@ -1,5 +1,7 @@
 import targetParser from '../../filtering/target-grammar.pegjs';
 
+const wildcase = '.';
+
 const parseTargets = (...args) => targetParser.parse(...args);
 
 describe('The target grammar', () => {
@@ -32,19 +34,19 @@ describe('The target grammar', () => {
     ]]);
   });
   it('properly decodes the wildcase', () => {
-    expect(parseTargets('*')).toEqual([[
-      { name: '*', optional: false }
+    expect(parseTargets(wildcase)).toEqual([[
+      { name: wildcase, optional: false }
     ]]);
-    expect(parseTargets('*?')).toEqual([[
-      { name: '*', optional: true }
+    expect(parseTargets(`${wildcase}?`)).toEqual([[
+      { name: wildcase, optional: true }
     ]]);
-    expect(parseTargets('* & foo & bar')).toEqual([[
-      { name: '*', optional: false },
+    expect(parseTargets(`${wildcase} & foo & bar`)).toEqual([[
+      { name: wildcase, optional: false },
       { name: 'foo', optional: false },
       { name: 'bar', optional: false }
     ]]);
-    expect(parseTargets('*? & foo & bar?')).toEqual([[
-      { name: '*', optional: true },
+    expect(parseTargets(`${wildcase}? & foo & bar?`)).toEqual([[
+      { name: wildcase, optional: true },
       { name: 'foo', optional: false },
       { name: 'bar', optional: true }
     ]]);
@@ -56,22 +58,22 @@ describe('The target grammar', () => {
       parseTargets('abc&bcd&def')
     );
     expect(
-      parseTargets('abc   & *  &  def ')
+      parseTargets(`abc   & ${wildcase}  &  def `)
     ).toEqual(
-      parseTargets('abc&*&def')
+      parseTargets(`abc&${wildcase}&def`)
     );
     expect(
-      parseTargets('abc?   & *?  &  def ')
+      parseTargets(`abc?   & ${wildcase}?  &  def `)
     ).toEqual(
-      parseTargets('abc?&*?&def')
+      parseTargets(`abc?&${wildcase}?&def`)
     );
   });
   it('supports multiple groups of targets (or operator)', () => {
-    const groups = parseTargets('a & b | bc? | * & foo & bar?');
+    const groups = parseTargets(`a & b | bc? | ${wildcase} & foo & bar?`);
     expect(groups).toEqual([].concat(
       parseTargets('a & b'),
       parseTargets(' bc?'),
-      parseTargets('* & foo & bar?')
+      parseTargets(`${wildcase} & foo & bar?`)
     ));
   });
   it('supports parentheses', () => {
@@ -86,9 +88,9 @@ describe('The target grammar', () => {
       parseTargets('aa & cc | aa & bb')
     );
     expect(
-      parseTargets('a & ( b | c? ) | ( d & ( c | e & * ))')
+      parseTargets(`a & ( b | c? ) | ( d & ( c | e & ${wildcase} ))`)
     ).toEqual(
-      parseTargets('a & b | a & c? | d & c | d & e & *')
+      parseTargets(`a & b | a & c? | d & c | d & e & ${wildcase}`)
     );
   });
   it('supports omission of the \'and\' operator', () => {
@@ -98,14 +100,14 @@ describe('The target grammar', () => {
       parseTargets('aa & bb & cc')
     );
     expect(
-      parseTargets('a b c | d e *')
+      parseTargets(`a b c | d e ${wildcase}`)
     ).toEqual(
-      parseTargets('a & b & c | d & e & *')
+      parseTargets(`a & b & c | d & e & ${wildcase}`)
     );
     expect(
-      parseTargets('a? ( o1 | o2 ) * b')
+      parseTargets(`a? ( o1 | o2 ) ${wildcase} b`)
     ).toEqual(
-      parseTargets('a? & o1 & * & b | a? & o2 & * & b')
+      parseTargets(`a? & o1 & ${wildcase} & b | a? & o2 & ${wildcase} & b`)
     );
   });
 });
