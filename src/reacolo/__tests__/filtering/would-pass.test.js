@@ -590,6 +590,73 @@ describe('values filter with * target', () => {
   });
 });
 
+describe('Doublons', () => {
+  it('remain consistent for non optional values', () => {
+    expect(
+      valuesFilter({ foo: 1, stuff: 1 }, [
+        { name: 'foo', optional: false },
+        { name: 'foo', optional: false },
+        { name: 'stuff', optional: false }
+      ])
+    ).toBe(true);
+    expect(
+      valuesFilter({ foo: 0, stuff: 1 }, [
+        { name: 'foo', optional: false },
+        { name: 'foo', optional: false },
+        { name: 'stuff', optional: false }
+      ])
+    ).toBe(false);
+  });
+  it('remain consistent for optional values', () => {
+    expect(
+      valuesFilter({ foo: 1, stuff: 1 }, [
+        { name: 'foo', optional: true },
+        { name: 'foo', optional: true },
+        { name: 'stuff', optional: false }
+      ])
+    ).toBe(true);
+    expect(
+      valuesFilter({ foo: 0, stuff: 1 }, [
+        { name: 'foo', optional: true },
+        { name: 'foo', optional: true },
+        { name: 'stuff', optional: false }
+      ])
+    ).toBe(true);
+  });
+  it('remain consistent with mixed of optional and non values', () => {
+    expect(
+      valuesFilter({ foo: 1, stuff: 1 }, [
+        { name: 'foo', optional: true },
+        { name: 'foo', optional: false },
+        { name: 'stuff', optional: false }
+      ])
+    ).toBe(true);
+    expect(
+      valuesFilter({ foo: 0, stuff: 1 }, [
+        { name: 'foo', optional: true },
+        { name: 'foo', optional: false },
+        { name: 'stuff', optional: false }
+      ])
+    ).toBe(false);
+  });
+  it('remain consistent for *', () => {
+    expect(
+      valuesFilter({ foo: 0, stuff: 1 }, [
+        { name: wildcase, optional: true },
+        { name: wildcase, optional: true },
+        { name: 'stuff', optional: false }
+      ])
+    ).toBe(true);
+    expect(
+      valuesFilter({ foo: 0, stuff: 1 }, [
+        { name: wildcase, optional: true },
+        { name: wildcase, optional: false },
+        { name: 'stuff', optional: false }
+      ])
+    ).toBe(false);
+  });
+});
+
 describe('values filter groups', () => {
   it('returns true if one of the group matches', () => {
     expect(
