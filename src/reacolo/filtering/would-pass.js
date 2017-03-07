@@ -15,10 +15,11 @@ export const valuesFilter = (values, targetGroup) => {
     return false;
   }
 
-  // If there is an optional wildcase, the only thing that matters is that the required
-  // targets are here (every other values are acceptable). Hence, the test succeded.
-  const wildcaseTarget = targetGroup.find(({ name }) => name === wildcase);
-  if (wildcaseTarget && wildcaseTarget.optional) {
+  // If there is wildcases and they are all optional (multiple wildcases is odd but who knows), the
+  // only thing that matters is that the required targets are here (every other values are
+  // acceptable). Hence, the test succeded.
+  const wildcaseTarget = targetGroup.filter(({ name }) => name === wildcase);
+  if (wildcaseTarget.length > 0 && wildcaseTarget.every(({ optional }) => optional)) {
     return true;
   }
 
@@ -39,8 +40,8 @@ export const valuesFilter = (values, targetGroup) => {
     .map(([val]) => val)
     .length;
 
-  if (wildcaseTarget) {
-    // If the wildcase is not optional, extraneous values are required.
+  if (wildcaseTarget.length > 0) {
+    // If there is a non optional, extraneous values are required.
     // (We already now that if there is a wildcase, it is not optional or the function would have
     // already returned).
     return presentTargetsNb < presentValuesNb;
