@@ -184,12 +184,37 @@ Connected components should always **manage the non connected special case**. Wh
 
 ## Reacolo Dev Model Sync
 
-Depends on the [SockJS](http://sockjs.org) and [eventemitter3](https://github.com/primus/eventemitter3) libraries.
+The reacolo dev model sync provides synchronization capabilities with a [reacolo-server](https://github.com/SMU-SIS/reacolo-server).
 
-*TODO*
+It complies with the ModelSync API and thus, is usable with the [`connect` HOC](#connect).
+
+It has two dependencies:
+  - [SockJS](http://sockjs.org) and
+  - [eventemitter3](https://github.com/primus/eventemitter3).
+
+### Usage
+
+```js
+import React from 'react';
+import { render } from 'react-dom';
+import ReacoloDevModelSync from 'reacolo-dev-model-sync';
+import { connect } from 'reacolo';
+
+// Create the model sync, specifying the requested role for this client.
+const modelSync = new ModelSync('http://my.reacolo.server:port/socket', 'thisClientRole');
+
+// Connect it to a component using Reacolo connect HOC.
+const MyConnectedApp = connect(MyApp, modelSync);
+
+// Render the component inside the root div using React.
+render(<MyConnectedApp />, document.getElementById('root'));
+
+// Start the synchronization.
+modelSync.start();
+```
 
 ## Reacology Model Sync
 
-Depends on the [eventemitter3](https://github.com/primus/eventemitter3) library.
+[eventemitter3](https://github.com/primus/eventemitter3) is a dependency.
 
 *TODO*
