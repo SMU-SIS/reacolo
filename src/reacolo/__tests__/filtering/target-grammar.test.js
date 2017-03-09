@@ -110,4 +110,14 @@ describe('The target grammar', () => {
       parseTargets(`a? & o1 & ${wildcase} & b | a? & o2 & ${wildcase} & b`)
     );
   });
+  it('supports names with special characters and numbers', () => {
+    expect(
+      parseTargets('a@3#4- _$1+%? 3? _')
+    ).toEqual([[
+      { name: 'a@3#4-', optional: false },
+      { name: '_$1+%', optional: true },
+      { name: '3', optional: true },
+      { name: '_', optional: false }
+    ]]);
+  });
 });

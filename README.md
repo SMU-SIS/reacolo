@@ -2,6 +2,7 @@
 
 Reacolo is a React-based adaptive cross-device applications library.
 Reacolo enables you to define what should be displayed:
+
 - **where**, i.e. on what device. E.g. video on smart glasses and controls on smart phone.
 - **when**, i.e. for what context. E.g. both a 'display' device and a 'remote' device are available or the user is walking.
 
@@ -32,6 +33,7 @@ npm run build
 ### Result
 
 The compilation produces three JS files in the `lib` folder:
+
 - [*reacolo*](#reacolo): The main library,
 - [*reacolo dev model sync*](#reacolo-dev-model-sync): Synchronization with Reacolo Dev Server,
 - [*reacology model sync*](#reacology-model-sync): Synchronization using the Android Ecology library.
@@ -66,6 +68,7 @@ It will pass if the context object contains a `clientRole` string property equal
 The second context does not specify any selectors and thus will always match. It will be rendered if the first context does not match.
 
 There is two rules to respect when defining `<Context>`s:
+
 1. `<Context>`s must be *directly* contained inside a `<ContextSwitch>`.
 2. Due to React's current [lake of support for fragments](https://github.com/facebook/react/issues/2127), `<Context>` can only contain a single child. [It may change eventually](https://github.com/facebook/react/issues/8854), but in the meantime, if you need a `<Context>` to define more than one child, you need to wrap them in a container (e.g. a `<span>` or a `<div>`).
 
@@ -89,6 +92,7 @@ Note: An obvious trade-off of this mechanism is that it is not possible to match
 ### Context Properties
 
 Context properties can have three forms:
+
 - Strings, e.g. `'pony'`.
 - Arrays of strings, e.g. `['pony'`, `'cat']`.
 - Objects of numbers, e.g. `{ pony: 1, cat: 2, pug: 0 }` (this is equivalent to the above).
@@ -100,7 +104,8 @@ The order does not matter.
 
 #### Basics and operators `&` and `|`
 
-Selectors can used the or operator `|` and the and operator `&`:
+Selectors can use the or operator `|` and the and operator `&`:
+
 - `pony | cat` will match `'pony'`, `'cat'`, `['pony']` and `['cat']`.
 - `pony & cat` will match `['pony', 'cat']`.
 
@@ -114,7 +119,8 @@ Names are trimmed: `pony|cat` is equivalent to `pony | cat`.
 
 Parenthesis can be used as expected: `pony ( cat | pug )` is equivalent to `pony cat | pony pug`.
 
-Names can only contain letters, numbers, dashes (`-`) and underscores (`_`).
+Names can make use of any characters except from `&`, `|`, `(`, `)`, `?`, `.` and blank characters.
+They cannot be exactly `default` either.
 
 #### Optional matches: `?`
 
@@ -167,11 +173,12 @@ const MyConnectedApp = connect(MyApp, myModelSync);
 ```
 
 Once `<MyApp>` is connected it will be provided with the following props:
+
 - `data`: a POJO containing the current application data (depends on the most recent `setData` call).
 - `setData`: a function that can be used to set (and synchronized) a new data object. Note that unlike `React.Component#setState`, `setData` does not merge the object with the existing one but replaces it.
 - `context`: depends on the model sync, but typically contains at least:
-  - `clientRole`: the role assigned to this particular client. This is typically the only piece of data that is not exactly similar among all clients.
-  - `roles`: the different roles that have been taken (including this client's role).
+    - `clientRole`: the role assigned to this particular client. This is typically the only piece of data that is not exactly similar among all clients.
+    - `roles`: the different roles that have been taken (including this client's role).
 - `isConnected`: indicates if the model is currently connected or not.
 
 
@@ -189,6 +196,7 @@ The reacolo dev model sync provides synchronization capabilities with a [reacolo
 It complies with the ModelSync API and thus, is usable with the [`connect` HOC](#connect).
 
 It has two dependencies:
+
   - [SockJS](http://sockjs.org) and
   - [eventemitter3](https://github.com/primus/eventemitter3).
 

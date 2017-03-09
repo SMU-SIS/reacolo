@@ -29,5 +29,5 @@ target "target"
   / "(" ws? to:targetsOr ws? ")"    { return to; }
 
 name "target name"
-  = chars:[0-9a-zA-Z_]+             { return chars.join(''); }
+  = chars:[^\(\)\&\| \t\r\n\.\?]+             { return chars.join(''); }
   / "\."
