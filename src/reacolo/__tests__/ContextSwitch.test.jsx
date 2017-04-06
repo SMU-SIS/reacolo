@@ -1,25 +1,39 @@
+/* eslint "react/no-array-index-key": 0 */
+
 import React from 'react';
 import renderer from 'react-test-renderer';
+import except from 'except';
 import ContextSwitch from '../ContextSwitch';
-import Context from '../Context';
 import wouldPass from '../filtering/would-pass';
 
 jest.mock('../filtering/would-pass');
 
-beforeEach(() => {
-  wouldPass.mockReset();
-  wouldPass.mockImplementation(() => false);
-});
-
 describe('ContextSwitch with non nested Context', () => {
+  let createMockContext;
+
+  beforeEach(() => {
+    wouldPass.mockReset();
+    wouldPass.mockImplementation(() => false);
+    createMockContext = jest.fn((targets = {}, isDefault = false) => {
+      const Context = jest.fn();
+      Context.getTargets = jest.fn(() => targets);
+      Context.isDefault = jest.fn(() => isDefault);
+      Context.isContext = true;
+      return Context;
+    });
+  });
+
+
   it('properly calls wouldPass until it returns true', () => {
     wouldPass.mockReturnValueOnce(false)
              .mockReturnValueOnce(true);
     renderer.create(
       <ContextSwitch context={{ contextProp: 'bar' }}>
-        <Context prop1="val1" default><div>child1</div></Context>
-        <Context prop2="val2"><div>child2</div></Context>
-        <Context prop3="val3"><div>child3</div></Context>
+        {[
+          createMockContext({ prop1: 'val1' }),
+          createMockContext({ prop2: 'val2' }),
+          createMockContext({ prop3: 'val3' })
+        ].map((Context, i) => <Context key={i} />)}
       </ContextSwitch>
     );
     expect(wouldPass.mock.calls).toEqual([
@@ -34,17 +48,20 @@ describe('ContextSwitch with non nested Context', () => {
   });
   it('renders the first context that passes', () => {
     wouldPass.mockImplementation((_, { pass }) => pass);
+    const Context = createMockContext();
+    const PassingContext = createMockContext({ pass: true });
     const component = renderer.create(
       <ContextSwitch context={{ roles: {} }}>
         <Context><div>Not to be rendered</div></Context>
-        <Context pass><div>To be rendered</div></Context>
-        <Context pass><div>Not to be rendered</div></Context>
+        <PassingContext><div>To be rendered</div></PassingContext>
+        <PassingContext><div>Not to be rendered</div></PassingContext>
       </ContextSwitch>
     );
     expect(component.toJSON()).toMatchSnapshot();
   });
   it('does not render if no contexts would pass and there is no default context', () => {
     wouldPass.mockReturnValue(false);
+    const Context = createMockContext();
     const component = renderer.create(
       <ContextSwitch context={{ roles: {} }}>
         <Context><div>Not to be rendered</div></Context>
@@ -55,10 +72,13 @@ describe('ContextSwitch with non nested Context', () => {
   });
   it('renders the default context if no contexts would pass', () => {
     wouldPass.mockReturnValue(false);
+    const Context = createMockContext();
+    const DefaultContext = createMockContext(undefined, true);
+
     const component = renderer.create(
       <ContextSwitch context={{ roles: {} }}>
         <Context><div>Not to be rendered</div></Context>
-        <Context default><div>Default ContextSwitch Content</div></Context>
+        <DefaultContext><div>Default ContextSwitch Content</div></DefaultContext>
         <Context><div>Not to be rendered</div></Context>
       </ContextSwitch>
     );
@@ -66,12 +86,15 @@ describe('ContextSwitch with non nested Context', () => {
   });
   it('renders the context that passes even if there is a default context', () => {
     wouldPass.mockImplementation((_, { pass }) => pass);
+    const Context = createMockContext();
+    const DefaultContext = createMockContext(undefined, true);
+    const PassingContext = createMockContext({ pass: true });
     const component = renderer.create(
       <ContextSwitch context={{ roles: {} }}>
         <Context><div>Not to be rendered</div></Context>
-        <Context pass><div>To be rendered</div></Context>
-        <Context default><div>Default ContextSwitch Content</div></Context>
-        <Context pass><div>Not to be rendered</div></Context>
+        <PassingContext><div>To be rendered</div></PassingContext>
+        <DefaultContext><div>Default ContextSwitch Content</div></DefaultContext>
+        <PassingContext><div>Not to be rendered</div></PassingContext>
         <Context><div>Not to be rendered</div></Context>
       </ContextSwitch>
     );
@@ -79,12 +102,15 @@ describe('ContextSwitch with non nested Context', () => {
   });
   it('renders the context that passes even if it comes after the default context', () => {
     wouldPass.mockImplementation((_, { pass }) => pass);
+    const Context = createMockContext();
+    const DefaultContext = createMockContext(undefined, true);
+    const PassingContext = createMockContext({ pass: true });
     const component = renderer.create(
       <ContextSwitch context={{ roles: {} }}>
         <Context><div>Not to be rendered</div></Context>
-        <Context default><div>Default ContextSwitch Content</div></Context>
-        <Context pass><div>To be rendered</div></Context>
-        <Context pass><div>Not to be rendered</div></Context>
+        <DefaultContext><div>Default ContextSwitch Content</div></DefaultContext>
+        <PassingContext><div>To be rendered</div></PassingContext>
+        <PassingContext><div>Not to be rendered</div></PassingContext>
       </ContextSwitch>
     );
     expect(component.toJSON()).toMatchSnapshot();
@@ -94,7 +120,12 @@ describe('ContextSwitch with non nested Context', () => {
 describe('ContextSwitch with nested Context components', () => {
   let component;
   beforeEach(() => {
+    wouldPass.mockReset();
     wouldPass.mockImplementation((_, { pass }) => pass);
+    const Context = jest.fn();
+    Context.getTargets = instance => except(instance.props, ['children', 'default']);
+    Context.isDefault = instance => !!instance.props.default;
+    Context.isContext = true;
     component = renderer.create(
       <ContextSwitch context={{ contextProp: 'foo' }}>
         <Context prop1="val1" default>
