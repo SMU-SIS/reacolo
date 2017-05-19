@@ -10,7 +10,6 @@ import { ACK_MSG_TYPE } from './message-types';
 import { DEFAULT_ACK_TIMEOUT, DEFAULT_THROTTLE } from './defaults';
 // Defaut configurations.
 
-
 export default class ReacoloSocket {
   constructor(
     serverAddress,

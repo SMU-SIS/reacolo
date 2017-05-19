@@ -47,7 +47,7 @@ const Events = {
   CONNECTED: Symbol.for('connected'),
   DISCONNECTED: Symbol.for('disconnected'),
   DATA_UPDATE: Symbol.for('data:update'),
-  CONTEXT_UPDATE: Symbol.for('context:update'),
+  CONTEXT_UPDATE: Symbol.for('context:update')
 };
 
 export class ReacologyModelSync extends EventEmitter {

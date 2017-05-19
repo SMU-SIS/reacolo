@@ -1,6 +1,6 @@
 import targetParser from './target-grammar.pegjs';
-import entries from '../../obj-entries';
 
+const entries = obj => Object.entries(obj);
 const wildcase = '.';
 
 export const valuesFilter = (values, targetGroup) => {

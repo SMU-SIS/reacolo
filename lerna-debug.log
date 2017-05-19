@@ -1,0 +1,216 @@
+0 silly input [ 'test' ]
+1 silly flags { _: [ 'run' ],
+1 silly flags   sort: true,
+1 silly flags   concurrency: 4,
+1 silly flags   script: 'test',
+1 silly flags   args: [] }
+2 verbose rootPath /Users/quentinroy/Workspace/reacolo-client
+3 info version 2.0.0-rc.4
+4 silly isInitialized
+5 silly isInitialized true
+6 silly existsSync /Users/quentinroy/Workspace/reacolo-client/VERSION
+7 silly initialize attempt
+8 silly initialize success
+9 silly execute attempt
+10 silly runScriptInDir test [] reacolo-dev-model-sync
+11 silly getExecOpts { cwd: '/Users/quentinroy/Workspace/reacolo-client/packages/reacolo-dev-model-sync' }
+12 silly runScriptInDir test [] reacolo
+13 silly getExecOpts { cwd: '/Users/quentinroy/Workspace/reacolo-client/packages/reacolo' }
+14 silly runScriptInDir test [] reacology-model-sync
+15 silly getExecOpts { cwd: '/Users/quentinroy/Workspace/reacolo-client/packages/reacology-model-sync' }
+16 error test Errored while running script in 'reacolo'
+17 error execute Error: Command failed: npm run test
+17 error execute  FAIL  src/__tests__/filtering/target-grammar.test.js
+17 error execute   ● Test suite failed to run
+17 error execute
+17 error execute     Cannot find module 'pegjs'
+17 error execute
+17 error execute       at Function.Module._resolveFilename (module.js:470:15)
+17 error execute       at Function.Module._load (module.js:418:25)
+17 error execute       at Module.require (module.js:498:17)
+17 error execute       at require (internal/module.js:20:19)
+17 error execute       at Object.<anonymous> (../../jest-transforms/pegjs-transformer.js:1:75)
+17 error execute       at Module._compile (module.js:571:32)
+17 error execute       at Object.Module._extensions..js (module.js:580:10)
+17 error execute       at Module.load (module.js:488:32)
+17 error execute       at tryModuleLoad (module.js:447:12)
+17 error execute       at Function.Module._load (module.js:439:3)
+17 error execute
+17 error execute  PASS  src/__tests__/bind-context.test.jsx
+17 error execute   ● Console
+17 error execute
+17 error execute     console.error node_modules/fbjs/lib/warning.js:36
+17 error execute       Warning: Accessing PropTypes via the main React package is deprecated. Use the prop-types package from npm instead.
+17 error execute
+17 error execute  FAIL  src/__tests__/filtering/would-pass.test.js
+17 error execute   ● Test suite failed to run
+17 error execute
+17 error execute     Cannot find module 'pegjs'
+17 error execute
+17 error execute       at Function.Module._resolveFilename (module.js:470:15)
+17 error execute       at Function.Module._load (module.js:418:25)
+17 error execute       at Module.require (module.js:498:17)
+17 error execute       at require (internal/module.js:20:19)
+17 error execute       at Object.<anonymous> (../../jest-transforms/pegjs-transformer.js:1:75)
+17 error execute       at Module._compile (module.js:571:32)
+17 error execute       at Object.Module._extensions..js (module.js:580:10)
+17 error execute       at Module.load (module.js:488:32)
+17 error execute       at tryModuleLoad (module.js:447:12)
+17 error execute       at Function.Module._load (module.js:439:3)
+17 error execute
+17 error execute  FAIL  src/__tests__/ContextSwitch.test.jsx
+17 error execute   ● Test suite failed to run
+17 error execute
+17 error execute     Cannot find module 'pegjs'
+17 error execute
+17 error execute       at Function.Module._resolveFilename (module.js:470:15)
+17 error execute       at Function.Module._load (module.js:418:25)
+17 error execute       at Module.require (module.js:498:17)
+17 error execute       at require (internal/module.js:20:19)
+17 error execute       at Object.<anonymous> (../../jest-transforms/pegjs-transformer.js:1:75)
+17 error execute       at Module._compile (module.js:571:32)
+17 error execute       at Object.Module._extensions..js (module.js:580:10)
+17 error execute       at Module.load (module.js:488:32)
+17 error execute       at tryModuleLoad (module.js:447:12)
+17 error execute       at Function.Module._load (module.js:439:3)
+17 error execute
+17 error execute  PASS  src/__tests__/Context.test.jsx
+17 error execute
+17 error execute Test Suites: 3 failed, 2 passed, 5 total
+17 error execute Tests:       7 passed, 7 total
+17 error execute Snapshots:   0 total
+17 error execute Time:        2.932s
+17 error execute Ran all test suites.
+17 error execute
+17 error execute npm ERR! Darwin 16.5.0
+17 error execute npm ERR! argv "/usr/local/Cellar/node/7.10.0/bin/node" "/usr/local/bin/npm" "run" "test"
+17 error execute npm ERR! node v7.10.0
+17 error execute npm ERR! npm  v4.2.0
+17 error execute npm ERR! code ELIFECYCLE
+17 error execute npm ERR! errno 1
+17 error execute npm ERR! reacolo@1.1.0 test: `jest`
+17 error execute npm ERR! Exit status 1
+17 error execute npm ERR!
+17 error execute npm ERR! Failed at the reacolo@1.1.0 test script 'jest'.
+17 error execute npm ERR! Make sure you have the latest version of node.js and npm installed.
+17 error execute npm ERR! If you do, this is most likely a problem with the reacolo package,
+17 error execute npm ERR! not with npm itself.
+17 error execute npm ERR! Tell the author that this fails on your system:
+17 error execute npm ERR!     jest
+17 error execute npm ERR! You can get information on how to open an issue for this project with:
+17 error execute npm ERR!     npm bugs reacolo
+17 error execute npm ERR! Or if that isn't available, you can get their info via:
+17 error execute npm ERR!     npm owner ls reacolo
+17 error execute npm ERR! There is likely additional logging output above.
+17 error execute
+17 error execute npm ERR! Please include the following file with any support request:
+17 error execute npm ERR!     /Users/quentinroy/.npm/_logs/2017-05-19T07_50_47_187Z-debug.log
+17 error execute
+17 error execute > reacolo@1.1.0 test /Users/quentinroy/Workspace/reacolo-client/packages/reacolo
+17 error execute > jest
+17 error execute
+17 error execute
+17 error execute     at Promise.all.then.arr (/Users/quentinroy/Workspace/reacolo-client/node_modules/execa/index.js:210:11)
+17 error execute     at process._tickCallback (internal/process/next_tick.js:109:7)
+17 error execute  callback with error
+17 error execute  { Error: Command failed: npm run test
+17 error execute  FAIL  src/__tests__/filtering/target-grammar.test.js
+17 error execute   ● Test suite failed to run
+17 error execute
+17 error execute     Cannot find module 'pegjs'
+17 error execute
+17 error execute       at Function.Module._resolveFilename (module.js:470:15)
+17 error execute       at Function.Module._load (module.js:418:25)
+17 error execute       at Module.require (module.js:498:17)
+17 error execute       at require (internal/module.js:20:19)
+17 error execute       at Object.<anonymous> (../../jest-transforms/pegjs-transformer.js:1:75)
+17 error execute       at Module._compile (module.js:571:32)
+17 error execute       at Object.Module._extensions..js (module.js:580:10)
+17 error execute       at Module.load (module.js:488:32)
+17 error execute       at tryModuleLoad (module.js:447:12)
+17 error execute       at Function.Module._load (module.js:439:3)
+17 error execute
+17 error execute  PASS  src/__tests__/bind-context.test.jsx
+17 error execute   ● Console
+17 error execute
+17 error execute     console.error node_modules/fbjs/lib/warning.js:36
+17 error execute       Warning: Accessing PropTypes via the main React package is deprecated. Use the prop-types package from npm instead.
+17 error execute
+17 error execute  FAIL  src/__tests__/filtering/would-pass.test.js
+17 error execute   ● Test suite failed to run
+17 error execute
+17 error execute     Cannot find module 'pegjs'
+17 error execute
+17 error execute       at Function.Module._resolveFilename (module.js:470:15)
+17 error execute       at Function.Module._load (module.js:418:25)
+17 error execute       at Module.require (module.js:498:17)
+17 error execute       at require (internal/module.js:20:19)
+17 error execute       at Object.<anonymous> (../../jest-transforms/pegjs-transformer.js:1:75)
+17 error execute       at Module._compile (module.js:571:32)
+17 error execute       at Object.Module._extensions..js (module.js:580:10)
+17 error execute       at Module.load (module.js:488:32)
+17 error execute       at tryModuleLoad (module.js:447:12)
+17 error execute       at Function.Module._load (module.js:439:3)
+17 error execute
+17 error execute  FAIL  src/__tests__/ContextSwitch.test.jsx
+17 error execute   ● Test suite failed to run
+17 error execute
+17 error execute     Cannot find module 'pegjs'
+17 error execute
+17 error execute       at Function.Module._resolveFilename (module.js:470:15)
+17 error execute       at Function.Module._load (module.js:418:25)
+17 error execute       at Module.require (module.js:498:17)
+17 error execute       at require (internal/module.js:20:19)
+17 error execute       at Object.<anonymous> (../../jest-transforms/pegjs-transformer.js:1:75)
+17 error execute       at Module._compile (module.js:571:32)
+17 error execute       at Object.Module._extensions..js (module.js:580:10)
+17 error execute       at Module.load (module.js:488:32)
+17 error execute       at tryModuleLoad (module.js:447:12)
+17 error execute       at Function.Module._load (module.js:439:3)
+17 error execute
+17 error execute  PASS  src/__tests__/Context.test.jsx
+17 error execute
+17 error execute Test Suites: 3 failed, 2 passed, 5 total
+17 error execute Tests:       7 passed, 7 total
+17 error execute Snapshots:   0 total
+17 error execute Time:        2.932s
+17 error execute Ran all test suites.
+17 error execute
+17 error execute npm ERR! Darwin 16.5.0
+17 error execute npm ERR! argv "/usr/local/Cellar/node/7.10.0/bin/node" "/usr/local/bin/npm" "run" "test"
+17 error execute npm ERR! node v7.10.0
+17 error execute npm ERR! npm  v4.2.0
+17 error execute npm ERR! code ELIFECYCLE
+17 error execute npm ERR! errno 1
+17 error execute npm ERR! reacolo@1.1.0 test: `jest`
+17 error execute npm ERR! Exit status 1
+17 error execute npm ERR!
+17 error execute npm ERR! Failed at the reacolo@1.1.0 test script 'jest'.
+17 error execute npm ERR! Make sure you have the latest version of node.js and npm installed.
+17 error execute npm ERR! If you do, this is most likely a problem with the reacolo package,
+17 error execute npm ERR! not with npm itself.
+17 error execute npm ERR! Tell the author that this fails on your system:
+17 error execute npm ERR!     jest
+17 error execute npm ERR! You can get information on how to open an issue for this project with:
+17 error execute npm ERR!     npm bugs reacolo
+17 error execute npm ERR! Or if that isn't available, you can get their info via:
+17 error execute npm ERR!     npm owner ls reacolo
+17 error execute npm ERR! There is likely additional logging output above.
+17 error execute
+17 error execute npm ERR! Please include the following file with any support request:
+17 error execute npm ERR!     /Users/quentinroy/.npm/_logs/2017-05-19T07_50_47_187Z-debug.log
+17 error execute
+17 error execute > reacolo@1.1.0 test /Users/quentinroy/Workspace/reacolo-client/packages/reacolo
+17 error execute > jest
+17 error execute
+17 error execute
+17 error execute     at Promise.all.then.arr (/Users/quentinroy/Workspace/reacolo-client/node_modules/execa/index.js:210:11)
+17 error execute     at process._tickCallback (internal/process/next_tick.js:109:7)
+17 error execute   code: 1,
+17 error execute   killed: false,
+17 error execute   stdout: '\n> reacolo@1.1.0 test /Users/quentinroy/Workspace/reacolo-client/packages/reacolo\n> jest\n\n',
+17 error execute   stderr: ' FAIL  src/__tests__/filtering/target-grammar.test.js\n  ● Test suite failed to run\n\n    Cannot find module \'pegjs\'\n      \n      at Function.Module._resolveFilename (module.js:470:15)\n      at Function.Module._load (module.js:418:25)\n      at Module.require (module.js:498:17)\n      at require (internal/module.js:20:19)\n      at Object.<anonymous> (../../jest-transforms/pegjs-transformer.js:1:75)\n      at Module._compile (module.js:571:32)\n      at Object.Module._extensions..js (module.js:580:10)\n      at Module.load (module.js:488:32)\n      at tryModuleLoad (module.js:447:12)\n      at Function.Module._load (module.js:439:3)\n\n PASS  src/__tests__/bind-context.test.jsx\n  ● Console\n\n    console.error node_modules/fbjs/lib/warning.js:36\n      Warning: Accessing PropTypes via the main React package is deprecated. Use the prop-types package from npm instead.\n\n FAIL  src/__tests__/filtering/would-pass.test.js\n  ● Test suite failed to run\n\n    Cannot find module \'pegjs\'\n      \n      at Function.Module._resolveFilename (module.js:470:15)\n      at Function.Module._load (module.js:418:25)\n      at Module.require (module.js:498:17)\n      at require (internal/module.js:20:19)\n      at Object.<anonymous> (../../jest-transforms/pegjs-transformer.js:1:75)\n      at Module._compile (module.js:571:32)\n      at Object.Module._extensions..js (module.js:580:10)\n      at Module.load (module.js:488:32)\n      at tryModuleLoad (module.js:447:12)\n      at Function.Module._load (module.js:439:3)\n\n FAIL  src/__tests__/ContextSwitch.test.jsx\n  ● Test suite failed to run\n\n    Cannot find module \'pegjs\'\n      \n      at Function.Module._resolveFilename (module.js:470:15)\n      at Function.Module._load (module.js:418:25)\n      at Module.require (module.js:498:17)\n      at require (internal/module.js:20:19)\n      at Object.<anonymous> (../../jest-transforms/pegjs-transformer.js:1:75)\n      at Module._compile (module.js:571:32)\n      at Object.Module._extensions..js (module.js:580:10)\n      at Module.load (module.js:488:32)\n      at tryModuleLoad (module.js:447:12)\n      at Function.Module._load (module.js:439:3)\n\n PASS  src/__tests__/Context.test.jsx\n\nTest Suites: 3 failed, 2 passed, 5 total\nTests:       7 passed, 7 total\nSnapshots:   0 total\nTime:        2.932s\nRan all test suites.\n\nnpm ERR! Darwin 16.5.0\nnpm ERR! argv "/usr/local/Cellar/node/7.10.0/bin/node" "/usr/local/bin/npm" "run" "test"\nnpm ERR! node v7.10.0\nnpm ERR! npm  v4.2.0\nnpm ERR! code ELIFECYCLE\nnpm ERR! errno 1\nnpm ERR! reacolo@1.1.0 test: `jest`\nnpm ERR! Exit status 1\nnpm ERR! \nnpm ERR! Failed at the reacolo@1.1.0 test script \'jest\'.\nnpm ERR! Make sure you have the latest version of node.js and npm installed.\nnpm ERR! If you do, this is most likely a problem with the reacolo package,\nnpm ERR! not with npm itself.\nnpm ERR! Tell the author that this fails on your system:\nnpm ERR!     jest\nnpm ERR! You can get information on how to open an issue for this project with:\nnpm ERR!     npm bugs reacolo\nnpm ERR! Or if that isn\'t available, you can get their info via:\nnpm ERR!     npm owner ls reacolo\nnpm ERR! There is likely additional logging output above.\n\nnpm ERR! Please include the following file with any support request:\nnpm ERR!     /Users/quentinroy/.npm/_logs/2017-05-19T07_50_47_187Z-debug.log\n',
+17 error execute   failed: true,
+17 error execute   signal: null,
+17 error execute   cmd: 'npm run test',
+17 error execute   timedOut: false }
