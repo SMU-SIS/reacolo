@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import bindContext from '../bind-context';
+import bindContext from '../bind-context.js';
 
 describe('bindContext', () => {
   it('creates contextes that cannot be directly rendered', () => {

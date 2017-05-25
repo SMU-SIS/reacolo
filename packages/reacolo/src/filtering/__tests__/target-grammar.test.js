@@ -1,4 +1,4 @@
-import targetParser from '../../filtering/target-grammar.pegjs';
+import targetParser from '../target-grammar.pegjs';
 
 const wildcase = '.';
 

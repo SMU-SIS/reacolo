@@ -1,5 +1,5 @@
-import Context from '../Context';
-import bindContext from '../bind-context';
+import Context from '../Context.jsx';
+import bindContext from '../bind-context.js';
 
 jest.mock('../bind-context.js', () => jest.fn(() => 'foo'));
 

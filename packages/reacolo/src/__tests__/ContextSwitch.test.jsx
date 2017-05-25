@@ -3,10 +3,10 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import except from 'except';
-import ContextSwitch from '../ContextSwitch';
-import wouldPass from '../filtering/would-pass';
+import ContextSwitch from '../ContextSwitch.jsx';
+import wouldPass from '../filtering/would-pass.js';
 
-jest.mock('../filtering/would-pass');
+jest.mock('../filtering/would-pass.js');
 
 describe('ContextSwitch with non nested Context', () => {
   let createMockContext;

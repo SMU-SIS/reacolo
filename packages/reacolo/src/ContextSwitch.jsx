@@ -1,5 +1,5 @@
 import React from 'react';
-import wouldPass from './filtering/would-pass';
+import wouldPass from './filtering/would-pass.js';
 
 // Try to find a context that passes amongst the providen children.
 const lookupContexts = (children, context) => {

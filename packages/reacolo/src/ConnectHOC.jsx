@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import except from 'except';
-import contextPropType from './context-prop-type';
+import contextPropType from './context-prop-type.js';
 
 export default class ConnectHOC extends Component {
 

@@ -2,7 +2,7 @@ import wouldPass, {
   valueGroupsFilter,
   valuesFilter,
   decodeContextVal
-} from '../../filtering/would-pass';
+} from '../would-pass';
 
 const wildcase = '.';
 
