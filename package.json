@@ -1,7 +1,5 @@
 {
   "name": "reacolo",
-  "version": "1.1.0",
-  "main": "lib/reacolo.js",
   "scripts": {
     "lint": "eslint 'packages/**/src/*.@(js|jsx)'",
     "lint:msg": "validate-commit-msg",
