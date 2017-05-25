@@ -13,17 +13,19 @@
     ["babel-plugin-transform-builtin-extend", {
         "globals": ["Error"],
         "approximate": true
-    }],
-    ["transform-runtime", {
-      "helpers": false,
-      "polyfill": false,
-      "regenerator": true
     }]
   ],
 
   "env": {
     "test": {
+      "presets": [["env", { "node": "current" }]],
       "plugins": ["transform-es2015-modules-commonjs"]
+    },
+    "production": {
+      "plugins": ["external-helpers"]
+    },
+    "development": {
+      "plugins": ["external-helpers"]
     }
   }
 }

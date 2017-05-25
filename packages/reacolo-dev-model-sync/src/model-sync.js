@@ -1,9 +1,9 @@
 import EventEmitter from 'eventemitter3';
-import ReacoloSocket from './reacolo-socket';
-import * as MessageTypes from './message-types';
-import * as Errors from './errors';
-import * as Events from './events';
-import { DEFAULT_SERVER_ADDR } from './defaults';
+import ReacoloSocket from './reacolo-socket.js';
+import * as MessageTypes from './message-types.js';
+import * as Errors from './errors.js';
+import * as Events from './events.js';
+import { DEFAULT_SERVER_ADDR } from './defaults.js';
 
 export default class ReacoloModelSync extends EventEmitter {
 

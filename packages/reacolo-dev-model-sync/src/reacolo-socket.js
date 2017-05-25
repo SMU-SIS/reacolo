@@ -1,5 +1,5 @@
 import SockJS from 'sockjs-client';
-import Schedule from './schedule';
+import Schedule from './schedule.js';
 import {
   RequestTimeoutError,
   NotConnectedError,
