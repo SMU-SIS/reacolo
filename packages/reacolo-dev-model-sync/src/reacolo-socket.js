@@ -8,7 +8,6 @@ import {
 } from './errors';
 import { ACK_MSG_TYPE } from './message-types';
 import { DEFAULT_ACK_TIMEOUT, DEFAULT_THROTTLE } from './defaults';
-// Defaut configurations.
 
 export default class ReacoloSocket {
   constructor(
@@ -81,8 +80,9 @@ export default class ReacoloSocket {
     }
     // Allow the request to be passed as two arguments (type, data) or as an object
     // ({ type, data }).
-    const request = typeof requestOrType === 'string' ? { type: requestOrType, data }
-                                                      : requestOrType;
+    const request = typeof requestOrType === 'string'
+      ? { type: requestOrType, data }
+      : requestOrType;
 
     let requestMessage;
     // If there is already a message waiting to be sent, attempt to merge the requests
@@ -215,6 +215,7 @@ export default class ReacoloSocket {
     if (callback) {
       callback(messageData);
     } else {
+      // eslint-disable-next-line no-console
       console.warn(
         `Received unexpected acknowledgement for message: ${messageData.messageId}.` +
         ' It may be a server error or because the request timed out.'

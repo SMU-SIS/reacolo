@@ -3,7 +3,6 @@ import except from 'except';
 import contextPropType from './context-prop-type.js';
 
 export default class ConnectHOC extends Component {
-
   static _attachModelHandlers(model, handlers) {
     handlers.forEach(([evt, handler]) => {
       model.addListener(evt, handler);

@@ -6,7 +6,6 @@ import * as Events from './events.js';
 import { DEFAULT_SERVER_ADDR } from './defaults.js';
 
 export default class ReacoloModelSync extends EventEmitter {
-
   constructor(serverAddress = DEFAULT_SERVER_ADDR, clientRole) {
     super();
 
@@ -103,6 +102,7 @@ export default class ReacoloModelSync extends EventEmitter {
         this.emit(Events.CONTEXT_UPDATE, this._context, true);
         break;
       default:
+        // eslint-disable-next-line no-console
         console.warn(`Unknown message type: ${message.type}`);
     }
   }
@@ -130,7 +130,6 @@ export default class ReacoloModelSync extends EventEmitter {
     }
     return undefined;
   }
-
 }
 
 // Inject the Errors and the Events as static members of ReacoloModelSync.

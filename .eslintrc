@@ -2,14 +2,11 @@
   "env": {
     "browser": true
   },
-  "ecmaFeatures": {
-    "jsx": true
-  },
   "root": true,
   "extends": "airbnb",
   "rules": {
     "no-underscore-dangle": 0,
     "comma-dangle": ["error", "never"],
-    'import/extensions': ['off', 'always'],
+    "import/extensions": ["off", "always"]
   }
 }
