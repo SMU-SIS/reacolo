@@ -1,6 +1,6 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 
-export default React.PropTypes.shape({
-  clientRole: React.PropTypes.string,
-  roles: React.PropTypes.objectOf(React.PropTypes.number).isRequired
+export default PropTypes.shape({
+  clientRole: PropTypes.string,
+  roles: PropTypes.objectOf(PropTypes.number).isRequired
 });

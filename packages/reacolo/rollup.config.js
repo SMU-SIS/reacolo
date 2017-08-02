@@ -12,8 +12,9 @@ export default {
     exclude: 'node_modules/**' // only transpile our source code
   })],
   dest: 'lib/reacolo.js',
-  external: ['react'],
+  external: ['react', 'prop-types'],
   globals: {
+    'prop-types': 'PropTypes',
     react: 'React'
   },
   sourceMap: true

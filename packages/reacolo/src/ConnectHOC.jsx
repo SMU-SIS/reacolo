@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import except from 'except';
 import contextPropType from './context-prop-type.js';
 
@@ -79,11 +80,11 @@ export default class ConnectHOC extends Component {
 }
 
 ConnectHOC.propTypes = {
-  model: React.PropTypes.shape({
-    data: React.PropTypes.object,
+  model: PropTypes.shape({
+    data: PropTypes.object,
     context: contextPropType.isRequired,
-    isConnected: React.PropTypes.bool.isRequired,
-    setAppData: React.PropTypes.func.isRequired
+    isConnected: PropTypes.bool.isRequired,
+    setAppData: PropTypes.func.isRequired
   }).isRequired,
-  Component: React.PropTypes.func.isRequired
+  Component: PropTypes.func.isRequired
 };

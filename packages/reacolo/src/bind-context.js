@@ -1,5 +1,5 @@
 import except from 'except';
-import React from 'react';
+import PropTypes from 'prop-types';
 
 const OMITTED_CONTEXT_PROPS_FROM_TARGETS = ['default', 'children'];
 const identity = x => x;
@@ -24,8 +24,8 @@ const bindContext = (propsToTargets = identity) => {
   Context.isDefault = element => !!element.props.default;
   Context.isContext = true;
   Context.propTypes = {
-    default: React.PropTypes.bool,
-    children: React.PropTypes.node
+    default: PropTypes.bool,
+    children: PropTypes.node
   };
   Context.defaultProps = {
     default: false
