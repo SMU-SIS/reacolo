@@ -3,14 +3,26 @@ import ReacoloSocket from './reacolo-socket.js';
 import * as MessageTypes from './message-types.js';
 import * as Errors from './errors.js';
 import * as Events from './events.js';
-import { DEFAULT_SERVER_ADDR } from './defaults.js';
+import { DEFAULT_SERVER_ADDR, DEFAULT_THROTTLE, DEFAULT_ACK_TIMEOUT } from './defaults.js';
 
 export default class ReacoloModelSync extends EventEmitter {
-  constructor(serverAddress = DEFAULT_SERVER_ADDR, clientRole) {
+  constructor(
+    serverAddress = DEFAULT_SERVER_ADDR,
+    clientRole,
+    {
+      requestThrottle = DEFAULT_THROTTLE,
+      requestTimeout = DEFAULT_ACK_TIMEOUT
+    } = {}
+  ) {
     super();
 
     // Create the connection toward the server.
-    this._socket = new ReacoloSocket(serverAddress, this.constructor._mergeRequest);
+    this._socket = new ReacoloSocket(
+      serverAddress,
+      this.constructor._mergeRequest,
+      requestTimeout,
+      requestThrottle
+    );
 
     // Init the values.
     this._context = { roles: {}, observers: 0, clientRole };
