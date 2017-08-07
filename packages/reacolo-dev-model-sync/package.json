@@ -1,6 +1,6 @@
 {
   "name": "reacolo-dev-model-sync",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "main": "lib/reacolo-dev-model-sync.js",
   "scripts": {
     "build": "rollup -c"
@@ -24,6 +24,5 @@
   },
   "author": "Quentin Roy <quentinroy@smu.edu.sg>",
   "license": "UNLICENSED",
-  "private": true,
-  "dependencies": {}
+  "private": true
 }
