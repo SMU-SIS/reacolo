@@ -37,6 +37,10 @@ export default class ConnectHOC extends Component {
     ConnectHOC._attachModelHandlers(model, this._modelHandlers);
   }
 
+  getChildContext() {
+    return { ecologyBroadcaster: this.props.model.eventBroadcaster };
+  }
+
   componentWillReceiveProps({ model }) {
     if (this.props.model !== model) {
       ConnectHOC._detachModelHandlers(this.props.model, this._modelHandlers);
@@ -84,7 +88,15 @@ ConnectHOC.propTypes = {
     data: PropTypes.object,
     context: contextPropType.isRequired,
     isConnected: PropTypes.bool.isRequired,
-    setAppData: PropTypes.func.isRequired
+    setAppData: PropTypes.func.isRequired,
+    eventBroadcaster: PropTypes.shape({
+      emit: PropTypes.func.isRequired,
+      on: PropTypes.func.isRequired
+    })
   }).isRequired,
   Component: PropTypes.func.isRequired
+};
+
+ConnectHOC.childContextTypes = {
+  ecologyBroadcaster: PropTypes.objectOf(PropTypes.func).isRequired
 };
