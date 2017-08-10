@@ -90,8 +90,9 @@ ConnectHOC.propTypes = {
     isConnected: PropTypes.bool.isRequired,
     setAppData: PropTypes.func.isRequired,
     eventBroadcaster: PropTypes.shape({
-      emit: PropTypes.func.isRequired,
-      on: PropTypes.func.isRequired
+      publish: PropTypes.func.isRequired,
+      subscribe: PropTypes.func.isRequired,
+      unsubscribe: PropTypes.func.isRequired
     })
   }).isRequired,
   Component: PropTypes.func.isRequired
