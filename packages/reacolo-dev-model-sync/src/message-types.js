@@ -6,3 +6,5 @@ export const META_DATA_REQUEST_MSG_TYPE = 'meta_data_request';
 export const ACK_MSG_TYPE = 'ack';
 export const METADATA_MSG_TYPE = 'meta_data';
 export const APP_DATA_MSG_TYPE = 'app_data';
+export const BROADCAST_USER_EVENT_MSG_TYPE = 'broadcast_user_event';
+export const USER_EVENT_MSG_TYPE = 'user_event';

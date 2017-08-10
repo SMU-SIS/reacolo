@@ -28,6 +28,31 @@ export default class ReacoloModelSync extends EventEmitter {
     this._context = { roles: {}, observers: 0, clientRole };
     this._appData = null;
 
+    // Create the event broadcaster (behind the scene, it uses an internal event emitter).
+    const broadcastEmitter = new EventEmitter();
+    const eventBroadcaster = Object.freeze({
+      publish: (eventName, data) => {
+        this._broadcastEvent(eventName, data);
+      },
+      subscribe(eventName, listener) {
+        broadcastEmitter.addListener(eventName, listener.bind());
+      },
+      unsubscribe(eventName, listener) {
+        broadcastEmitter.removeListener(eventName, listener.bind());
+      }
+    });
+
+    // Set up the event broadcaster as a read only property.
+    Object.defineProperty(this, 'eventBroadcaster', {
+      enumerable: true,
+      configurable: false,
+      writable: false,
+      value: eventBroadcaster
+    });
+
+    // Method to locally publish the events.
+    this._publishBroadcastedEvent = (...args) => broadcastEmitter.emit(...args);
+
     this._isConnected = false;
   }
 
@@ -103,6 +128,14 @@ export default class ReacoloModelSync extends EventEmitter {
 
   // TODO: stop.
 
+  async _broadcastEvent(eventName, data) {
+    await this._socket.sendRequest(MessageTypes.BROADCAST_USER_EVENT_MSG_TYPE, {
+      eventName,
+      data
+    });
+    this._publishBroadcastedEvent(eventName, data);
+  }
+
   _onSocketMessage(message) {
     switch (message.type) {
       case MessageTypes.APP_DATA_MSG_TYPE:
@@ -112,6 +145,9 @@ export default class ReacoloModelSync extends EventEmitter {
       case MessageTypes.METADATA_MSG_TYPE:
         this._context = Object.assign({}, message.data, { clientRole: this._context.clientRole });
         this.emit(Events.CONTEXT_UPDATE, this._context, true);
+        break;
+      case MessageTypes.USER_EVENT_MSG_TYPE:
+        this._publishBroadcastedEvent(message.data.eventName, message.data.data);
         break;
       default:
         // eslint-disable-next-line no-console

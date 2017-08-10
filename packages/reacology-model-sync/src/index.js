@@ -135,7 +135,7 @@ export class ReacologyModelSync extends EventEmitter {
    */
   stop() {
     if (this._isConnected) {
-      // Stop listening for android notificatins.
+      // Stop listening for android notifications.
       disconnect();
       this._isConnected = false;
       // Notify that the event has been disconnected.
