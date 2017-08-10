@@ -1,4 +1,6 @@
+/* global cordova */
 import EventEmitter from 'eventemitter3';
+import EcologyEventBroadcaster from './ecology-event-broadcaster';
 
 // Fetch the cordova ecology plugin
 const CORDOVA_ECOLOGY = cordova.plugins.CordovaEcology;
@@ -19,6 +21,14 @@ export class CordovaEcologyModelSync extends EventEmitter {
     this._isConnected = false;
     this._deviceId = null;
     this._ecologyConfig = config;
+
+    // Set up the event broadcaster as a read only property.
+    Object.defineProperty(this, 'eventBroadcaster', {
+      enumerable: true,
+      configurable: false,
+      writable: false,
+      value: new EcologyEventBroadcaster()
+    });
   }
 
   _onDataUpdate(data) {
@@ -69,7 +79,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
    * @param {object} newContext the new context.
    */
   setAppContext(newContext) {
-    CORDOVA_ECOLOGY.setData('context', newContext)
+    CORDOVA_ECOLOGY.setData('context', newContext);
   }
 
   /**
@@ -86,8 +96,8 @@ export class CordovaEcologyModelSync extends EventEmitter {
         // Start handler must be called only once so we unsubscribe to the event.
         CORDOVA_ECOLOGY.unsubscribeEvent('device:connected', startHandler);
         // Subscribe to cordova events.
-        CORDOVA_ECOLOGY.subscribeEvent('device:connected', this._deviceConnected.bind(this));
-        CORDOVA_ECOLOGY.subscribeEvent('device:disconnected', this._deviceDisconnected.bind(this));
+        CORDOVA_ECOLOGY.subscribeEvent('device:connected');
+        CORDOVA_ECOLOGY.subscribeEvent('device:disconnected');
         CORDOVA_ECOLOGY.subscribeEvent('syncData', this._onSyncData.bind(this));
         CORDOVA_ECOLOGY.getMyDeviceId().then(this._myDeviceId.bind(this));
         this._isConnected = true;
@@ -102,18 +112,9 @@ export class CordovaEcologyModelSync extends EventEmitter {
       // Automatically fetch the initial data and notify.
       .then(CORDOVA_ECOLOGY.getData('data'))
       .then(({ data }) => {
-        console.log('initdata', { data });
         // Parse the data to workaround cordova plugin bug.
         this._onDataUpdate(data);
       });
-  }
-
-  _deviceConnected(connectDeviceData) {
-    console.log(`_deviceConnected, ${connectDeviceData.data}`);
-  }
-
-  _deviceDisconnected(disconnectDeviceData) {
-    console.log('_deviceDisconnected');
   }
 
   _onSyncData({ data: [key, newValue] }) {
@@ -125,12 +126,12 @@ export class CordovaEcologyModelSync extends EventEmitter {
       case 'context':
         CORDOVA_ECOLOGY.getAvailableDevices()
           .then(({ availableDevices: roles }) => {
-              const contextData = {
-                roles,
-                clientRole: this._deviceId
-              };
-              const newContextData = Object.assign({}, newValue, contextData);
-              this._onContextUpdate(newContextData);
+            const contextData = {
+              roles,
+              clientRole: this._deviceId
+            };
+            const newContextData = Object.assign({}, newValue, contextData);
+            this._onContextUpdate(newContextData);
           });
         break;
       default:
@@ -138,7 +139,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
   }
 
   _myDeviceId(deviceIdData) {
-      this._deviceId = deviceIdData.myDeviceId;
+    this._deviceId = deviceIdData.myDeviceId;
   }
 
   /**
@@ -154,7 +155,6 @@ export class CordovaEcologyModelSync extends EventEmitter {
     }
     return Promise.resolve();
   }
-
 }
 
 export default CordovaEcologyModelSync;
