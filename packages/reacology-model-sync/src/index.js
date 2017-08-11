@@ -16,7 +16,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
     this._data = {};
     this._context = {
       clientRole: undefined,
-      roles: []
+      roles: {}
     };
     this._isConnected = false;
     this._deviceId = null;
