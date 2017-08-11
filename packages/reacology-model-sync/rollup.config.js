@@ -5,8 +5,10 @@ import babel from 'rollup-plugin-babel';
 export default {
   entry: 'src/index.js',
   format: 'umd',
-  moduleId: 'reacology-model-sync',
   moduleName: 'ReacologyModelSync',
+  amd: {
+    id: 'reacology-model-sync'
+  },
   plugins: [resolve(), commonjs(), babel({
     exclude: 'node_modules/**' // only transpile our source code
   })],
