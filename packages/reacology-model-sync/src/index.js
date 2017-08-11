@@ -2,9 +2,6 @@
 import EventEmitter from 'eventemitter3';
 import EcologyEventBroadcaster from './ecology-event-broadcaster';
 
-// Fetch the cordova ecology plugin
-const CORDOVA_ECOLOGY = cordova.plugins.CordovaEcology;
-
 // Events emitted by the model.
 const Events = {
   CONNECTED: Symbol.for('connected'),
@@ -17,7 +14,10 @@ export class CordovaEcologyModelSync extends EventEmitter {
   constructor(config) {
     super();
     this._data = {};
-    this._context = {};
+    this._context = {
+      clientRole: undefined,
+      roles: {}
+    };
     this._isConnected = false;
     this._deviceId = null;
     this._ecologyConfig = config;
@@ -69,7 +69,9 @@ export class CordovaEcologyModelSync extends EventEmitter {
    */
   setAppData(newData) {
     return new Promise((resolve) => {
-      CORDOVA_ECOLOGY.setData('data', newData, () => resolve(newData));
+      cordova.plugins.CordovaEcology.setData('data', newData, () =>
+        resolve(newData)
+      );
     });
   }
 
@@ -79,7 +81,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
    * @param {object} newContext the new context.
    */
   setAppContext(newContext) {
-    CORDOVA_ECOLOGY.setData('context', newContext);
+    cordova.plugins.CordovaEcology.setData('context', newContext);
   }
 
   /**
@@ -87,33 +89,32 @@ export class CordovaEcologyModelSync extends EventEmitter {
    */
   start() {
     if (this.isConnected) return Promise.resolve();
+    const cordovaPlugin = cordova.plugins.CordovaEcology;
 
     return new Promise((resolve) => {
+      // Subscribe to cordova events.
+      cordovaPlugin.subscribeEvent('syncData', this._onSyncData.bind(this));
+      cordovaPlugin.subscribeEvent('ecology:disconnected', this._onDisconnected.bind(this));
+      cordovaPlugin.subscribeEvent('ecology:connected', resolve);
       // Connect to the ecology. Throws if ecology is already created.
-      CORDOVA_ECOLOGY.ecologyConnect(this._ecologyConfig);
-
-      const startHandler = () => {
-        // Start handler must be called only once so we unsubscribe to the event.
-        CORDOVA_ECOLOGY.unsubscribeEvent('device:connected', startHandler);
-        // Subscribe to cordova events.
-        CORDOVA_ECOLOGY.subscribeEvent('device:connected');
-        CORDOVA_ECOLOGY.subscribeEvent('device:disconnected');
-        CORDOVA_ECOLOGY.subscribeEvent('syncData', this._onSyncData.bind(this));
-        CORDOVA_ECOLOGY.getMyDeviceId().then(this._myDeviceId.bind(this));
-        this._isConnected = true;
-        // Notify that the model has been connected.
-        this.emit(Events.CONNECTED);
-        // Resolve the connection promize
-        resolve();
-      };
-      // Once we get the first device:connected event, we know the model sync is connected.
-      CORDOVA_ECOLOGY.subscribeEvent('device:connected', startHandler);
+      cordovaPlugin.ecologyConnect(this._ecologyConfig);
     })
-      // Automatically fetch the initial data and notify.
-      .then(CORDOVA_ECOLOGY.getData('data'))
-      .then(({ data }) => {
-        // Parse the data to workaround cordova plugin bug.
-        this._onDataUpdate(data);
+      // Fetch the device id (corresponds to the client role) and the initial data.
+      .then(() => Promise.all([
+        cordovaPlugin.getMyDeviceId()
+          .then(({ myDeviceId }) => {
+            this._onContextUpdate(
+              Object.assign({}, this._context, { clientRole: myDeviceId })
+            );
+          }),
+        cordovaPlugin.getData('data')
+          .then(this._onDataUpdate.bind(this))
+      ]))
+      .then(() => {
+        // Once data and client role has been initialized, notify the connection (and resolve
+        // the start promise.
+        this._isConnected = true;
+        this.emit(Events.CONNECTED);
       });
   }
 
@@ -124,7 +125,8 @@ export class CordovaEcologyModelSync extends EventEmitter {
         this._onDataUpdate(newValue);
         break;
       case 'context':
-        CORDOVA_ECOLOGY.getAvailableDevices()
+        cordova.plugins.CordovaEcology
+          .getAvailableDevices()
           .then(({ availableDevices: roles }) => {
             const contextData = {
               roles,
@@ -138,8 +140,10 @@ export class CordovaEcologyModelSync extends EventEmitter {
     }
   }
 
-  _myDeviceId(deviceIdData) {
-    this._deviceId = deviceIdData.myDeviceId;
+  _onDisconnected() {
+    this._isConnected = false;
+    // Notify that the model has been disconnected.
+    this.emit(Events.DISCONNECTED);
   }
 
   /**
@@ -147,7 +151,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
    */
   stop() {
     if (this._isConnected) {
-      CORDOVA_ECOLOGY.ecologyDisconnect();
+      cordova.plugins.CordovaEcology.ecologyDisconnect();
 
       this._isConnected = false;
       // Notify that the model has been disconnected.
