@@ -6,7 +6,9 @@ import babel from 'rollup-plugin-babel';
 export default {
   entry: 'src/index.js',
   format: 'umd',
-  moduleId: 'reacolo',
+  amd: {
+    id: 'reacolo'
+  },
   moduleName: 'Reacolo',
   plugins: [resolve(), commonjs(), pegjs(), babel({
     exclude: 'node_modules/**' // only transpile our source code
