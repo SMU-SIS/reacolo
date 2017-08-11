@@ -102,9 +102,9 @@ export class CordovaEcologyModelSync extends EventEmitter {
       // Fetch the device id (corresponds to the client role) and the initial data.
       .then(() => Promise.all([
         cordovaPlugin.getMyDeviceId()
-          .then((deviceId) => {
+          .then(({ myDeviceId }) => {
             this._onContextUpdate(
-              Object.assign({}, this._context, { clientRole: deviceId })
+              Object.assign({}, this._context, { clientRole: myDeviceId })
             );
           }),
         cordovaPlugin.getData('data')
