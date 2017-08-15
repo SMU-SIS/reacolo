@@ -1,6 +1,6 @@
 {
   "name": "reacology-model-sync",
-  "version": "2.0.1",
+  "version": "2.2.0",
   "main": "lib/reacology-model-sync.js",
   "scripts": {
     "build": "rollup -c --environment NODE_ENV:production",
