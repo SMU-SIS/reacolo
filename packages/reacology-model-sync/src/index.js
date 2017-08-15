@@ -92,7 +92,6 @@ export class CordovaEcologyModelSync extends EventEmitter {
   async start() {
     // If the model sync is already connected, nothing happens.
     if (this.isConnected) return;
-    const cordovaPlugin = cordova.plugins.CordovaEcology;
     // Wait for the device to be ready. This is safe. Indeed, this particular
     // event has an odd behavior: if the device is already ready, the event is
     // immediately emitted once subscribed.
@@ -100,12 +99,16 @@ export class CordovaEcologyModelSync extends EventEmitter {
       (l) => { document.addEventListener('deviceready', l); },
       (l) => { document.removeEventListener('deviceready', l); }
     );
-    // Subscribe to cordova events.
-    cordovaPlugin.subscribeEvent('syncData', this._onSyncData.bind(this));
-    cordovaPlugin.subscribeEvent(
+
+    // Do not fetch this before 'deviceready' or may still be undefined.
+    const cordovaPlugin = cordova.plugins.CordovaEcology;
+
+    // Subscribe to the disconnected cordova event.
+    await cordovaPlugin.subscribeEvent(
       'ecology:disconnected',
       this._onDisconnected.bind(this)
     );
+
     if (!await cordovaPlugin.isConnected()) {
       // If the ecology is not connected, connect it. We subscribe to the event
       // first, just in case it is synchronously emitted.
@@ -116,16 +119,20 @@ export class CordovaEcologyModelSync extends EventEmitter {
         (l) => { cordovaPlugin.unsubscribeEvent('ecology:connected', l); }
       );
       // Connect to the ecology. Throws if ecology is already created.
-      cordovaPlugin.ecologyConnect(this._ecologyConfig);
+      await cordovaPlugin.ecologyConnect(this._ecologyConfig);
       await prom;
     }
+
+    // Subscribe to sync data events.
+    await cordovaPlugin.subscribeEvent('syncData', this._onSyncData.bind(this));
+
     // Fetch (in parallel) and initialize device id and data.
-    const [{ myDeviceId }, data] = await Promise.all([
+    const [deviceId, data] = await Promise.all([
       cordovaPlugin.getMyDeviceId(),
       cordovaPlugin.getData('data')
     ]);
     this._onContextUpdate(
-      Object.assign({}, this._context, { clientRole: myDeviceId })
+      Object.assign({}, this._context, { clientRole: deviceId })
     );
     this._onDataUpdate(data);
     // Once data and client role has been initialized, notify the connection.
@@ -142,7 +149,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
       case 'context':
         cordova.plugins.CordovaEcology
           .getAvailableDevices()
-          .then(({ availableDevices: roles }) => {
+          .then((roles) => {
             const contextData = {
               roles,
               clientRole: this._deviceId
