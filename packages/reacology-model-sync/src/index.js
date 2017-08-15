@@ -152,6 +152,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
           });
         break;
       default:
+        throw new Error(`Received unexpected data key: ${key}`);
     }
   }
 
