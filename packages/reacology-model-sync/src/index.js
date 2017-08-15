@@ -1,5 +1,6 @@
 /* global cordova */
 import EventEmitter from 'eventemitter3';
+import promisifyEvent from './promisify-event';
 import EcologyEventBroadcaster from './ecology-event-broadcaster';
 
 // Events emitted by the model.
@@ -86,36 +87,50 @@ export class CordovaEcologyModelSync extends EventEmitter {
 
   /**
    * Start the data synchronization.
+   * @return {Promise} A promise resolved once the connection is established.
    */
-  start() {
-    if (this.isConnected) return Promise.resolve();
+  async start() {
+    // If the model sync is already connected, nothing happens.
+    if (this.isConnected) return;
     const cordovaPlugin = cordova.plugins.CordovaEcology;
-
-    return new Promise((resolve) => {
-      // Subscribe to cordova events.
-      cordovaPlugin.subscribeEvent('syncData', this._onSyncData.bind(this));
-      cordovaPlugin.subscribeEvent('ecology:disconnected', this._onDisconnected.bind(this));
-      cordovaPlugin.subscribeEvent('ecology:connected', resolve);
+    // Wait for the device to be ready. This is safe. Indeed, this particular
+    // event has an odd behavior: if the device is already ready, the event is
+    // immediately emitted once subscribed.
+    await promisifyEvent(
+      (l) => { document.addEventListener('deviceready', l); },
+      (l) => { document.removeEventListener('deviceready', l); }
+    );
+    // Subscribe to cordova events.
+    cordovaPlugin.subscribeEvent('syncData', this._onSyncData.bind(this));
+    cordovaPlugin.subscribeEvent(
+      'ecology:disconnected',
+      this._onDisconnected.bind(this)
+    );
+    if (!await cordovaPlugin.isConnected()) {
+      // If the ecology is not connected, connect it. We subscribe to the event
+      // first, just in case it is synchronously emitted.
+      // FIXME: if the connection parameters have changed, they are just
+      // silently ignored...
+      const prom = promisifyEvent(
+        (l) => { cordovaPlugin.subscribeEvent('ecology:connected', l); },
+        (l) => { cordovaPlugin.unsubscribeEvent('ecology:connected', l); }
+      );
       // Connect to the ecology. Throws if ecology is already created.
       cordovaPlugin.ecologyConnect(this._ecologyConfig);
-    })
-      // Fetch the device id (corresponds to the client role) and the initial data.
-      .then(() => Promise.all([
-        cordovaPlugin.getMyDeviceId()
-          .then(({ myDeviceId }) => {
-            this._onContextUpdate(
-              Object.assign({}, this._context, { clientRole: myDeviceId })
-            );
-          }),
-        cordovaPlugin.getData('data')
-          .then(this._onDataUpdate.bind(this))
-      ]))
-      .then(() => {
-        // Once data and client role has been initialized, notify the connection (and resolve
-        // the start promise.
-        this._isConnected = true;
-        this.emit(Events.CONNECTED);
-      });
+      await prom;
+    }
+    // Fetch (in parallel) and initialize device id and data.
+    const [{ myDeviceId }, data] = await Promise.all([
+      cordovaPlugin.getMyDeviceId(),
+      cordovaPlugin.getData('data')
+    ]);
+    this._onContextUpdate(
+      Object.assign({}, this._context, { clientRole: myDeviceId })
+    );
+    this._onDataUpdate(data);
+    // Once data and client role has been initialized, notify the connection.
+    this._isConnected = true;
+    this.emit(Events.CONNECTED);
   }
 
   _onSyncData({ data: [key, newValue] }) {

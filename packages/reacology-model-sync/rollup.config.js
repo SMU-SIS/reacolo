@@ -9,13 +9,18 @@ export default {
   amd: {
     id: 'reacology-model-sync'
   },
-  plugins: [resolve(), commonjs(), babel({
-    exclude: 'node_modules/**' // only transpile our source code
-  })],
+  plugins: [
+    resolve(),
+    commonjs(),
+    babel({
+      exclude: 'node_modules/**' // only transpile our source code
+    })
+  ],
   dest: 'lib/reacology-model-sync.js',
   exports: 'named',
-  external: ['eventemitter3'],
+  external: ['eventemitter3', 'babel-runtime/regenerator'],
   globals: {
+    'babel-runtime/regenerator': 'regeneratorRuntime',
     eventemitter3: 'EventEmitter'
   },
   sourceMap: true
