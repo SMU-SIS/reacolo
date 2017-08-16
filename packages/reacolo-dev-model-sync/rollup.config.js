@@ -5,8 +5,10 @@ import babel from 'rollup-plugin-babel';
 export default {
   entry: 'src/model-sync.js',
   format: 'umd',
-  moduleId: 'reacolo-dev-model-sync',
   moduleName: 'ReacoloDevModelSync',
+  amd: {
+    id: 'reacolo-dev-model-sync'
+  },
   plugins: [resolve(), commonjs(), babel({
     exclude: 'node_modules/**' // only transpile our source code
   })],

@@ -1,6 +1,6 @@
 {
   "name": "reacolo-dev-model-sync",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "lib/reacolo-dev-model-sync.js",
   "modules": "src",
   "scripts": {
