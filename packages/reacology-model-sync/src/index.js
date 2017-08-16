@@ -33,7 +33,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
   }
 
   _onDataUpdate(data) {
-    this._data = data;
+    this._data = data || {};
     this.emit(Events.DATA_UPDATE, this._data, true);
   }
 
