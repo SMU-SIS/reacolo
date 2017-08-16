@@ -2,5 +2,8 @@ import PropTypes from 'prop-types';
 
 export default PropTypes.shape({
   clientRole: PropTypes.string,
-  roles: PropTypes.objectOf(PropTypes.number).isRequired
+  roles: PropTypes.oneOfType([
+    PropTypes.objectOf(PropTypes.number),
+    PropTypes.arrayOf(PropTypes.string)
+  ]).isRequired
 });

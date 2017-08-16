@@ -33,7 +33,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
   }
 
   _onDataUpdate(data) {
-    this._data = data;
+    this._data = data || {};
     this.emit(Events.DATA_UPDATE, this._data, true);
   }
 
@@ -127,12 +127,13 @@ export class CordovaEcologyModelSync extends EventEmitter {
     await cordovaPlugin.subscribeEvent('syncData', this._onSyncData.bind(this));
 
     // Fetch (in parallel) and initialize device id and data.
-    const [deviceId, data] = await Promise.all([
+    const [clientRole, data, roles] = await Promise.all([
       cordovaPlugin.getMyDeviceId(),
-      cordovaPlugin.getData('data')
+      cordovaPlugin.getData('data'),
+      cordovaPlugin.getAvailableDevices()
     ]);
     this._onContextUpdate(
-      Object.assign({}, this._context, { clientRole: deviceId })
+      Object.assign({}, this._context, { clientRole, roles })
     );
     this._onDataUpdate(data);
     // Once data and client role has been initialized, notify the connection.
