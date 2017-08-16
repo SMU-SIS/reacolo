@@ -16,7 +16,7 @@ export const valuesFilter = (values, targetGroup) => {
 
   // If there is wildcases and they are all optional (multiple wildcases is odd but who knows), the
   // only thing that matters is that the required targets are here (every other values are
-  // acceptable). Hence, the test succeded.
+  // acceptable). Hence, the test succeeded.
   const wildcaseTarget = targetGroup.filter(({ name }) => name === wildcase);
   if (wildcaseTarget.length > 0 && wildcaseTarget.every(({ optional }) => optional)) {
     return true;
@@ -61,7 +61,7 @@ export const decodeTargetVal = (val) => {
   return val;
 };
 
-// Decode a context value (if not already decoded) in the form of a dictionnary of count.
+// Decode a context value (if not already decoded) in the form of a dictionary of count.
 export const decodeContextVal = (val) => {
   if (!val) {
     return {};
@@ -73,7 +73,7 @@ export const decodeContextVal = (val) => {
   return val;
 };
 
-// Compare a context object agains a targets object and returns true if the context matches
+// Compare a context object against a targets object and returns true if the context matches
 // the targets.
 const wouldPass = (context, targets) => Object.keys(targets).every((targetName) => {
   const targetVal = targets[targetName];
