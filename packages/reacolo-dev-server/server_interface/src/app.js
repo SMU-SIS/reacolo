@@ -98,6 +98,7 @@ window.addEventListener('load', () => {
         lastDataUpdateTime = thisDataUpdateTime;
         areServerUpdatesIgnored = true;
         dataSetter(newData)
+          // eslint-disable-next-line no-console
           .then(() => console.log('server successfully updated'))
           .catch((err) => {
             // console.error('server update refused: ' + err.message);
@@ -154,6 +155,7 @@ window.addEventListener('load', () => {
       setState(STATES.connected);
     })
     .catch((error) => {
+      // eslint-disable-next-line no-console
       console.error(error.message, error.stack);
       toastError(error.message);
       setState(STATES.disconnected);
