@@ -1,0 +1,44 @@
+{
+  "name": "reacolo-dev-server",
+  "version": "2.2.0",
+  "description": "Small server for reacolo. It is meant to be used with reacolo-dev-model-sync.",
+  "bin": {
+    "reacolo-server": "./bin/start-server.js"
+  },
+  "files": ["server", "server_interface/dist"],
+  "engines": {
+    "node": ">=7"
+  },
+  "scripts": {
+    "test": "echo \"No test specified\"",
+    "build": "webpack --config server_interface/webpack.config.js",
+    "start": "node ./bin/start-server.js",
+    "prepare": "npm run build"
+  },
+  "author": "Quentin Roy <quentin@quentinroy.fr>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.4",
+    "object-pick": "^0.1.2",
+    "sockjs": "^0.3.18"
+  },
+  "private": true,
+  "devDependencies": {
+    "reacolo-dev-model-sync": "^2.2.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.1",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.28.4",
+    "eslint": "^4.4.1",
+    "eslint-config-airbnb-base": "^11.3.1",
+    "eslint-plugin-import": "^2.7.0",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "jsoneditor": "^5.9.3",
+    "query-string": "^5.0.0",
+    "uglifyjs-webpack-plugin": "^1.0.0-beta.2",
+    "url-loader": "^0.5.9",
+    "webpack": "^3.5.5"
+  }
+}

@@ -1,0 +1,33 @@
+#content.loading #connected,
+#content.loading #disconnected,
+#content.connected #loading,
+#content.connected #disconnected,
+#content.disconnected #loading,
+#content.disconnected #connected {
+  display: none;
+}
+#app-data, #context {
+  width: 800px;
+  height: 400px;
+}
+#alert {
+  position: absolute;
+  opacity: 0;
+  font-size: 1.2em;
+  text-align: center;
+  border-radius: 5px;
+  background-color: #D8AFAF;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #871010;
+  color: #871010;
+  margin: 0 auto;
+  left: .5em;
+  right: .5em;
+  top: .5em;
+  padding: .3em;
+  transition: 200ms;
+}
+#alert.shown {
+  opacity: 1;
+}

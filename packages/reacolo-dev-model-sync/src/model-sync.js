@@ -71,7 +71,7 @@ export default class ReacoloModelSync extends EventEmitter {
   }
 
   async setClientRole(clientRole) {
-    await this._socket.sendRequest(MessageTypes.SET_SOCKET_ROLE_MSG_TYPE, clientRole);
+    await this._socket.sendRequest(MessageTypes.SET_CLIENT_ROLE_MSG_TYPE, clientRole);
     this._context = Object.assign({}, this._context, { clientRole });
     this.emit(Events.CONTEXT_UPDATE, this._context, false);
     return this._context;
@@ -106,10 +106,10 @@ export default class ReacoloModelSync extends EventEmitter {
       const [clientRole, appData, metaData] = await Promise.all([
         // If no role has been defined default the role promise is just resolved to undefined.
         this._context.clientRole == null ? undefined : (
-          this._socket.sendRequest(MessageTypes.SET_SOCKET_ROLE_MSG_TYPE, this._context.clientRole)
+          this._socket.sendRequest(MessageTypes.SET_CLIENT_ROLE_MSG_TYPE, this._context.clientRole)
         ),
         this._socket.sendRequest(MessageTypes.APP_DATA_REQUEST_MSG_TYPE),
-        this._socket.sendRequest(MessageTypes.META_DATA_REQUEST_MSG_TYPE)
+        this._socket.sendRequest(MessageTypes.CONTEXT_REQUEST_MSG_TYPE)
       ]);
       this._appData = appData;
       this._context = Object.assign({}, metaData, { clientRole });
@@ -142,12 +142,14 @@ export default class ReacoloModelSync extends EventEmitter {
         this._appData = message.data;
         this.emit(Events.DATA_UPDATE, this._appData, true);
         break;
-      case MessageTypes.METADATA_MSG_TYPE:
+      case MessageTypes.CONTEXT_MSG_TYPE:
         this._context = Object.assign({}, message.data, { clientRole: this._context.clientRole });
         this.emit(Events.CONTEXT_UPDATE, this._context, true);
         break;
       case MessageTypes.USER_EVENT_MSG_TYPE:
         this._publishBroadcastedEvent(message.data.eventName, message.data.data);
+        break;
+      case MessageTypes.KEEP_ALIVE_MSG_TYPE:
         break;
       default:
         // eslint-disable-next-line no-console
@@ -164,12 +166,12 @@ export default class ReacoloModelSync extends EventEmitter {
     // Currently, no 2 different requests can be merged.
     if (request1.type === request2.type) {
       switch (request1.type) {
-        // This requests are just replaced by a new one.
-        // Only the callback is modified.
+        // These requests are single shot: only the last one matters.
+        // Hence we replace any pending request with the new one.
         case MessageTypes.SET_APP_DATA_MSG_TYPE:
-        case MessageTypes.SET_SOCKET_ROLE_MSG_TYPE:
+        case MessageTypes.SET_CLIENT_ROLE_MSG_TYPE:
         case MessageTypes.APP_DATA_REQUEST_MSG_TYPE:
-        case MessageTypes.META_DATA_REQUEST_MSG_TYPE:
+        case MessageTypes.CONTEXT_REQUEST_MSG_TYPE:
           // Create the new request.
           return request2;
         // By default it is safer not to merge.
