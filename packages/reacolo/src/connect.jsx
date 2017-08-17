@@ -12,10 +12,13 @@ const detachModelHandlers = (model, handlers) => {
   });
 };
 
+const getDisplayName = WrappedComponent =>
+  WrappedComponent.displayName || WrappedComponent.name || 'Component';
+
 const connect = (WrappedComponent, model) => {
   const setData = model.setAppData.bind(model);
 
-  class ConnectedComponent extends Component {
+  class Connected extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -71,7 +74,11 @@ const connect = (WrappedComponent, model) => {
     }
   }
 
-  return ConnectedComponent;
+  Connected.displayName = `Connected(${getDisplayName(
+    WrappedComponent
+  )})`;
+
+  return Connected;
 };
 
 export default connect;
