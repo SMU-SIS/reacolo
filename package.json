@@ -34,7 +34,7 @@
   "author": "Quentin Roy <quentinroy@smu.edu.sg>",
   "license": "UNLICENSED",
   "private": true,
-  "repository": "bitbucket:quentinroy/reacolo-client",
+  "repository": "https://github.com/SMU-SIS/reacolo.git",
   "config": {
     "validate-commit-msg": {
       "types": [
