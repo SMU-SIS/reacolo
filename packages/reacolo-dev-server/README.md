@@ -1,4 +1,4 @@
-# reacolo server
+# Reacolo Dev Server
 
 Dev server for reacolo.
 
@@ -6,5 +6,6 @@ Dev server for reacolo.
 
 ```bash
 yarn install
+yarn build
 yarn start
 ```
