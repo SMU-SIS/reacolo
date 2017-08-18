@@ -7,3 +7,5 @@ export const ACK_MSG_TYPE = 'ack';
 export const CONTEXT_MSG_TYPE = 'context';
 export const APP_DATA_MSG_TYPE = 'appData';
 export const KEEP_ALIVE_MSG_TYPE = 'keepAlive';
+export const BROADCAST_USER_EVENT_MSG_TYPE = 'broadcastUserEvent';
+export const USER_EVENT_MSG_TYPE = 'userEvent';
