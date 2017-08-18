@@ -47,8 +47,10 @@ const connect = (WrappedComponent, model) => {
       return { ecologyBroadcaster: model.eventBroadcaster };
     }
 
-    componentDidMount() {
+    componentWillMount() {
       attachModelHandlers(model, this._modelHandlers);
+      // We cannot do this in component did mount or we would trigger a
+      // re-render.
       this.updateStateFromModel();
     }
 
