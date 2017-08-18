@@ -1,6 +1,6 @@
 {
   "name": "reacolo",
-  "version": "4.0.1",
+  "version": "4.1.0-beta.0",
   "main": "lib/reacolo.js",
   "scripts": {
     "test": "jest",

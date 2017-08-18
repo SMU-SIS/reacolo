@@ -1,6 +1,6 @@
 {
   "name": "reacolo-dev-server",
-  "version": "4.0.0",
+  "version": "4.1.0-beta.0",
   "description": "Small server for reacolo. It is meant to be used with reacolo-dev-model-sync.",
   "bin": {
     "reacolo-server": "./bin/start-server.js"
@@ -39,7 +39,7 @@
     "extract-text-webpack-plugin": "^3.0.0",
     "jsoneditor": "^5.9.3",
     "query-string": "^5.0.0",
-    "reacolo-dev-model-sync": "^4.0.0",
+    "reacolo-dev-model-sync": "^4.1.0-beta.0",
     "uglifyjs-webpack-plugin": "^1.0.0-beta.2",
     "url-loader": "^0.5.9",
     "webpack": "^3.5.5"
