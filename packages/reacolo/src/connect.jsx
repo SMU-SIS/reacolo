@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 const attachModelHandlers = (model, handlers) => {
   handlers.forEach(([evt, handler]) => {
@@ -42,6 +43,10 @@ const connect = (WrappedComponent, model) => {
       ];
     }
 
+    getChildContext() {
+      return { ecologyBroadcaster: model.eventBroadcaster };
+    }
+
     componentWillMount() {
       attachModelHandlers(model, this._modelHandlers);
       // We cannot do this in component did mount or we would trigger a
@@ -79,6 +84,10 @@ const connect = (WrappedComponent, model) => {
   Connected.displayName = `Connected(${getDisplayName(
     WrappedComponent
   )})`;
+
+  Connected.childContextTypes = {
+    ecologyBroadcaster: PropTypes.objectOf(PropTypes.func).isRequired
+  };
 
   return Connected;
 };
