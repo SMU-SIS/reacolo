@@ -34,11 +34,11 @@ export default class ReacoloModelSync extends EventEmitter {
       publish: (eventName, data) => {
         this._broadcastEvent(eventName, data);
       },
-      subscribe(eventName, listener) {
-        broadcastEmitter.addListener(eventName, listener.bind());
+      subscribe(eventName, listener, context) {
+        broadcastEmitter.addListener(eventName, listener, context);
       },
-      unsubscribe(eventName, listener) {
-        broadcastEmitter.removeListener(eventName, listener.bind());
+      unsubscribe(eventName, listener, context) {
+        broadcastEmitter.removeListener(eventName, listener, context);
       }
     });
 
