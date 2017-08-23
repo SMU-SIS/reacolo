@@ -19,11 +19,11 @@ const createClientRegistry = () => {
       clients.delete(client);
     },
     clientRoles() {
-      return Array.from(clients.values()).map(r => r).filter(r => r);
+      return Array.from(clients.values()).filter(r => r);
     },
     observerCount() {
       return Array.from(clients.values())
-        .map(r => !r)
+        .filter(r => !r)
         .reduce(count => count + 1, 0);
     },
     clients() {
