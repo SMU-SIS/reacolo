@@ -7,6 +7,35 @@ import './app.css';
 const TOAST_DURATION = 2200;
 const has = Object.prototype.hasOwnProperty;
 
+// Dirty deepEqual.
+const deepEqual = (obj1, obj2) => JSON.stringify(obj1) === JSON.stringify(obj2);
+
+// Shallow clone an object apart from the specified properties.
+const cloneExcept = (obj, exceptions) =>
+  Object.keys(obj).reduce((res, key) => {
+    if (exceptions.indexOf(key) < 0) {
+      res[key] = obj[key];
+    }
+    return res;
+  }, {});
+
+// Create a copy of an object containing only the specified properties.
+const pick = (obj, keys) =>
+  keys.reduce((res, k) => {
+    if (has.call(obj, k)) {
+      res[k] = obj[k];
+    }
+    return res;
+  }, {});
+
+// App's state values.
+const STATES = {
+  loading: Symbol('loading'),
+  connected: Symbol('connected'),
+  disconnected: Symbol('disconnected')
+};
+
+
 window.addEventListener('load', () => {
   // Fetch node elements.
   const contentDiv = document.getElementById('content');
@@ -20,35 +49,6 @@ window.addEventListener('load', () => {
     toastTimeOut = setTimeout(() => {
       errorDiv.classList.remove('shown');
     }, TOAST_DURATION);
-  };
-
-  // Dirty deepEqual.
-  const deepEqual = (obj1, obj2) =>
-    JSON.stringify(obj1) === JSON.stringify(obj2);
-
-  // Shallow clone an object apart from the specified properties.
-  const cloneExcept = (obj, exceptions) =>
-    Object.keys(obj).reduce((res, key) => {
-      if (exceptions.indexOf(key) < 0) {
-        res[key] = obj[key];
-      }
-      return res;
-    }, {});
-
-  // Create a copy of an object containing only the specified properties.
-  const pick = (obj, keys) =>
-    keys.reduce((res, k) => {
-      if (has.call(obj, k)) {
-        res[k] = obj[k];
-      }
-      return res;
-    }, {});
-
-  // App's state values.
-  const STATES = {
-    loading: Symbol('loading'),
-    connected: Symbol('connected'),
-    disconnected: Symbol('disconnected')
   };
 
   const modelSync = new ReacoloDevModelSync(
