@@ -47,10 +47,13 @@ const createClientRegistry = () => {
  * @return {object} The engine
  */
 module.exports = function createEngine() {
-  // The data.
+  // The client registry, used to store and monitor the clients as well as
+  // their roles.
   const clientRegistry = createClientRegistry();
+  // The data.
   let appData = {};
   let metaData = {};
+  let appDataRevision = 0;
 
   // Return the current context (metadata + client roles + observer count)/
   const getContext = () =>
@@ -74,7 +77,8 @@ module.exports = function createEngine() {
     }
   };
 
-  // Handle the different client messages.
+  // Handle the different client messages. Each handler's is fetched using a
+  // client's message message type. They are all called the same way.
   const messageHandlers = {
     /**
      * Set the application data.
@@ -86,11 +90,16 @@ module.exports = function createEngine() {
      */
     setAppData(messageData, messageId, client) {
       appData = messageData;
-      sendMessage(client, 'ack', { success: true, messageId });
+      appDataRevision += 1;
+      sendMessage(client, 'ack', {
+        success: true,
+        messageId,
+        response: { appDataRevision }
+      });
       sendMessage(
         clientRegistry.clients().filter(c => c !== client),
         'appData',
-        appData
+        { appDataRevision, appData }
       );
     },
 
@@ -153,7 +162,10 @@ module.exports = function createEngine() {
       sendMessage(client, 'ack', {
         success: true,
         messageId,
-        response: appData
+        response: {
+          appDataRevision,
+          appData
+        }
       });
     },
 
