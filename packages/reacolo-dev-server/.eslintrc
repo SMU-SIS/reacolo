@@ -2,5 +2,8 @@
   "env": {
     "node": true,
     "browser": false
+  },
+  "rules": {
+      "valid-jsdoc": "error"
   }
 }

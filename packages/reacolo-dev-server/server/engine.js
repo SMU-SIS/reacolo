@@ -1,3 +1,9 @@
+/**
+ * The complete Triforce, or one or more components of the Triforce.
+ * @typedef {Object} Client
+ * @property {function} send - Send a message to the client.
+ */
+
 const SERVER_PROPS = ['observers', 'roles'];
 const CLIENT_PROPS = ['clientRole'];
 
@@ -35,7 +41,12 @@ const createClientRegistry = () => {
   };
 };
 
-module.exports = () => {
+
+/**
+ * Create the server engines to handle the client messages.
+ * @return {object} The engine
+ */
+module.exports = function createEngine() {
   // The data.
   const clientRegistry = createClientRegistry();
   let appData = {};
@@ -65,6 +76,14 @@ module.exports = () => {
 
   // Handle the different client messages.
   const messageHandlers = {
+    /**
+     * Set the application data.
+     * @param {object} messageData - The new data to set as application data.
+     * @param {string} messageId - The identifier of the message (important
+     * for the acknowledgement).
+     * @param {Client} client - The client that sent the message.
+     * @return {undefined}
+     */
     setAppData(messageData, messageId, client) {
       appData = messageData;
       sendMessage(client, 'ack', { success: true, messageId });
@@ -75,6 +94,14 @@ module.exports = () => {
       );
     },
 
+    /**
+     * Set the meta data data.
+     * @param {object} messageData - The new data to set as meta data.
+     * @param {string} messageId - The identifier of the message (important
+     * for the acknowledgement).
+     * @param {Client} client - The client that sent the message.
+     * @return {undefined}
+     */
     setMetaData(messageData, messageId, client) {
       if (SERVER_PROPS.some(prop => messageData[prop])) {
         process.stderr.write(
@@ -113,6 +140,15 @@ module.exports = () => {
       }
     },
 
+    /**
+     * Handle request for the application data: send the current application
+     * data to the requesting client.
+     * @param {undefined} messageData - Ignored.
+     * @param {string} messageId - The identifier of the message (important
+     * for the acknowledgement).
+     * @param {Client} client - The client that sent the message.
+     * @return {undefined}
+     */
     appDataRequest(messageData, messageId, client) {
       sendMessage(client, 'ack', {
         success: true,
@@ -121,6 +157,15 @@ module.exports = () => {
       });
     },
 
+    /**
+     * Handle request for the context: send the current context to the
+     * requesting client.
+     * @param {undefined} messageData - Ignored.
+     * @param {string} messageId - The identifier of the message (important
+     * for the acknowledgement).
+     * @param {Client} client - The client that sent the message.
+     * @return {undefined}
+     */
     contextRequest(messageData, messageId, client) {
       sendMessage(client, 'ack', {
         success: true,
@@ -129,6 +174,14 @@ module.exports = () => {
       });
     },
 
+    /**
+     * Set the role of the requesting client.
+     * @param {string} messageData - The new role to set.
+     * @param {string} messageId - The identifier of the message (important
+     * for the acknowledgement).
+     * @param {Client} client - The client that sent the message.
+     * @return {undefined}
+     */
     setClientRole(messageData, messageId, client) {
       if (typeof messageData !== 'string') {
         const errMessage = `Incorrect role type: "${messageData}".`;
@@ -153,6 +206,14 @@ module.exports = () => {
       }
     },
 
+    /**
+     * Set the role of the requesting client.
+     * @param {string} messageData - The data of the event to broadcast.
+     * @param {string} messageId - The identifier of the message (important
+     * for the acknowledgement).
+     * @param {Client} client - The client that sent the message.
+     * @return {undefined}
+     */
     broadcastUserEvent(messageData, messageId, client) {
       sendMessage(
         clientRegistry.clients().filter(s => s !== client),
@@ -168,6 +229,14 @@ module.exports = () => {
   };
 
   return {
+    /**
+     * Handle a message from the client.
+     * @param  {string} type - The type of the message to handle.
+     * @param  {string} id - The id of the message.
+     * @param  {object} data - The data of the message.
+     * @param  {Client} client - The client that sent the message.
+     * @return {undefined}
+     */
     handleClientMessage(type, id, data, client) {
       // Look for an appropriate way to handle this particular message.
       const handler = messageHandlers[type];
@@ -186,12 +255,24 @@ module.exports = () => {
       // Handle the message.
       handler(data, id, client);
     },
+
+    /**
+     * Handle a parsing error while processing a client message.
+     * @param  {Error} err - The error.
+     * @param  {Client} client - The client that sent the message.
+     * @return {undefined}
+     */
     handleParsingError(err, client) {
       const errMessage = `Cannot parse message: ${err}`;
       process.stderr.write(`${errMessage}\n`);
       sendMessage(client, 'ack', { success: false, response: errMessage });
     },
-    // Register a new connection.
+
+    /**
+     * Register a new client
+     * @param  {Client} client - The client.
+     * @return {undefined}
+     */
     addClient(client) {
       clientRegistry.addClient(client);
       // Notify the change of context.
@@ -201,7 +282,12 @@ module.exports = () => {
         `${new Date()} A user connected (#connected: ${clientRegistry.size})`
       );
     },
-    // Register that a client left.
+
+    /**
+     * Remove a client
+     * @param  {Client} client - The client.
+     * @return {undefined}
+     */
     removeClient(client) {
       clientRegistry.removeClient(client);
       sendMessage(clientRegistry.clients(), 'context', getContext());
