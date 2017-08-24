@@ -27,6 +27,7 @@ export default class ReacoloModelSync extends EventEmitter {
     // Init the values.
     this._context = { roles: {}, observers: 0, clientRole };
     this._appData = null;
+    this._appDataRevision = -1;
 
     // Create the event broadcaster (behind the scene, it uses an internal event emitter).
     const broadcastEmitter = new EventEmitter();
@@ -57,7 +58,8 @@ export default class ReacoloModelSync extends EventEmitter {
   }
 
   async setAppData(appData) {
-    await this._socket.sendRequest(MessageTypes.SET_APP_DATA_MSG_TYPE, appData);
+    const resp = await this._socket.sendRequest(MessageTypes.SET_APP_DATA_MSG_TYPE, appData);
+    this._appDataRevision = resp.appDataRevision;
     this._appData = appData;
     this.emit(Events.DATA_UPDATE, this._appData, false);
     return appData;
@@ -103,7 +105,11 @@ export default class ReacoloModelSync extends EventEmitter {
       this._socket.onclose = this._onSocketClose.bind(this);
 
       // Synchronize the data with the server.
-      const [clientRole, appData, metaData] = await Promise.all([
+      const [
+        clientRole,
+        { appData, appDataRevision },
+        metaData
+      ] = await Promise.all([
         // If no role has been defined default the role promise is just resolved to undefined.
         this._context.clientRole == null ? undefined : (
           this._socket.sendRequest(MessageTypes.SET_CLIENT_ROLE_MSG_TYPE, this._context.clientRole)
@@ -112,6 +118,7 @@ export default class ReacoloModelSync extends EventEmitter {
         this._socket.sendRequest(MessageTypes.CONTEXT_REQUEST_MSG_TYPE)
       ]);
       this._appData = appData;
+      this._appDataRevision = appDataRevision;
       this._context = Object.assign({}, metaData, { clientRole });
       this._isConnected = true;
 
@@ -139,7 +146,8 @@ export default class ReacoloModelSync extends EventEmitter {
   _onSocketMessage(message) {
     switch (message.type) {
       case MessageTypes.APP_DATA_MSG_TYPE:
-        this._appData = message.data;
+        this._appData = message.data.appData;
+        this._appDataRevision = message.data.appDataRevision;
         this.emit(Events.DATA_UPDATE, this._appData, true);
         break;
       case MessageTypes.CONTEXT_MSG_TYPE:
