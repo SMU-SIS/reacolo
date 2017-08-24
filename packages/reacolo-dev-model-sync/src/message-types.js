@@ -1,4 +1,5 @@
 export const SET_APP_DATA_MSG_TYPE = 'setAppData';
+export const PATCH_DATA_MSG_TYPE = 'patchAppData';
 export const SET_META_DATA_MSG_TYPE = 'setMetaData';
 export const SET_CLIENT_ROLE_MSG_TYPE = 'setClientRole';
 export const APP_DATA_REQUEST_MSG_TYPE = 'appDataRequest';

@@ -1,4 +1,5 @@
 import EventEmitter from 'eventemitter3';
+import jsonPatch from 'jsonpatch';
 import ReacoloSocket from './reacolo-socket.js';
 import * as MessageTypes from './message-types.js';
 import * as Errors from './errors.js';
@@ -63,6 +64,14 @@ export default class ReacoloModelSync extends EventEmitter {
     this._appData = appData;
     this.emit(Events.DATA_UPDATE, this._appData, false);
     return appData;
+  }
+
+  async patchAppData(patch) {
+    const resp = await this._socket.sendRequest(MessageTypes.PATCH_DATA_MSG_TYPE, patch);
+    this._appDataRevision = resp.appDataRevision;
+    this._appData = jsonPatch.apply_patch(this._appData, patch);
+    this.emit(Events.DATA_UPDATE, this._appData, false);
+    return this._appData;
   }
 
   async setMetaData(metaData) {
