@@ -6,10 +6,6 @@
   "scripts": {
     "build": "rollup -c"
   },
-  "peerDependencies": {
-    "eventemitter3": "^2.0.2",
-    "sockjs-client": "^1.1.1"
-  },
   "devDependencies": {
     "babel-core": "^6.23.1",
     "babel-eslint": "^7.1.0",
@@ -24,5 +20,9 @@
   },
   "author": "Quentin Roy <quentinroy@smu.edu.sg>",
   "license": "UNLICENSED",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "eventemitter3": "^2.0.2",
+    "sockjs-client": "^1.1.1"
+  }
 }
