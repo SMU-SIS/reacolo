@@ -10,6 +10,10 @@
   width: 800px;
   height: 400px;
 }
+#patch-data {
+  width: 800px;
+  height: 200px;
+}
 #alert {
   position: fixed;
   z-index: 100;

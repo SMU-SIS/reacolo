@@ -147,6 +147,21 @@ window.addEventListener('load', () => {
     dataGetter: () => modelSync.context
   });
 
+  // Create the patch editor.
+  const patchEditor = new JSONEditor(document.getElementById('patch-data'), {
+    mode: 'code'
+  });
+  patchEditor.set([]);
+
+  document.getElementById('send-patch-button').addEventListener('click', () => {
+    const patch = patchEditor.get();
+    patchEditor.set([]);
+    modelSync.patchAppData(patch).catch((e) => {
+      console.error(e);
+      toastError(e.message || e);
+    });
+  });
+
   modelSync
     .start()
     .then(() => {
