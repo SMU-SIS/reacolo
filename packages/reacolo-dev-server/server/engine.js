@@ -1,3 +1,5 @@
+const jsonpatch = require('jsonpatch');
+
 /**
  * The complete Triforce, or one or more components of the Triforce.
  * @typedef {Object} Client
@@ -101,6 +103,37 @@ module.exports = function createEngine() {
         'appData',
         { appDataRevision, appData }
       );
+    },
+
+    /**
+     * Patch the application data.
+     * @param {object} patch - The RFC 6902 patch to apply.
+     * @param {string} messageId - The identifier of the message (important
+     * for the acknowledgement).
+     * @param {Client} client - The client that sent the message.
+     * @return {undefined}
+     */
+    patchAppData(patch, messageId, client) {
+      try {
+        appData = jsonpatch.apply_patch(appData, patch);
+        appDataRevision += 1;
+        sendMessage(client, 'ack', {
+          success: true,
+          messageId,
+          response: { appDataRevision }
+        });
+        sendMessage(
+          clientRegistry.clients().filter(c => c !== client),
+          'appData',
+          { appDataRevision, appData }
+        );
+      } catch (e) {
+        sendMessage(client, 'ack', {
+          success: false,
+          messageId,
+          response: e.message
+        });
+      }
     },
 
     /**

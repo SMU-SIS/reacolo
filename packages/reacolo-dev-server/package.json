@@ -22,6 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.4",
+    "jsonpatch": "^3.0.1",
     "object-pick": "^0.1.2",
     "sockjs": "^0.3.18"
   },
