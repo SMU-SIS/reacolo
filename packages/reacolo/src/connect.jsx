@@ -18,6 +18,9 @@ const getDisplayName = WrappedComponent =>
 
 const connect = (WrappedComponent, model) => {
   const setData = model.setAppData.bind(model);
+  const patchData = model.patchAppData
+    ? model.patchAppData.bind(model)
+    : undefined;
 
   class Connected extends Component {
     constructor(props) {
@@ -75,6 +78,7 @@ const connect = (WrappedComponent, model) => {
           context={context}
           isConnected={isConnected}
           setData={setData}
+          patchData={patchData}
           {...this.props}
         />
       );
