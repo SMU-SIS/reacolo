@@ -157,6 +157,7 @@ window.addEventListener('load', () => {
     const patch = patchEditor.get();
     patchEditor.set([]);
     modelSync.patchAppData(patch).catch((e) => {
+      // eslint-disable-next-line no-console
       console.error(e);
       toastError(e.message || e);
     });
