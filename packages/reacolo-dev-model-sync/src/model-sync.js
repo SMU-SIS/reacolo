@@ -4,6 +4,7 @@ import ReacoloSocket from './reacolo-socket.js';
 import * as MessageTypes from './message-types.js';
 import * as Errors from './errors.js';
 import * as Events from './events.js';
+import mergeRequest from './merge-requests.js';
 import { DEFAULT_SERVER_ADDR, DEFAULT_THROTTLE, DEFAULT_ACK_TIMEOUT } from './defaults.js';
 
 export default class ReacoloModelSync extends EventEmitter {
@@ -20,7 +21,7 @@ export default class ReacoloModelSync extends EventEmitter {
     // Create the connection toward the server.
     this._socket = new ReacoloSocket(
       serverAddress,
-      this.constructor._mergeRequest,
+      mergeRequest,
       requestTimeout,
       requestThrottle
     );
@@ -177,25 +178,6 @@ export default class ReacoloModelSync extends EventEmitter {
   _onSocketClose() {
     this._isConnected = false;
     this.emit(Events.DISCONNECTED);
-  }
-
-  static _mergeRequest(request1, request2) {
-    // Currently, no 2 different requests can be merged.
-    if (request1.type === request2.type) {
-      switch (request1.type) {
-        // These requests are single shot: only the last one matters.
-        // Hence we replace any pending request with the new one.
-        case MessageTypes.SET_APP_DATA_MSG_TYPE:
-        case MessageTypes.SET_CLIENT_ROLE_MSG_TYPE:
-        case MessageTypes.APP_DATA_REQUEST_MSG_TYPE:
-        case MessageTypes.CONTEXT_REQUEST_MSG_TYPE:
-          // Create the new request.
-          return request2;
-        // By default it is safer not to merge.
-        default:
-      }
-    }
-    return undefined;
   }
 }
 
