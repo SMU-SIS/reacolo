@@ -160,6 +160,9 @@ window.addEventListener('load', () => {
       // eslint-disable-next-line no-console
       console.error(e);
       toastError(e.message || e);
+    }).then(() => {
+      // eslint-disable-next-line no-console
+      console.log('server successfully updated');
     });
   });
 
