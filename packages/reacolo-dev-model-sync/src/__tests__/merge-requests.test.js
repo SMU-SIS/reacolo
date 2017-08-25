@@ -41,12 +41,18 @@ describe('`mergeRequests`', () => {
   test('properly merges patches', () => {
     expect(
       mergeRequests(
-        { type: MessageTypes.PATCH_DATA_MSG_TYPE, data: [{ a: 0 }] },
-        { type: MessageTypes.PATCH_DATA_MSG_TYPE, data: [{ b: 1 }] }
+        {
+          type: MessageTypes.PATCH_DATA_MSG_TYPE,
+          data: { patch: [{ a: 0 }, { a: 2 }], from: 1 }
+        },
+        {
+          type: MessageTypes.PATCH_DATA_MSG_TYPE,
+          data: { patch: [{ b: 1 }, { b: 4 }], from: 5 }
+        }
       )
     ).toEqual({
       type: MessageTypes.PATCH_DATA_MSG_TYPE,
-      data: [{ a: 0 }, { b: 1 }]
+      data: { patch: [{ a: 0 }, { a: 2 }, { b: 1 }, { b: 4 }], from: 1 }
     });
     expect(
       mergeRequests(

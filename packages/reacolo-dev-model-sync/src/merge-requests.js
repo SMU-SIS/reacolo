@@ -29,7 +29,10 @@ const mergeRequest = (lastRequest, newRequest) => {
       return lastRequest.type === newRequest.type
         ? {
           type: 'patchAppData',
-          data: [...lastRequest.data, ...newRequest.data]
+          data: {
+            patch: [...lastRequest.data.patch, ...newRequest.data.patch],
+            from: lastRequest.data.from
+          }
         }
         : undefined;
     default:
