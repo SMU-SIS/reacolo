@@ -96,12 +96,12 @@ module.exports = function createEngine() {
       sendMessage(client, 'ack', {
         success: true,
         messageId,
-        response: { appDataRevision }
+        response: { revision: appDataRevision }
       });
       sendMessage(
         clientRegistry.clients().filter(c => c !== client),
         'appData',
-        { appDataRevision, appData }
+        { revision: appDataRevision, appData }
       );
     },
 
@@ -120,12 +120,12 @@ module.exports = function createEngine() {
         sendMessage(client, 'ack', {
           success: true,
           messageId,
-          response: { appDataRevision }
+          response: { revision: appDataRevision }
         });
         sendMessage(
           clientRegistry.clients().filter(c => c !== client),
           'appData',
-          { appDataRevision, appData }
+          { revision: appDataRevision, appData }
         );
       } catch (e) {
         sendMessage(client, 'ack', {
@@ -196,7 +196,7 @@ module.exports = function createEngine() {
         success: true,
         messageId,
         response: {
-          appDataRevision,
+          revision: appDataRevision,
           appData
         }
       });
