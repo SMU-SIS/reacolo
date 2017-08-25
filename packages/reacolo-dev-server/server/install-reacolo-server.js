@@ -47,6 +47,9 @@ const installSocketHandlers = (sockJsServer) => {
 };
 
 /**
+ * Install the reacolo server on an express application. Does not mount the
+ * server interface.
+ * @module
  * @param {object} expressServer - An express to install the reacolo server on.
  * @param {string} prefix - The websocket handlers' address prefix.
  * @return {object} The express server with the handlers installed.

@@ -1,73 +1,33 @@
+/** @module engine */
+
 const jsonpatch = require('jsonpatch');
+const createClientRegistry = require('./client-registry');
+const createDataRegistry = require('./data-registry');
 
 /**
- * The complete Triforce, or one or more components of the Triforce.
  * @typedef {Object} Client
  * @property {function} send - Send a message to the client.
  */
 
-const SERVER_PROPS = ['observers', 'roles'];
-const CLIENT_PROPS = ['clientRole'];
 
 // Shortcut for process.stdout.write + new line.
 const print = str => process.stdout.write(`${str}\n`);
 
-// Register handle the role of the different clients.
-const createClientRegistry = () => {
-  const clients = new Map();
-
-  return {
-    addClient(client, role = undefined) {
-      clients.set(client, role);
-    },
-    setClientRole(client, role) {
-      clients.set(client, role);
-    },
-    removeClient(client) {
-      clients.delete(client);
-    },
-    clientRoles() {
-      return Array.from(clients.values()).filter(r => r);
-    },
-    observerCount() {
-      return Array.from(clients.values())
-        .filter(r => !r)
-        .reduce(count => count + 1, 0);
-    },
-    clients() {
-      return Array.from(clients.keys());
-    },
-    get size() {
-      return clients.size;
-    }
-  };
-};
-
-
 /**
- * Create the server engines to handle the client messages.
- * @return {object} The engine
+ * Create the server engines that handles messages from clients.
+ * @return {engine~ReacoloEngine} The engine
  */
 module.exports = function createEngine() {
   // The client registry, used to store and monitor the clients as well as
   // their roles.
   const clientRegistry = createClientRegistry();
+
   // The data.
-  let appData = {};
-  let metaData = {};
-  let appDataRevision = 0;
+  const appData = createDataRegistry({});
+  const metaData = createDataRegistry({});
 
-  // Return the current context (metadata + client roles + observer count)/
-  const getContext = () =>
-    Object.assign(
-      {
-        roles: clientRegistry.clientRoles(),
-        observers: clientRegistry.observerCount()
-      },
-      metaData
-    );
-
-  // Send a message to a list of clients.
+  // Send a message to a list of clients. In theory, this should only be called
+  // by the helpers below to ensure consistency in the sent messages.
   const sendMessage = (clientOrClients, type, data) => {
     const msg = JSON.stringify({ type, data });
     if (clientOrClients.send) {
@@ -79,106 +39,87 @@ module.exports = function createEngine() {
     }
   };
 
+  // Helpers to send different type of messages.
+  const sendAck = (success, client, messageId, response) =>
+    sendMessage(client, 'ack', { success, messageId, response });
+  const sendAppData = clients =>
+    sendMessage(clients, 'appData', {
+      revision: appData.revision,
+      appData: appData.get()
+    });
+  const sendAppDataPatch = (clients, patch, from) =>
+    sendMessage(clients, 'appDataPatch', {
+      from,
+      patch,
+      revision: appData.revision
+    });
+  const sendMetaData = clients =>
+    sendMessage(clients, 'metaData', {
+      metaData: metaData.get(),
+      revision: metaData.revision
+    });
+  const sendRoles = clients =>
+    sendMessage(clients, 'roles', {
+      roles: clientRegistry.clientRoles(),
+      observers: clientRegistry.observerCount(),
+      revision: clientRegistry.revision
+    });
+  const sendUserEvent = (clients, messageData) =>
+    sendMessage(clients, 'userEvent', messageData);
+
+
   // Handle the different client messages. Each handler's is fetched using a
   // client's message message type. They are all called the same way.
   const messageHandlers = {
     /**
      * Set the application data.
-     * @param {object} messageData - The new data to set as application data.
+     * @param {{ from, appData }} messageData - The new data to set as
+     * application data. The from property must contain the previous known
+     * revision.
      * @param {string} messageId - The identifier of the message (important
      * for the acknowledgement).
-     * @param {Client} client - The client that sent the message.
+     * @param {module:engine~Client} client - The client that sent the message.
      * @return {undefined}
      */
     setAppData(messageData, messageId, client) {
-      appData = messageData;
-      appDataRevision += 1;
-      sendMessage(client, 'ack', {
-        success: true,
-        messageId,
-        response: { revision: appDataRevision }
-      });
-      sendMessage(
-        clientRegistry.clients().filter(c => c !== client),
-        'appData',
-        { revision: appDataRevision, appData }
-      );
+      if (messageData.from !== appData.revision) {
+        print(
+          `warning: Data set from an outdated revision (request revision: ${messageData.from}, actual revision: ${appData.revision})`
+        );
+      }
+      appData.set(messageData.appData);
+      sendAppData(clientRegistry.clients().filter(c => c !== client));
+      sendAck(true, client, messageId, { revision: appData.revision });
     },
 
     /**
      * Patch the application data.
-     * @param {object} patch - The RFC 6902 patch to apply.
+     * @param {{from, patch}} messageData - The message data containing the id
+     * of the revision it is applied on an RFC 6902 patch to apply.
      * @param {string} messageId - The identifier of the message (important
      * for the acknowledgement).
-     * @param {Client} client - The client that sent the message.
+     * @param {module:engine~Client} client - The client that sent the message.
      * @return {undefined}
      */
-    patchAppData(patch, messageId, client) {
+    patchAppData(messageData, messageId, client) {
       try {
-        appData = jsonpatch.apply_patch(appData, patch);
-        appDataRevision += 1;
-        sendMessage(client, 'ack', {
-          success: true,
-          messageId,
-          response: { revision: appDataRevision }
-        });
-        sendMessage(
+        if (messageData.from !== appData.revision) {
+          print(
+            `warning: Attempt to apply a patch built for an outdated data revision (patch's revision: ${messageData.from}, current data revision: ${appData.revision})`
+          );
+        }
+        const currentRevision = appData.revision;
+        appData.set(jsonpatch.apply_patch(appData.get(), messageData.patch));
+        sendAppDataPatch(
           clientRegistry.clients().filter(c => c !== client),
-          'appData',
-          { revision: appDataRevision, appData }
+          messageData.patch,
+          currentRevision
         );
+        sendAck(true, client, messageId, { revision: appData.revision });
       } catch (e) {
-        sendMessage(client, 'ack', {
-          success: false,
-          messageId,
-          response: e.message
-        });
-      }
-    },
-
-    /**
-     * Set the meta data data.
-     * @param {object} messageData - The new data to set as meta data.
-     * @param {string} messageId - The identifier of the message (important
-     * for the acknowledgement).
-     * @param {Client} client - The client that sent the message.
-     * @return {undefined}
-     */
-    setMetaData(messageData, messageId, client) {
-      if (SERVER_PROPS.some(prop => messageData[prop])) {
-        process.stderr.write(
-          'Attempt to update a server managed context property\n'
-        );
-        sendMessage(client, 'ack', {
-          success: false,
-          response:
-            'Context property "roles" and "observers" are managed by the server.',
-          messageId
-        });
-      } else if (CLIENT_PROPS.some(prop => messageData[prop])) {
-        process.stderr.write(
-          'Attempt to update a client specific context property\n'
-        );
-        sendMessage(client, 'ack', {
-          success: false,
-          response: 'Context property "clientRole" is managed by each client.',
-          messageId
-        });
-      } else {
-        metaData = messageData;
-        const context = getContext();
-        // Notify the change of context to the other clients.
-        sendMessage(
-          clientRegistry.clients().filter(c => c !== client),
-          'context',
-          context
-        );
-        // Acknowledge with the new context.
-        sendMessage(client, 'ack', {
-          success: true,
-          messageId,
-          response: context
-        });
+        const error = `Patch application failed: ${e.message}`;
+        process.stderr.write(`${error}\n`);
+        sendAck(false, client, messageId, error);
       }
     },
 
@@ -188,65 +129,96 @@ module.exports = function createEngine() {
      * @param {undefined} messageData - Ignored.
      * @param {string} messageId - The identifier of the message (important
      * for the acknowledgement).
-     * @param {Client} client - The client that sent the message.
+     * @param {module:engine~Client} client - The client that sent the message.
      * @return {undefined}
      */
     appDataRequest(messageData, messageId, client) {
-      sendMessage(client, 'ack', {
-        success: true,
-        messageId,
-        response: {
-          revision: appDataRevision,
-          appData
-        }
+      sendAck(true, client, messageId, {
+        revision: appData.revision,
+        appData: appData.get()
       });
     },
 
     /**
-     * Handle request for the context: send the current context to the
-     * requesting client.
-     * @param {undefined} messageData - Ignored.
+     * Set the meta data data.
+     * @param {{ from, metaData }} messageData - The new data to set as meta
+     * data.
      * @param {string} messageId - The identifier of the message (important
      * for the acknowledgement).
-     * @param {Client} client - The client that sent the message.
+     * @param {module:engine~Client} client - The client that sent the message.
      * @return {undefined}
      */
-    contextRequest(messageData, messageId, client) {
-      sendMessage(client, 'ack', {
-        success: true,
-        messageId,
-        response: getContext()
+    setMetaData({ from, metaData: newMetaData }, messageId, client) {
+      if (from !== metaData.revision) {
+        process.stdout.write(
+          `warning: metaData set from an outdated context revision (request revision: ${from}, actual context revision: ${metaData.revision})`
+        );
+      }
+      metaData.set(newMetaData);
+      // Notify the change of context to the other clients.
+      sendMetaData(clientRegistry.clients().filter(c => c !== client));
+      // Acknowledge with the new context.
+      sendAck(true, client, messageId, {
+        revision: metaData.revision
+      });
+    },
+
+    /**
+     * Handle request for the meta data: send the current context to the
+     * requesting client.
+     * @param {undefined} _ - Ignored.
+     * @param {string} messageId - The identifier of the message (important
+     * for the acknowledgement).
+     * @param {module:engine~Client} client - The client that sent the message.
+     * @return {undefined}
+     */
+    metaDataRequest(_, messageId, client) {
+      sendAck(true, client, messageId, {
+        metaData: metaData.get(),
+        revision: metaData.revision
+      });
+    },
+
+    /**
+     * Handle request for the roles: send the current available roles to the
+     * requesting client.
+     * @param {undefined} _ - Ignored.
+     * @param {string} messageId - The identifier of the message (important
+     * for the acknowledgement).
+     * @param {module:engine~Client} client - The client that sent the message.
+     * @return {undefined}
+     */
+    rolesRequest(_, messageId, client) {
+      sendAck(true, client, messageId, {
+        roles: clientRegistry.clientRoles(),
+        observers: clientRegistry.observerCount(),
+        revision: clientRegistry.revision
       });
     },
 
     /**
      * Set the role of the requesting client.
-     * @param {string} messageData - The new role to set.
+     * @param {{ role }} messageData - Contains the new role to set as a
+     * property.
      * @param {string} messageId - The identifier of the message (important
      * for the acknowledgement).
-     * @param {Client} client - The client that sent the message.
+     * @param {module:engine~Client} client - The client that sent the message.
      * @return {undefined}
      */
-    setClientRole(messageData, messageId, client) {
-      if (typeof messageData !== 'string') {
-        const errMessage = `Incorrect role type: "${messageData}".`;
+    setClientRole({ role }, messageId, client) {
+      if (typeof role !== 'string') {
+        const errMessage = `Incorrect role type: "${role}".`;
         process.stderr.write(`${errMessage}\n`);
-        sendMessage(client, 'ack', {
-          success: false,
-          response: errMessage,
-          messageId
-        });
+        sendAck(false, client, messageId, errMessage);
       } else {
-        clientRegistry.setClientRole(client, messageData);
-        sendMessage(
-          clientRegistry.clients().filter(c => c !== client),
-          'context',
-          getContext()
-        );
-        sendMessage(client, 'ack', {
-          success: true,
-          messageId,
-          response: messageData
+        clientRegistry.setClientRole(client, role);
+        // Notify the change of context to the other clients.
+        sendRoles(clientRegistry.clients().filter(c => c !== client));
+        sendAck(true, client, messageId, {
+          clientRole: role,
+          roles: clientRegistry.clientRoles(),
+          observers: clientRegistry.observerCount(),
+          revision: clientRegistry.revision
         });
       }
     },
@@ -256,30 +228,30 @@ module.exports = function createEngine() {
      * @param {string} messageData - The data of the event to broadcast.
      * @param {string} messageId - The identifier of the message (important
      * for the acknowledgement).
-     * @param {Client} client - The client that sent the message.
+     * @param {module:engine~Client} client - The client that sent the message.
      * @return {undefined}
      */
     broadcastUserEvent(messageData, messageId, client) {
-      sendMessage(
+      sendUserEvent(
         clientRegistry.clients().filter(s => s !== client),
-        'userEvent',
         messageData
       );
-      sendMessage(client, 'ack', {
-        success: true,
-        messageId,
-        response: messageData
-      });
+      sendAck(true, client, messageId);
     }
   };
 
+
+  /**
+   * @interface engine~ReacoloEngine
+   */
   return {
     /**
      * Handle a message from the client.
+     * @memberof engine~ReacoloEngine#
      * @param  {string} type - The type of the message to handle.
      * @param  {string} id - The id of the message.
      * @param  {object} data - The data of the message.
-     * @param  {Client} client - The client that sent the message.
+     * @param  {module:engine~Client} client - The client that sent the message.
      * @return {undefined}
      */
     handleClientMessage(type, id, data, client) {
@@ -289,11 +261,7 @@ module.exports = function createEngine() {
         // If we cannot find a handler, we send an acknowledgement notifying
         // that the request failed.
         const errMessage = `Unknown message type: "${type}".`;
-        sendMessage(client, 'ack', {
-          success: false,
-          response: errMessage,
-          messageId: id
-        });
+        sendAck(false, client, id, errMessage);
         process.stderr.write(`${errMessage}\n`);
         return;
       }
@@ -303,25 +271,27 @@ module.exports = function createEngine() {
 
     /**
      * Handle a parsing error while processing a client message.
+     * @memberof engine~ReacoloEngine#
      * @param  {Error} err - The error.
-     * @param  {Client} client - The client that sent the message.
+     * @param  {module:engine~Client} client - The client that sent the message.
      * @return {undefined}
      */
     handleParsingError(err, client) {
       const errMessage = `Cannot parse message: ${err}`;
+      sendAck(false, client, undefined, errMessage);
       process.stderr.write(`${errMessage}\n`);
-      sendMessage(client, 'ack', { success: false, response: errMessage });
     },
 
     /**
-     * Register a new client
-     * @param  {Client} client - The client.
+     * Register a new client.
+     * @memberof engine~ReacoloEngine#
+     * @param  {module:engine~Client} client - The client.
      * @return {undefined}
      */
     addClient(client) {
       clientRegistry.addClient(client);
       // Notify the change of context.
-      sendMessage(clientRegistry.clients(), 'context', getContext());
+      sendRoles(clientRegistry.clients());
       // Log.
       print(
         `${new Date()} A user connected (#connected: ${clientRegistry.size})`
@@ -329,13 +299,15 @@ module.exports = function createEngine() {
     },
 
     /**
-     * Remove a client
-     * @param  {Client} client - The client.
+     * Remove a client.
+     * @memberof engine~ReacoloEngine#
+     * @param  {module:engine~Client} client - The client.
      * @return {undefined}
      */
     removeClient(client) {
       clientRegistry.removeClient(client);
-      sendMessage(clientRegistry.clients(), 'context', getContext());
+      // Notify the change of context.
+      sendRoles(clientRegistry.clients());
       print(
         `${new Date()} A user disconnected (#connected: ${clientRegistry.size})`
       );

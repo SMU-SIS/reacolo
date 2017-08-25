@@ -5,6 +5,7 @@ const installReacoloServer = require('./install-reacolo-server');
 
 /**
  * Start the server.
+ * @module
  * @param  {Number} [port=3000] - The port on which to start the server
  * @param  {String} [socketPrefix='socket'] - The prefix of the socket handler.
  * @param  {string} [interfacePath] - The path of the server interface static
