@@ -13,7 +13,9 @@ const mergeRequest = (lastRequest, newRequest) => {
     // These requests are single shot: only the last one matters.
     // Hence we replace any pending request with the new one.
     case MessageTypes.SET_CLIENT_ROLE_MSG_TYPE:
-    case MessageTypes.CONTEXT_REQUEST_MSG_TYPE:
+    case MessageTypes.ROLES_REQUEST_MSG_TYPE:
+    case MessageTypes.SET_META_DATA_MSG_TYPE:
+    case MessageTypes.META_DATA_REQUEST_MSG_TYPE:
     case MessageTypes.APP_DATA_REQUEST_MSG_TYPE:
       // These requests overwrites any previous similar requests.
       return newRequest.type === lastRequest.type ? newRequest : undefined;

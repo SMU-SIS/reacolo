@@ -6,7 +6,7 @@ describe('`mergeRequests`', () => {
     expect(
       mergeRequests(
         { type: MessageTypes.APP_DATA_MSG_TYPE, data: { a: 0 } },
-        { type: MessageTypes.CONTEXT_REQUEST_MSG_TYPE, data: { b: 1 } }
+        { type: MessageTypes.META_DATA_REQUEST_MSG_TYPE, data: { b: 1 } }
       )
     ).toBe(undefined);
     expect(
@@ -17,7 +17,7 @@ describe('`mergeRequests`', () => {
     ).toBe(undefined);
     expect(
       mergeRequests(
-        { type: MessageTypes.CONTEXT_REQUEST_MSG_TYPE, data: { b: 1 } },
+        { type: MessageTypes.META_DATA_REQUEST_MSG_TYPE, data: { b: 1 } },
         { type: '?', data: { a: 0 } }
       )
     ).toBe(undefined);
@@ -26,7 +26,9 @@ describe('`mergeRequests`', () => {
   test('properly merges similar overwriting requests', () => {
     [
       MessageTypes.SET_CLIENT_ROLE_MSG_TYPE,
-      MessageTypes.CONTEXT_REQUEST_MSG_TYPE,
+      MessageTypes.ROLES_REQUEST_MSG_TYPE,
+      MessageTypes.SET_META_DATA_MSG_TYPE,
+      MessageTypes.META_DATA_REQUEST_MSG_TYPE,
       MessageTypes.APP_DATA_REQUEST_MSG_TYPE,
       MessageTypes.SET_APP_DATA_MSG_TYPE
     ].forEach((type) => {
