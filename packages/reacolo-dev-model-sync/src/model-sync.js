@@ -192,7 +192,8 @@ export default class ReacoloModelSync extends EventEmitter {
           // If the patch is applied on a revision different from the current
           // revision, we do not apply the patch and instead ask the server
           // for a full data update.
-          console.warning(
+          // eslint-disable-next-line no-console
+          console.warn(
             `Received an app data patch from unknown revision: ${message.data.from} (current is ${this._appDataRevision}). Requesting a full data update.`
           );
           this._socket.sendRequest(MessageTypes.APP_DATA_REQUEST_MSG_TYPE);
