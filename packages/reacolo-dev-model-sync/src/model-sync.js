@@ -83,11 +83,17 @@ export default class ReacoloModelSync extends EventEmitter {
   }
 
   async setMetaData(metaData) {
-    const response = await this._socket.sendRequest(
+    const { revision } = await this._socket.sendRequest(
       MessageTypes.SET_META_DATA_MSG_TYPE,
       { metaData, from: this._metaDataRevision }
     );
-    this._context = Object.assign({}, response, { clientRole: this._context.clientRole });
+    this._metaDataRevision = revision;
+    this._context = Object.assign({}, this._context, metaData, {
+      // Make sure these properties are not overwriten.
+      clientRole: this._context.clientRole,
+      roles: this._context.roles,
+      observers: this._context.observers
+    });
     this.emit(Events.CONTEXT_UPDATE, this._context, true);
     return this._context;
   }
