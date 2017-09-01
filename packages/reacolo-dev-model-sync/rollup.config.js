@@ -9,15 +9,21 @@ export default {
   amd: {
     id: 'reacolo-dev-model-sync'
   },
-  plugins: [resolve(), commonjs(), babel({
-    exclude: 'node_modules/**' // only transpile our source code
-  })],
+  plugins: [
+    resolve(),
+    commonjs(),
+    babel({
+      exclude: 'node_modules/**' // only transpile our source code
+    })
+  ],
   dest: 'lib/reacolo-dev-model-sync.js',
   exports: 'default',
-  external: ['sockjs-client', 'eventemitter3'],
+  external: ['babel-runtime/regenerator', 'sockjs-client', 'eventemitter3', 'jsonpatch'],
   globals: {
+    'jsonpatch': 'jsonpatch',
     'sockjs-client': 'SockJS',
-    eventemitter3: 'EventEmitter'
+    eventemitter3: 'EventEmitter',
+    'babel-runtime/regenerator': 'regeneratorRuntime'
   },
   sourceMap: true
 };
