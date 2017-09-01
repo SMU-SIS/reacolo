@@ -89,7 +89,7 @@ export default class ReacoloModelSync extends EventEmitter {
     );
     this._metaDataRevision = revision;
     this._context = Object.assign({}, this._context, metaData, {
-      // Make sure these properties are not overwriten.
+      // Make sure these properties are not overwritten.
       clientRole: this._context.clientRole,
       roles: this._context.roles,
       observers: this._context.observers
