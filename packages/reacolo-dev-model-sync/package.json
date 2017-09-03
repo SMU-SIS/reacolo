@@ -2,7 +2,7 @@
   "name": "reacolo-dev-model-sync",
   "version": "4.1.0-beta.1",
   "main": "lib/reacolo-dev-model-sync.js",
-  "modules": "src",
+  "module": "src",
   "scripts": {
     "build": "rollup -c --environment NODE_ENV:production",
     "prepare": "npm run build",
