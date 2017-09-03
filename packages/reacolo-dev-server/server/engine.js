@@ -29,7 +29,7 @@ module.exports = function createEngine() {
   // Send a message to a list of clients. In theory, this should only be called
   // by the helpers below to ensure consistency in the sent messages.
   const sendMessage = (clientOrClients, type, data) => {
-    const msg = JSON.stringify({ type, data });
+    const msg = JSON.stringify([type, data]);
     if (clientOrClients.send) {
       clientOrClients.send(msg);
     } else {
@@ -41,7 +41,7 @@ module.exports = function createEngine() {
 
   // Helpers to send different type of messages.
   const sendAck = (success, client, messageId, response) =>
-    sendMessage(client, 'ack', { success, messageId, response });
+    sendMessage(client, 'ack', [messageId, success, response]);
   const sendAppData = clients =>
     sendMessage(clients, 'appData', {
       revision: appData.revision,

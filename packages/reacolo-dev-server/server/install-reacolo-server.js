@@ -5,24 +5,42 @@ const installSocketHandlers = (sockJsServer) => {
   // Create the engine that will handle the client messages.
   const engine = createEngine();
 
-  // Process socket messages.
-  const handleSocketData = (dataStr, socketEntry) => {
-    let data;
+  // Handle parsed socket messages.
+  const handleSocketMessage = (message, socketEntry) => {
     try {
-      data = JSON.parse(dataStr);
+      // Check the message format.
+      if (!Array.isArray(message) || message.length < 2 || message.length > 3) {
+        throw new Error('Messages does not look like [type, messageId, data]');
+      }
+      if (message[0] === 'bundle') {
+        // Handle bundles.
+        if (!Array.isArray(message[2])) {
+          throw new Error('Bundles must be arrays of messages');
+        }
+        message[2].forEach(m => handleSocketMessage(m, socketEntry));
+      } else {
+        // Handle single messages.
+        engine.handleClientMessage(
+          message[0],
+          message[1],
+          message[2],
+          socketEntry
+        );
+      }
     } catch (err) {
       engine.handleParsingError(err, socketEntry);
     }
-    // Support for bundle of messages.
-    const msgList = Array.isArray(data) ? data : [data];
-    msgList.forEach((message) => {
-      engine.handleClientMessage(
-        message.type,
-        message.id,
-        message.data,
-        socketEntry
-      );
-    });
+  };
+
+  // Parse and handle socket messages.
+  const handleSocketData = (dataStr, socketEntry) => {
+    let message;
+    try {
+      message = JSON.parse(dataStr);
+    } catch (err) {
+      engine.handleParsingError(err, socketEntry);
+    }
+    handleSocketMessage(message, socketEntry);
   };
 
   // Listen for socket connection.
