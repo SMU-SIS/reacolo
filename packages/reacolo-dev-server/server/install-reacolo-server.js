@@ -1,7 +1,7 @@
 const sockJS = require('sockjs');
 const createEngine = require('./engine');
 
-const installSocketHandlers = (sockJsServer) => {
+const installSocketHandlers = (sockJsServer, keepAlive = 100) => {
   // Create the engine that will handle the client messages.
   const engine = createEngine();
 
@@ -45,9 +45,27 @@ const installSocketHandlers = (sockJsServer) => {
 
   // Listen for socket connection.
   sockJsServer.on('connection', (socket) => {
+    // Set up keep alive if needed.
+    let keepAliveIntervalId;
+    const setupKeepAlive = () => {
+      clearInterval(keepAliveIntervalId);
+      keepAliveIntervalId = setInterval(
+        () => socket.write('["keepAlive"]'),
+        keepAlive
+      );
+    };
+    if (keepAlive != null) setupKeepAlive();
+
     // Create a wrapper around the socket that is used outside this handler.
     const socketEntry = {
-      send: socket.write.bind(socket)
+      send:
+        keepAlive == null
+          ? socket.write.bind(socket)
+          : (...args) => {
+            // Reset the keep alive interval.
+            setupKeepAlive();
+            socket.write(...args);
+          }
     };
 
     engine.addClient(socketEntry);
