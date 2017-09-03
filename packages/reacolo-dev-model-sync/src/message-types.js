@@ -18,8 +18,8 @@ export const ROLES_MSG_TYPE = 'roles';
 export const APP_DATA_MSG_TYPE = 'appData';
 export const APP_DATA_PATCH_MSG_TYPE = 'appDataPatch';
 export const USER_EVENT_MSG_TYPE = 'userEvent';
-export const KEEP_ALIVE_MSG_TYPE = 'keepAlive';
 
 // Communication.
 export const ACK_MSG_TYPE = 'ack';
 export const BUNDLE_MSG_TYPE = 'bundle';
+export const KEEP_ALIVE_MSG_TYPE = 'keepAlive';
