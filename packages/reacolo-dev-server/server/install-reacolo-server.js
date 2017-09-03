@@ -86,14 +86,15 @@ const installSocketHandlers = (sockJsServer, keepAlive = 100) => {
  * Install the reacolo server on an express application. Does not mount the
  * server interface.
  * @module
- * @param {object} expressServer - An express to install the reacolo server on.
+ * @param {http.Server} httpServer - An http server to install the reacolo
+ * socket on.
  * @param {string} prefix - The websocket handlers' address prefix.
  * @return {object} The express server with the handlers installed.
  */
-module.exports = function installReacoloServer(expressServer, prefix) {
+module.exports = function installReacoloServer(httpServer, prefix) {
   const wsServer = sockJS.createServer();
   installSocketHandlers(wsServer);
   // Plug the websocket server into the http server.
-  wsServer.installHandlers(expressServer, { prefix: `/${prefix}` });
-  return expressServer;
+  wsServer.installHandlers(httpServer, { prefix: `/${prefix}` });
+  return httpServer;
 };
