@@ -12,9 +12,6 @@ export const ROLES_REQUEST_MSG_TYPE = 'rolesRequest';
 // Events.
 export const BROADCAST_USER_EVENT_MSG_TYPE = 'broadcastUserEvent';
 
-// Acknowledgements.
-export const ACK_MSG_TYPE = 'ack';
-
 // Server Updates.
 export const META_DATA_MSG_TYPE = 'metaData';
 export const ROLES_MSG_TYPE = 'roles';
@@ -22,3 +19,7 @@ export const APP_DATA_MSG_TYPE = 'appData';
 export const APP_DATA_PATCH_MSG_TYPE = 'appDataPatch';
 export const USER_EVENT_MSG_TYPE = 'userEvent';
 export const KEEP_ALIVE_MSG_TYPE = 'keepAlive';
+
+// Communication.
+export const ACK_MSG_TYPE = 'ack';
+export const BUNDLE_MSG_TYPE = 'bundle';

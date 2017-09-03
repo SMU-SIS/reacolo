@@ -6,7 +6,7 @@ import {
   AlreadyConnectedError,
   RequestFailedError
 } from './errors';
-import { ACK_MSG_TYPE } from './message-types';
+import { ACK_MSG_TYPE, BUNDLE_MSG_TYPE } from './message-types';
 import { DEFAULT_ACK_TIMEOUT, DEFAULT_THROTTLE } from './defaults';
 
 export default class ReacoloSocket {
@@ -141,10 +141,11 @@ export default class ReacoloSocket {
 
     // Create the message response promise.
     message.responsePromise = ackPromise.then((ack) => {
-      if (ack.success) {
-        return ack.response;
+      const [, success, response] = ack;
+      if (success) {
+        return response;
       }
-      throw new RequestFailedError(ack.response);
+      throw new RequestFailedError(response);
     });
 
     // Register the acknowledgement callback.
@@ -188,19 +189,26 @@ export default class ReacoloSocket {
 
   _sendMessages(messages) {
     // Create the bundle by picking the properties to send from each message.
-    const messagesToSend = messages.map(({ request: { type, data }, id }) => ({ type, data, id }));
+    const messagesToSend = messages.map(
+      ({ request: { type, data }, id }) =>
+        (data != null ? [type, id, data] : [type, id])
+    );
     // If there is only one waiting message, unpack it before sending it.
-    const bundle = messagesToSend.length > 1 ? messagesToSend : messagesToSend[0];
+    const bundle =
+      messagesToSend.length > 1
+        ? [BUNDLE_MSG_TYPE, this._getNextMessageId(), messagesToSend]
+        : messagesToSend[0];
     // Send the message.
     this._socket.send(JSON.stringify(bundle));
   }
 
+
   _onSocketMessage(originalMessage) {
-    const message = JSON.parse(originalMessage.data);
-    if (message.type === ACK_MSG_TYPE) {
-      this._handleAckMessage(message);
+    const [type, data] = JSON.parse(originalMessage.data);
+    if (type === ACK_MSG_TYPE) {
+      this._handleAckMessage(data);
     } else {
-      this.onmessage(message);
+      this.onmessage(type, data);
     }
   }
 
@@ -209,9 +217,9 @@ export default class ReacoloSocket {
     this.onclose();
   }
 
-  _handleAckMessage(ackMessage) {
-    const messageData = ackMessage.data;
-    const callback = this._ackCallbacks.get(messageData.messageId);
+  _handleAckMessage(messageData) {
+    const messageId = messageData[0];
+    const callback = this._ackCallbacks.get(messageId);
     if (callback) {
       callback(messageData);
     } else {

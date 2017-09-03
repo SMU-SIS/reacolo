@@ -180,56 +180,56 @@ export default class ReacoloModelSync extends EventEmitter {
     this._publishBroadcastedEvent(eventName, data);
   }
 
-  _onSocketMessage(message) {
-    switch (message.type) {
+  _onSocketMessage(type, data) {
+    switch (type) {
       case MessageTypes.APP_DATA_MSG_TYPE:
-        this._appData = message.data.appData;
-        this._appDataRevision = message.data.revision;
+        this._appData = data.appData;
+        this._appDataRevision = data.revision;
         this.emit(Events.DATA_UPDATE, this._appData, true);
         break;
       case MessageTypes.APP_DATA_PATCH_MSG_TYPE:
-        if (this._appDataRevision !== message.data.from) {
+        if (this._appDataRevision !== data.from) {
           // If the patch is applied on a revision different from the current
           // revision, we do not apply the patch and instead ask the server
           // for a full data update.
           // eslint-disable-next-line no-console
           console.warn(
-            `Received an app data patch from unknown revision: ${message.data.from} (current is ${this._appDataRevision}). Requesting a full data update.`
+            `Received an app data patch from unknown revision: ${data.from} (current is ${this._appDataRevision}). Requesting a full data update.`
           );
           this._socket.sendRequest(MessageTypes.APP_DATA_REQUEST_MSG_TYPE);
         } else {
-          this._appData = jsonPatch.apply_patch(this._appData, message.data.patch);
-          this._appDataRevision = message.data.revision;
+          this._appData = jsonPatch.apply_patch(this._appData, data.patch);
+          this._appDataRevision = data.revision;
           this.emit(Events.DATA_UPDATE, this._appData, true);
         }
         break;
       case MessageTypes.META_DATA_MSG_TYPE:
         this._context = Object.assign(
           {},
-          message.data.metaData,
+          data.metaData,
           // clientRole and roles are part of the context, but not part of
           // the metaData.
           { clientRole: this._context.clientRole, roles: this._context.roles }
         );
-        this._metaDataRevision = message.data.revision;
+        this._metaDataRevision = data.revision;
         this.emit(Events.CONTEXT_UPDATE, this._context, true);
         break;
       case MessageTypes.ROLES_MSG_TYPE:
         this._context = Object.assign(
           {},
           this._context,
-          { roles: message.data.roles, observers: message.data.observers }
+          { roles: data.roles, observers: data.observers }
         );
         this.emit(Events.CONTEXT_UPDATE, this._context, true);
         break;
       case MessageTypes.USER_EVENT_MSG_TYPE:
-        this._publishBroadcastedEvent(message.data.eventName, message.data.data);
+        this._publishBroadcastedEvent(data.eventName, data.data);
         break;
       case MessageTypes.KEEP_ALIVE_MSG_TYPE:
         break;
       default:
         // eslint-disable-next-line no-console
-        console.warn(`Unknown message type: ${message.type}`);
+        console.warn(`Unknown message type: ${type}`);
     }
   }
 
