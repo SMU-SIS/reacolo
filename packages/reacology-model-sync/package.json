@@ -4,6 +4,7 @@
   "main": "lib/reacology-model-sync.js",
   "scripts": {
     "build": "rollup -c --environment NODE_ENV:production",
+    "prepare": "npm run build",
     "test": "jest"
   },
   "peerDependencies": {

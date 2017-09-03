@@ -4,7 +4,8 @@
   "main": "lib/reacolo.js",
   "scripts": {
     "test": "jest",
-    "build": "rollup -c"
+    "build": "rollup -c --environment NODE_ENV:production",
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "react": "^15.6.1"

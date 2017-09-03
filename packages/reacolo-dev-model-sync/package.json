@@ -4,7 +4,8 @@
   "main": "lib/reacolo-dev-model-sync.js",
   "modules": "src",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c --environment NODE_ENV:production",
+    "prepare": "npm run build",
     "test": "jest"
   },
   "devDependencies": {
