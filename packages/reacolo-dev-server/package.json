@@ -1,6 +1,7 @@
 {
   "name": "reacolo-dev-server",
   "version": "4.1.0-beta.2",
+  "main": "server/index.js",
   "description": "Small server for reacolo. It is meant to be used with reacolo-dev-model-sync.",
   "bin": {
     "reacolo-dev-server": "./bin/start-server.js"
