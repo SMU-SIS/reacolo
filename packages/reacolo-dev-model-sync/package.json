@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "rollup -c --environment NODE_ENV:production",
-    "prepare": "npm run build",
+    "prepare": "yarn run build",
     "test": "jest"
   },
   "devDependencies": {

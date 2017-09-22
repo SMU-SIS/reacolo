@@ -17,7 +17,7 @@
     "test": "echo \"No test specified\"",
     "build": "webpack --config server_interface/webpack.config.js",
     "start": "node ./bin/start-server.js",
-    "prepare": "npm run build"
+    "prepare": "yarn run build"
   },
   "author": "Quentin Roy <quentin@quentinroy.fr>",
   "license": "MIT",
