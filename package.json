@@ -35,6 +35,9 @@
   "license": "UNLICENSED",
   "private": true,
   "repository": "https://github.com/SMU-SIS/reacolo.git",
+  "workspaces": [
+    "packages/*"
+  ],
   "config": {
     "validate-commit-msg": {
       "types": [
