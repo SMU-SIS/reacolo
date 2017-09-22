@@ -3,7 +3,7 @@
  * @module data-registry
  * @param  {Object} initData - The initial data contained by the registry.
  * @param  {Number} [initRevision=0] - The initial revision id.
- * @return {data-registry~DataRegistry} The data registy
+ * @return {data-registry~DataRegistry} The data registry.
  */
 const createDataRegistry = (initData, initRevision = 0) => {
   let data = initData;
