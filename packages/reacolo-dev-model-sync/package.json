@@ -3,7 +3,10 @@
   "version": "4.1.0-beta.1",
   "main": "lib/reacolo-dev-model-sync.js",
   "module": "src",
-  "files": ["src", "lib"],
+  "files": [
+    "src",
+    "lib"
+  ],
   "scripts": {
     "build": "rollup -c --environment NODE_ENV:production",
     "prepare": "npm run build",
@@ -16,13 +19,12 @@
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.1.8",
     "eventemitter3": "^2.0.2",
-    "jest": "^20.0.4",
+    "jest": "^21.1.0",
     "rollup": "^0.45.2",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "sockjs-client": "^1.1.1",
-    "wait-then": "^0.1.2"
+    "sockjs-client": "^1.1.1"
   },
   "author": "Quentin Roy <quentinroy@smu.edu.sg>",
   "license": "UNLICENSED",

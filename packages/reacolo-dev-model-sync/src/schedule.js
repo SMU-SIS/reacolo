@@ -12,19 +12,23 @@ const schedule = (delay, f, onCanceled) => {
   let cancel = null;
 
   const promise = new Promise((resolve, reject) => {
-    const timeout = setTimeout(resolve, delay);
+    const timeout = setTimeout(() => {
+      try {
+        if (f) f();
+        hasRun = true;
+        resolve();
+      } catch (e) {
+        hasRun = true;
+        reject(e);
+      }
+    }, delay);
     cancel = (...args) => {
       isCanceled = true;
       clearTimeout(timeout);
-      reject(...args);
+      if (onCanceled) onCanceled(...args);
+      reject();
     };
-  })
-    .then(() => {
-      f();
-    }, onCanceled)
-    .then(() => {
-      hasRun = true;
-    });
+  });
 
   /**
    * @interface schedule~ScheduledCall
