@@ -67,6 +67,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
    * Set the application data.
    *
    * @param {object} newData the new data.
+   * @return {undefined}
    */
   setAppData(newData) {
     return new Promise((resolve) => {
@@ -80,6 +81,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
    * Set the application context.
    *
    * @param {object} newContext the new context.
+   * @return {undefined}
    */
   setAppContext(newContext) {
     cordova.plugins.CordovaEcology.setData('context', newContext);
@@ -172,6 +174,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
 
   /**
    * Stop the data synchronization.
+   * @return {undefined}
    */
   stop() {
     if (this._isConnected) {

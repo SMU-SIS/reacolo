@@ -5,6 +5,7 @@
   "root": true,
   "extends": "airbnb",
   "rules": {
+    "valid-jsdoc": "error",
     "no-underscore-dangle": 0,
     "comma-dangle": ["error", "never"],
     "import/extensions": ["off", "always"],
