@@ -3,7 +3,7 @@
   "version": "4.1.0-beta.2",
   "description": "Small server for reacolo. It is meant to be used with reacolo-dev-model-sync.",
   "bin": {
-    "reacolo-server": "./bin/start-server.js"
+    "reacolo-dev-server": "./bin/start-server.js"
   },
   "files": [
     "server",
