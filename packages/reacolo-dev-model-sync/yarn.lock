@@ -2558,6 +2558,10 @@ vlq@^0.2.1:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/vlq/-/vlq-0.2.2.tgz#e316d5257b40b86bb43cb8d5fea5d7f54d6b0ca1"
 
+wait-then@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/wait-then/-/wait-then-0.1.2.tgz#ca399ce6672513cadd4365bf366631ce9c57b833"
+
 walker@~1.0.5:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/walker/-/walker-1.0.7.tgz#2f7f9b8fd10d677262b18a884e28d19618e028fb"

@@ -1,25 +1,89 @@
-// A class that can be used to schedule or cancel a function call.
-export default class Schedule {
-  constructor(delay, f, onCanceled) {
-    this._isCanceled = false;
-    this._hasRun = false;
-    this.promise = new Promise((resolve, reject) => {
-      const timeout = setTimeout(resolve, delay);
-      this.cancel = (...args) => {
-        this._isCanceled = true;
-        clearTimeout(timeout);
-        reject(...args);
-      };
-    }).then(f, onCanceled)
-      .then(() => { this._hasRun = true; });
-  }
-  get isCanceled() {
-    return this._isCanceled;
-  }
-  get hasRun() {
-    return this._hasRun;
-  }
-  get isDone() {
-    return this._isCanceled || this._hasRun;
-  }
-}
+/**
+ * Create a scheduled function call.
+ * @module schedule
+ * @param {Object} delay - The delay after which to call the function.
+ * @param {number} [f] - The function call.
+ * @param {func} [onCanceled] - The function to call on schedule cancel.
+ * @return {schedule~ScheduledCall} The scheduled call.
+ */
+const schedule = (delay, f, onCanceled) => {
+  let isCanceled = false;
+  let hasRun = false;
+  let cancel = null;
+
+  const promise = new Promise((resolve, reject) => {
+    const timeout = setTimeout(resolve, delay);
+    cancel = (...args) => {
+      isCanceled = true;
+      clearTimeout(timeout);
+      reject(...args);
+    };
+  })
+    .then(() => {
+      f();
+    }, onCanceled)
+    .then(() => {
+      hasRun = true;
+    });
+
+  /**
+   * @interface schedule~ScheduledCall
+   */
+  return {
+    /**
+     * Cancel the scheduled call.
+     * @function
+     * @memberof schedule~ScheduledCall#
+     * @return {undefined}
+     */
+    cancel,
+
+    /**
+     * A promise resolved when the scheduled call has been called, and rejected
+     * when it is rejected.
+     *
+     * @memberof schedule~ScheduledCall#
+     * @readonly
+     * @type {Promise}
+     */
+    get promise() {
+      return promise;
+    },
+
+    /**
+     * True if the call has been canceled.
+     *
+     * @memberof schedule~ScheduledCall#
+     * @readonly
+     * @type {boolean}
+     */
+    get isCanceled() {
+      return isCanceled;
+    },
+
+    /**
+     * True if the function has been executed.
+     *
+     * @memberof schedule~ScheduledCall#
+     * @readonly
+     * @type {boolean}
+     */
+    get hasRun() {
+      return hasRun;
+    },
+
+    /**
+     * True if the schedule is done (i.e. the function has run or has been
+     * canceled).
+     *
+     * @memberof schedule~ScheduledCall#
+     * @readonly
+     * @type {boolean}
+     */
+    get isDone() {
+      return isCanceled || hasRun;
+    }
+  };
+};
+
+export default schedule;

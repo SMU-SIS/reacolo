@@ -1,5 +1,5 @@
 import SockJS from 'sockjs-client';
-import Schedule from './schedule.js';
+import schedule from './schedule.js';
 import {
   RequestTimeoutError,
   NotConnectedError,
@@ -155,7 +155,7 @@ export default class ReacoloSocket {
   }
 
   _scheduleNextSending(delay = 0) {
-    this._nextSendingSchedule = new Schedule(delay, () => {
+    this._nextSendingSchedule = schedule(delay, () => {
       this._sendPendingMessages();
     });
   }

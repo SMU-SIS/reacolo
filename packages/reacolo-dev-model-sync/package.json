@@ -20,7 +20,8 @@
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "sockjs-client": "^1.1.1"
+    "sockjs-client": "^1.1.1",
+    "wait-then": "^0.1.2"
   },
   "author": "Quentin Roy <quentinroy@smu.edu.sg>",
   "license": "UNLICENSED",
