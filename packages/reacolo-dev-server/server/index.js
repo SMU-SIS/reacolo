@@ -3,6 +3,8 @@ const http = require('http');
 const path = require('path');
 const installReacoloServer = require('./install-reacolo-server');
 
+const INTERFACE_PATH = path.resolve(__dirname, '../server_interface/dist');
+
 /**
  * Start the server.
  * @module
@@ -15,7 +17,7 @@ const installReacoloServer = require('./install-reacolo-server');
 module.exports = function startReacoloServer(
   port = 3000,
   socketPrefix = 'socket',
-  interfacePath = path.resolve(__dirname, '../server_interface/dist')
+  interfacePath = INTERFACE_PATH
 ) {
   // Init server components.
   const app = express();
@@ -34,3 +36,4 @@ module.exports = function startReacoloServer(
 };
 
 module.exports.install = installReacoloServer;
+module.exports.INTERFACE_PATH = INTERFACE_PATH;
