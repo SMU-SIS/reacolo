@@ -2,7 +2,7 @@
  * Create a scheduled function call.
  * @module schedule
  * @param {Object} delay - The delay after which to call the function.
- * @param {number} [f] - The function call.
+ * @param {number} f - The function to call.
  * @param {func} [onCanceled] - The function to call on schedule cancel.
  * @return {schedule~ScheduledCall} The scheduled call.
  */
