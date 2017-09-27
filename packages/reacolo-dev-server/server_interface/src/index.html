@@ -13,15 +13,24 @@
   <section id="content" class="connecting">
     <div id="connecting">Connecting...</div>
     <div id="connected">
-      <h2>Data</h2>
-      <div id="app-data"></div>
+      <div class="editor">
+        <h2 class="editor-title">Data</h2>
+        <div id="app-data"></div>
+      </div>
 
-      <h2>Meta Data</h2>
-      <div id="meta-data"></div>
 
-      <h2>Patch</h2>
-      <div id="patch-data"></div>
-      <button id="send-patch-button">send</button>
+      <div class="editor">
+        <h2 class="editor-title">Meta Data</h2>
+        <div id="meta-data"></div>
+      </div>
+
+      <div class="editor">
+        <h2 class="editor-title">Patch</h2>
+        <div id="patch-data"></div>
+        <div class="editor-control-wrapper">
+          <button id="send-patch-button">Apply</button>
+        </div>
+      </div>
     </div>
     <div id="disconnected">Disconnected.</div>
   </section>
