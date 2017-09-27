@@ -59,7 +59,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin([{ from: '**/*.html', to: './' }]),
     new webpack.optimize.ModuleConcatenationPlugin(),
-    new UglifyJsPlugin({ sourceMap: true, parallel: true }),
+    // new UglifyJsPlugin({ sourceMap: true, parallel: true }),
     new webpack.optimize.OccurrenceOrderPlugin()
   ]
 };

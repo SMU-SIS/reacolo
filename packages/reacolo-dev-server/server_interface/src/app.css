@@ -1,38 +1,58 @@
-#content.loading #connected,
-#content.loading #disconnected,
-#content.connected #loading,
-#content.connected #disconnected,
-#content.disconnected #loading,
-#content.disconnected #connected {
+#connecting,
+#connected,
+#disconnected {
   display: none;
 }
-#app-data, #context {
-  width: 800px;
+
+#content.connecting #connecting,
+#content.connected #connected,
+#content.disconnected #disconnected {
+  display: inherit;
+}
+
+#app-data {
   height: 400px;
 }
-#patch-data {
-  width: 800px;
+#meta-data {
   height: 200px;
 }
-#alert {
+#patch-data {
+  height: 200px;
+}
+#alert .toast {
   position: fixed;
   z-index: 100;
-  opacity: 0;
   font-size: 1.2em;
   text-align: center;
   border-radius: 5px;
-  background-color: #D8AFAF;
+  background-color: #d8afaf;
   border-style: solid;
   border-width: 1px;
   border-color: #871010;
   color: #871010;
   margin: 0 auto;
-  left: .5em;
-  right: .5em;
-  top: .5em;
-  padding: .3em;
+  left: 0.5em;
+  right: 0.5em;
+  top: 0.5em;
+  padding: 0.3em;
+}
+.toast {
+  opacity: 0;
   transition: 200ms;
 }
-#alert.shown {
+.toast.shown {
   opacity: 1;
+}
+
+#app-data .jsoneditor-menu,
+#meta-data .jsoneditor-menu,
+#patch-data .jsoneditor-menu {
+  display: none;
+}
+
+#app-data .jsoneditor-outer,
+#meta-data .jsoneditor-outer,
+#patch-data .jsoneditor-outer {
+  margin: inherit;
+  padding: inherit;
 }
