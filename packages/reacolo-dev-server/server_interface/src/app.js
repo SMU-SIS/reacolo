@@ -50,7 +50,7 @@ window.addEventListener('load', () => {
     parent: document.getElementById('patch-data'),
     onPatch(patch) {
       modelSync
-        .patchAppData(patch)
+        .patchData(patch)
         .catch((e) => {
           // eslint-disable-next-line no-console
           console.error(e);
