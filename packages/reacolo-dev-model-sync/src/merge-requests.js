@@ -1,4 +1,10 @@
-import * as MessageTypes from './message-types.js';
+import {
+  SET_DATA_MSG_TYPE,
+  SET_CLIENT_ROLE_MSG_TYPE,
+  PATCH_DATA_MSG_TYPE,
+  GET_DATA_MSG_TYPE,
+  GET_META_DATA_MSG_TYPE
+} from './message-types.js';
 
 /**
  * Merge two requests.
@@ -12,23 +18,21 @@ const mergeRequest = (lastRequest, newRequest) => {
   switch (newRequest.type) {
     // These requests are single shot: only the last one matters.
     // Hence we replace any pending request with the new one.
-    case MessageTypes.SET_CLIENT_ROLE_MSG_TYPE:
-    case MessageTypes.ROLES_REQUEST_MSG_TYPE:
-    case MessageTypes.SET_META_DATA_MSG_TYPE:
-    case MessageTypes.META_DATA_REQUEST_MSG_TYPE:
-    case MessageTypes.APP_DATA_REQUEST_MSG_TYPE:
+    case SET_CLIENT_ROLE_MSG_TYPE:
+    case GET_META_DATA_MSG_TYPE:
+    case GET_DATA_MSG_TYPE:
       // These requests overwrites any previous similar requests.
       return newRequest.type === lastRequest.type ? newRequest : undefined;
-    case MessageTypes.SET_APP_DATA_MSG_TYPE:
+    case SET_DATA_MSG_TYPE:
       // Set app data request also overwrites patch data.
       return lastRequest.type === newRequest.type ||
-      lastRequest.type === MessageTypes.PATCH_DATA_MSG_TYPE
+      lastRequest.type === PATCH_DATA_MSG_TYPE
         ? newRequest
         : undefined;
-    case MessageTypes.PATCH_DATA_MSG_TYPE:
+    case PATCH_DATA_MSG_TYPE:
       return lastRequest.type === newRequest.type
         ? {
-          type: 'patchAppData',
+          type: PATCH_DATA_MSG_TYPE,
           data: {
             patch: [...lastRequest.data.patch, ...newRequest.data.patch],
             from: lastRequest.data.from

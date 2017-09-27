@@ -1,22 +1,17 @@
 // Setters.
-export const SET_APP_DATA_MSG_TYPE = 'setAppData';
-export const SET_META_DATA_MSG_TYPE = 'setMetaData';
+export const SET_DATA_MSG_TYPE = 'setData';
 export const SET_CLIENT_ROLE_MSG_TYPE = 'setClientRole';
-export const PATCH_DATA_MSG_TYPE = 'patchAppData';
+export const PATCH_DATA_MSG_TYPE = 'patchData';
 
-// Data requests.
-export const APP_DATA_REQUEST_MSG_TYPE = 'appDataRequest';
-export const META_DATA_REQUEST_MSG_TYPE = 'metaDataRequest';
-export const ROLES_REQUEST_MSG_TYPE = 'rolesRequest';
-
-// Events.
+// Client requests.
+export const GET_DATA_MSG_TYPE = 'getData';
+export const GET_META_DATA_MSG_TYPE = 'getMetaData';
 export const BROADCAST_USER_EVENT_MSG_TYPE = 'broadcastUserEvent';
 
 // Server Updates.
 export const META_DATA_MSG_TYPE = 'metaData';
-export const ROLES_MSG_TYPE = 'roles';
-export const APP_DATA_MSG_TYPE = 'appData';
-export const APP_DATA_PATCH_MSG_TYPE = 'appDataPatch';
+export const DATA_MSG_TYPE = 'data';
+export const DATA_PATCH_MSG_TYPE = 'dataPatch';
 export const USER_EVENT_MSG_TYPE = 'userEvent';
 
 // Communication.
