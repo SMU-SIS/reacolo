@@ -1,8 +1,8 @@
-# Reacolo Dev Model Sync
+# Reacolo Dev Model
 
-The Reacolo dev model sync provides synchronization capabilities with [Reacolo Dev Server](../reacolo-dev-server).
+The Reacolo dev model provides synchronization capabilities with [Reacolo Dev Server](../reacolo-dev-server).
 
-It complies with Reacolo's ModelSync API and thus, is usable with the [`connect` HOC](../reacolo/README.md#connect).
+It complies with the Reacolo Model API and thus, is usable with the [`connect` HOC](../reacolo/README.md#connect).
 
 ## Build
 
@@ -28,14 +28,14 @@ npm run build
 ```js
 import React from 'react';
 import { render } from 'react-dom';
-import ReacoloDevModelSync from 'reacolo-dev-model-sync';
+import ReacoloDevModel from 'reacolo-dev-model';
 import { connect } from 'reacolo';
 
 // Create the model sync, specifying the requested role for this client.
-const modelSync = new ModelSync('http://my.reacolo.server:port/socket', 'thisClientRole');
+const model = new ReacoloDevModel('http://my.reacolo.server:port/socket', 'thisClientRole');
 
 // Connect it to a component using Reacolo connect.
-const MyConnectedApp = connect(MyApp, modelSync);
+const MyConnectedApp = connect(MyApp, model);
 
 // Render the component inside the root div using React.
 render(<MyConnectedApp />, document.getElementById('root'));

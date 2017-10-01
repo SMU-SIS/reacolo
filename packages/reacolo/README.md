@@ -157,10 +157,10 @@ Nexted contexts can themselves contain nested contexts.
 
 ### connect
 
-The `connect` higher order component (HOC) is used to provide context and data synchronization to a component by connecting it to a [Model Sync](#model-sync-api) (see [reacolo dev model sync](../reacolo-dev-model-sync) and [reacology model sync](../reacology-model-sync)):
+The `connect` higher order component (HOC) is used to provide context and data synchronization to a component by connecting it to a [ReacoloModel](#reacolo-model-api) (see [reacolo dev model](../reacolo-dev-model) and [reacology model](../reacology-model)):
 
 ```js
-const MyConnectedApp = connect(MyApp, myModelSync);
+const MyConnectedApp = connect(MyApp, myModel);
 ```
 
 Once `<MyApp>` is connected it will be provided with the following props:
@@ -176,6 +176,6 @@ Once `<MyApp>` is connected it will be provided with the following props:
 Connected components should always **manage the non connected special case**. When the model is not connected, `data` and `setData` are not accessible. The content of `context` depends on the model sync that is used, but it will typically provides minimum values (e.g. `'clientRole'`). It is typical that the first time a connected component is rendered, the model sync is not connected yet.
 
 
-### Model Sync API
+### Reacolo Model Sync
 
 *TODO*

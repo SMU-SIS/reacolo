@@ -5,9 +5,9 @@ import babel from 'rollup-plugin-babel';
 export default {
   entry: 'src/index.js',
   format: 'umd',
-  moduleName: 'ReacologyModelSync',
+  moduleName: 'ReacologyModel',
   amd: {
-    id: 'reacology-model-sync'
+    id: 'reacology-model'
   },
   plugins: [
     resolve(),
@@ -16,7 +16,7 @@ export default {
       exclude: 'node_modules/**' // only transpile our source code
     })
   ],
-  dest: 'lib/reacology-model-sync.js',
+  dest: 'lib/reacology-model.js',
   exports: 'named',
   external: ['eventemitter3', 'babel-runtime/regenerator'],
   globals: {

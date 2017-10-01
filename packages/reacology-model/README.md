@@ -1,4 +1,4 @@
-# Reacology-model-sync
+# Reacology-model
 
 **Not functional yet.**
 

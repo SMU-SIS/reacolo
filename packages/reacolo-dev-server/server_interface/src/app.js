@@ -1,5 +1,5 @@
 import queryString from 'query-string';
-import ReacoloDevModelSync from 'reacolo-dev-model-sync';
+import ReacoloDevModel from 'reacolo-dev-model';
 import createDataEditor from './data-editor';
 import createPatchEditor from './patch-editor';
 import createToast from './toast';
@@ -12,7 +12,7 @@ window.addEventListener('load', () => {
   const contentDiv = document.getElementById('content');
 
   // Create the model sync.
-  const modelSync = new ReacoloDevModelSync(
+  const reacoloModel = new ReacoloDevModel(
     `http://${location.host}/socket`,
     queryString.parse(location.search).role
   );
@@ -31,8 +31,8 @@ window.addEventListener('load', () => {
   // Create the data editor and get a function to handle new data.
   const newAppDataHandler = createDataEditor({
     targetNode: document.getElementById('app-data'),
-    dataSetter: data => modelSync.setData(data),
-    dataGetter: () => modelSync.data,
+    dataSetter: data => reacoloModel.setData(data),
+    dataGetter: () => reacoloModel.data,
     onError: toastError
   });
 
@@ -40,7 +40,7 @@ window.addEventListener('load', () => {
   const metaDataHandler = createDataEditor({
     targetNode: document.getElementById('meta-data'),
     dataSetter: () => Promise.reject(new Error('Meta-data cannot be updated.')),
-    dataGetter: () => modelSync.metaData,
+    dataGetter: () => reacoloModel.metaData,
     readOnly: true,
     onError: toastError
   });
@@ -49,7 +49,7 @@ window.addEventListener('load', () => {
   createPatchEditor({
     parent: document.getElementById('patch-data'),
     onPatch(patch) {
-      modelSync
+      reacoloModel
         .patchData(patch)
         .catch((e) => {
           // eslint-disable-next-line no-console
@@ -60,22 +60,22 @@ window.addEventListener('load', () => {
   });
 
   // Connect model sync events.
-  modelSync.on(ReacoloDevModelSync.DATA_UPDATE_EVT, newAppDataHandler);
-  modelSync.on(ReacoloDevModelSync.META_DATA_UPDATE_EVT, metaDataHandler);
-  modelSync.on(ReacoloDevModelSync.STATUS_UPDATE_EVT, (newStatus) => {
+  reacoloModel.on(ReacoloDevModel.DATA_UPDATE_EVT, newAppDataHandler);
+  reacoloModel.on(ReacoloDevModel.META_DATA_UPDATE_EVT, metaDataHandler);
+  reacoloModel.on(ReacoloDevModel.STATUS_UPDATE_EVT, (newStatus) => {
     setState(
-      newStatus === ReacoloDevModelSync.CONNECTED_STATUS
+      newStatus === ReacoloDevModel.CONNECTED_STATUS
         ? 'connected'
         : 'disconnected'
     );
   });
 
   // Start the model sync.
-  modelSync
+  reacoloModel
     .start()
     .then(() => {
-      newAppDataHandler(modelSync.data);
-      metaDataHandler(modelSync.metaData);
+      newAppDataHandler(reacoloModel.data);
+      metaDataHandler(reacoloModel.metaData);
       setState('connected');
     })
     .catch((error) => {
