@@ -10,6 +10,7 @@
   "scripts": {
     "build": "rollup -c --environment NODE_ENV:production",
     "prepare": "yarn run build",
+    "generate-docs": "jsdoc --configure jsdoc.config.js --verbose",
     "test": "jest"
   },
   "devDependencies": {
@@ -20,6 +21,8 @@
     "babel-preset-env": "^1.1.8",
     "eventemitter3": "^2.0.2",
     "jest": "^21.1.0",
+    "jsdoc": "^3.5.5",
+    "minami": "^1.2.3",
     "rollup": "^0.45.2",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.0.2",

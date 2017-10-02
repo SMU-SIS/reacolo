@@ -1,6 +1,7 @@
 /**
- * Create a scheduled function call.
- * @module schedule
+ * Creates a scheduled function call.
+ * @module {func} reacolo-dev-model/schedule
+ * @private
  * @param {Object} delay - The delay after which to call the function.
  * @param {number} f - The function to call.
  * @param {func} [onCanceled] - The function to call on schedule cancel.
@@ -32,6 +33,7 @@ const schedule = (delay, f, onCanceled) => {
 
   /**
    * @interface schedule~ScheduledCall
+   * @private
    */
   return {
     /**

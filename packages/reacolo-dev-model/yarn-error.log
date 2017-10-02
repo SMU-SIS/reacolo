@@ -1,0 +1,77 @@
+Arguments: 
+  /usr/local/Cellar/node/8.4.0/bin/node /usr/local/Cellar/yarn/1.0.1/libexec/bin/yarn.js bootstrap
+
+PATH: 
+  /Users/quentinroy/.yarn/bin:/usr/local/bin:/usr/local/sbin:/Users/quentinroy/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/opt/X11/bin
+
+Yarn version: 
+  1.0.1
+
+Node version: 
+  8.4.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "reacolo-dev-model",
+    "version": "4.1.0-beta.1",
+    "main": "lib/reacolo-dev-model.js",
+    "module": "src",
+    "files": [
+      "src",
+      "lib"
+    ],
+    "scripts": {
+      "build": "rollup -c --environment NODE_ENV:production",
+      // "prepare": "yarn run build",
+      "generate-docs": "jsdoc --configure .jsdoc.json --verbose",
+      "test": "jest"
+    },
+    "devDependencies": {
+      "babel-core": "^6.23.1",
+      "babel-eslint": "^7.1.0",
+      "babel-jest": "^20.0.3",
+      "babel-plugin-external-helpers": "^6.22.0",
+      "babel-preset-env": "^1.1.8",
+      "eventemitter3": "^2.0.2",
+      "jest": "^21.1.0",
+      "jsdoc": "^3.5.5",
+      "minami": "^1.2.3",
+      "rollup": "^0.45.2",
+      "rollup-plugin-babel": "^2.7.1",
+      "rollup-plugin-commonjs": "^8.0.2",
+      "rollup-plugin-node-resolve": "^3.0.0",
+      "sockjs-client": "^1.1.1"
+    },
+    "author": "Quentin Roy <quentinroy@smu.edu.sg>",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+      "babel-plugin-transform-runtime": "^6.23.0",
+      "eventemitter3": "^2.0.2",
+      "jsonpatch": "^3.0.1",
+      "sockjs-client": "^1.1.1"
+    },
+    "jest": {
+      "transform": {
+        "\\.js$": "babel-jest"
+      }
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  SyntaxError: /Users/quentinroy/Workspace/reacolo/packages/reacolo-dev-model/package.json: Unexpected token / in JSON at position 237
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/1.0.1/libexec/lib/cli.js:797:57
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.0.1/libexec/lib/cli.js:92:30)
+      at /usr/local/Cellar/yarn/1.0.1/libexec/lib/cli.js:103:13
+      at <anonymous>

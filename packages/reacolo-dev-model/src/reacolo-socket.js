@@ -1,3 +1,8 @@
+/**
+ * @module reacolo-dev-model/reacolo-socket
+ * @private
+ */
+
 import SockJS from 'sockjs-client';
 import schedule from './schedule.js';
 import {
@@ -5,16 +10,41 @@ import {
   NotConnectedError,
   AlreadyConnectedError,
   RequestFailedError
-} from './errors';
-import { ACK_MSG_TYPE, BUNDLE_MSG_TYPE } from './message-types';
-import { DEFAULT_ACK_TIMEOUT, DEFAULT_THROTTLE } from './defaults';
+} from './constants/errors';
+import { ACK_MSG_TYPE, BUNDLE_MSG_TYPE } from './constants/message-types.js';
 
+/**
+ * This function tries to merge two requests together.
+ *
+ * @callback requestMerger
+ * @param  {{type: string, data: object}} lastRequest - The last request that
+ * has been pushed before the new request.
+ * @param  {{type: string, data: object}} newRequest - The new request.
+ * @return {{type: string, data: object}} The request merged or undefined if the
+ * two requests cannot be merged.
+ */
+
+
+/**
+ * Handle the transmissions of the requests to the reacolo dev server.
+ * @private
+ */
 export default class ReacoloSocket {
+  /**
+   * Create the socket.
+   *
+   * @param {string} serverAddress - The address of the server.
+   * @param {module:reacolo-dev-model/reacolo-socket~requestMerger}
+   * requestMerger - The function used to merge requests together.
+   * @param {number} ackTimeout - Maximum time to wait for a request
+   * acknowledgement.
+   * @param {number} throttleDelay - Minimum time between two requests.
+   */
   constructor(
     serverAddress,
     requestMerger = () => undefined,
-    ackTimeout = DEFAULT_ACK_TIMEOUT,
-    throttleDelay = DEFAULT_THROTTLE
+    ackTimeout,
+    throttleDelay
   ) {
     this._serverAddress = serverAddress;
     // Time to wait for an acknowledgement after a request has been sent to the server.
@@ -42,38 +72,59 @@ export default class ReacoloSocket {
     this.onclose = () => {};
   }
 
-  async start() {
+  /**
+   * Connect to the server
+   *
+   * @return {Promise} A promise resolved once the connection has been
+   * established.
+   */
+  start() {
     if (this._isConnected) {
-      throw new AlreadyConnectedError();
+      return Promise.reject(new AlreadyConnectedError());
     }
 
     // Open the socket.
-    this._socket = await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const socket = new SockJS(this._serverAddress);
       socket.onopen = () => resolve(socket);
-      socket.onerror = () => reject();
+      socket.onerror = err => reject(err);
+    }).then((socket) => {
+      this._socket = socket;
+
+      // Bind the handlers.
+      this._socket.onmessage = this._onSocketMessage.bind(this);
+      this._socket.onclose = this._onSocketClose.bind(this);
+
+      // Mark the socket as connected.
+      this._isConnected = true;
+
+      return this;
     });
-
-    // Bind the handlers.
-    this._socket.onmessage = this._onSocketMessage.bind(this);
-    this._socket.onclose = this._onSocketClose.bind(this);
-
-    // Mark the socket as connected.
-    this._isConnected = true;
-
-    // Return itself upon completion.
-    return this;
   }
 
+  /**
+   * @type {boolean}
+   */
   get isConnected() {
     return this._isConnected;
   }
 
+  /**
+   * @type {boolean}
+   */
   get isASendingScheduled() {
     return this._nextSendingSchedule && !this._nextSendingSchedule.isDone;
   }
 
-  // Send a request ({ type, data }).
+
+  /**
+   * Send a request.
+   * @param {{type: string, data: object}|string} requestOrType - The request or
+   * the type of the request.
+   * @param {object} [data] - The request's data.
+   * @return {Promise} a promise resolved with the server's response to the
+   * request.
+   */
   sendRequest(requestOrType, data) {
     if (!this.isConnected) {
       throw new NotConnectedError('Not connected to the server.');
@@ -110,6 +161,15 @@ export default class ReacoloSocket {
 
     // Return the acknowledgement promise of this request.
     return requestMessage.responsePromise;
+  }
+
+  /**
+   * Immediately send every pending requests.
+   * @return {undefined}
+   */
+  flush() {
+    this._cancelNextSending();
+    this._sendPendingMessages();
   }
 
   _createRequestMessage(request) {
@@ -164,12 +224,6 @@ export default class ReacoloSocket {
     if (this.isASendingScheduled) {
       this._nextSendingSchedule.cancel();
     }
-  }
-
-  // Immediately send every pending requests.
-  flush() {
-    this._cancelNextSending();
-    this._sendPendingMessages();
   }
 
   _sendPendingMessages() {

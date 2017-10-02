@@ -3,7 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 
 export default {
-  entry: 'src/model.js',
+  entry: 'src/index.js',
   format: 'umd',
   moduleName: 'ReacoloDevModel',
   amd: {
@@ -17,7 +17,6 @@ export default {
     })
   ],
   dest: 'lib/reacolo-dev-model.js',
-  exports: 'default',
   external: [
     'babel-runtime/regenerator',
     'sockjs-client',

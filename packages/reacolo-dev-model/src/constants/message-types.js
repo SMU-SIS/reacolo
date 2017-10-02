@@ -1,3 +1,8 @@
+/**
+ * @module reacolo-dev-model/constants/message-types
+ * @private
+ */
+
 // Setters.
 export const SET_DATA_MSG_TYPE = 'setData';
 export const SET_CLIENT_ROLE_MSG_TYPE = 'setClientRole';

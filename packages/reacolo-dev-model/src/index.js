@@ -1,6 +1,6 @@
-import ReacoloModel from './model.js';
-import * as Events from './events.js';
-import * as Errors from './errors.js';
+/** @module reacolo-dev-model */
 
-export { ReacoloModel, Events, Errors };
-export default ReacoloModel;
+export { default as create } from './create.js';
+export * from './constants/events.js';
+export * from './constants/errors.js';
+export * from './constants/status.js';

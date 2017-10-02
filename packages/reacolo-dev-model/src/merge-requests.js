@@ -1,20 +1,28 @@
+/**
+ * @module module:reacolo-dev-model/merge-request
+ * @private
+ */
+
 import {
   SET_DATA_MSG_TYPE,
   SET_CLIENT_ROLE_MSG_TYPE,
   PATCH_DATA_MSG_TYPE,
   GET_DATA_MSG_TYPE,
   GET_META_DATA_MSG_TYPE
-} from './message-types.js';
+} from './constants/message-types.js';
 
 /**
  * Merge two requests.
+ *
+ * @see module:reacolo-dev-model/reacolo-socket~requestMerger
  * @param  {{type: string, data: object}} lastRequest - The last request that
  * has been pushed before the new request.
  * @param  {{type: string, data: object}} newRequest - The new request.
  * @return {{type: string, data: object}} The request merged or undefined if the
  * two requests cannot be merged.
+ * @type {module:reacolo-dev-model/reacolo-socket~requestMerger}
  */
-const mergeRequest = (lastRequest, newRequest) => {
+export default function mergeRequests(lastRequest, newRequest) {
   switch (newRequest.type) {
     // These requests are single shot: only the last one matters.
     // Hence we replace any pending request with the new one.
@@ -43,6 +51,4 @@ const mergeRequest = (lastRequest, newRequest) => {
       // By default it is safer not to merge.
       return undefined;
   }
-};
-
-export default mergeRequest;
+}
