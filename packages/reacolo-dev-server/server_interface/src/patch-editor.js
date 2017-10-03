@@ -1,5 +1,5 @@
 import JSONEditor from 'jsoneditor';
-import 'jsoneditor/dist/jsoneditor.min.css';
+import 'jsoneditor/dist/jsoneditor.css';
 
 export default ({ parent, onPatch }) => {
   const patchEditor = new JSONEditor(parent, {

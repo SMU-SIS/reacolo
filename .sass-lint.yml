@@ -1,0 +1,9 @@
+rules:
+  property-sort-order:
+    - 1
+    - order: 'concentric'
+  leading-zero:
+    - 1
+    - include: true
+  no-ids: 0
+  indentation: 0

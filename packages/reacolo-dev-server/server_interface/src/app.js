@@ -1,18 +1,21 @@
 import queryString from 'query-string';
-import ReacoloDevModel from 'reacolo-dev-model';
+import omit from 'lodash/omit';
+import * as reacoloDevModel from 'reacolo-dev-model';
 import createDataEditor from './data-editor';
 import createPatchEditor from './patch-editor';
 import createToast from './toast';
-import './app.css';
+import './app.scss';
 
 const TOAST_DURATION = 2200;
+const READONLY_CONTEXT_PROPERTIES = ['observers', 'roles', 'clientRole'];
+
 
 window.addEventListener('load', () => {
   // Fetch node elements.
   const contentDiv = document.getElementById('content');
 
   // Create the model sync.
-  const reacoloModel = new ReacoloDevModel(
+  const reacoloModel = reacoloDevModel.create(
     `http://${location.host}/socket`,
     queryString.parse(location.search).role
   );
@@ -23,34 +26,29 @@ window.addEventListener('load', () => {
     return error => toast(error.message || error);
   })();
 
-  // Function to update the current state (changes what content is displayed).
-  const setState = (newState) => {
-    contentDiv.className = newState;
-  };
-
   // Create the data editor and get a function to handle new data.
-  const newAppDataHandler = createDataEditor({
-    targetNode: document.getElementById('app-data'),
-    dataSetter: data => reacoloModel.setData(data),
-    dataGetter: () => reacoloModel.data,
+  const newStateHandler = createDataEditor({
+    targetNode: document.getElementById('state-editor'),
+    dataSetter: state => reacoloModel.setState(state),
+    dataGetter: () => reacoloModel.getState(),
     onError: toastError
   });
 
   // Create the meta-data editor and get a function to handle new meta-data.
-  const metaDataHandler = createDataEditor({
-    targetNode: document.getElementById('meta-data'),
-    dataSetter: () => Promise.reject(new Error('Meta-data cannot be updated.')),
-    dataGetter: () => reacoloModel.metaData,
-    readOnly: true,
+  const contextHandler = createDataEditor({
+    targetNode: document.getElementById('context-editor'),
+    dataSetter: context =>
+      reacoloModel.setContext(omit(context, READONLY_CONTEXT_PROPERTIES)),
+    dataGetter: () => reacoloModel.getContext(),
     onError: toastError
   });
 
   // Create the patch editor.
   createPatchEditor({
-    parent: document.getElementById('patch-data'),
+    parent: document.getElementById('patch-editor'),
     onPatch(patch) {
       reacoloModel
-        .patchData(patch)
+        .patchState(patch)
         .catch((e) => {
           // eslint-disable-next-line no-console
           console.error(e);
@@ -60,30 +58,26 @@ window.addEventListener('load', () => {
   });
 
   // Connect model sync events.
-  reacoloModel.on(ReacoloDevModel.DATA_UPDATE_EVT, newAppDataHandler);
-  reacoloModel.on(ReacoloDevModel.META_DATA_UPDATE_EVT, metaDataHandler);
-  reacoloModel.on(ReacoloDevModel.STATUS_UPDATE_EVT, (newStatus) => {
-    setState(
-      newStatus === ReacoloDevModel.CONNECTED_STATUS
-        ? 'connected'
-        : 'disconnected'
-    );
+  reacoloModel.addListener(reacoloDevModel.MODEL_UPDATE_EVT, () => {
+    newStateHandler(reacoloModel.getState());
+    contextHandler(reacoloModel.getContext());
+  });
+  reacoloModel.addListener(reacoloDevModel.STATUS_UPDATE_EVT, (newStatus) => {
+    contentDiv.className = newStatus;
   });
 
   // Start the model sync.
   reacoloModel
     .start()
     .then(() => {
-      newAppDataHandler(reacoloModel.data);
-      metaDataHandler(reacoloModel.metaData);
-      setState('connected');
+      newStateHandler(reacoloModel.getState());
+      contextHandler(reacoloModel.getContext());
     })
     .catch((error) => {
       // eslint-disable-next-line no-console
       console.error(error.message, error.stack);
       toastError(error);
-      setState('disconnected');
     });
 
-  setState('connecting');
+  contentDiv.className = reacoloModel.getStatus();
 });

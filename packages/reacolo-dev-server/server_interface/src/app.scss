@@ -1,0 +1,152 @@
+$bg-color: #eee;
+
+$focused-editor-bg-color: #353535;
+$focused-editor-border-color: #000;
+$focused-editor-shadow-color: #a3a1a1;
+$focused-editor-title-text-color: #fff;
+$focused-editor-controls-bg-color: #858585;
+
+$editor-button-border-color: #5e5e5e;
+$editor-button-text-color: #000;
+$editor-button-bg-color: #f8f7f7;
+$editor-button-active-text-color: $editor-button-text-color;
+$editor-button-active-bg-color: #e0dfdf;
+$editor-button-active-border-color: $editor-button-border-color;
+
+$alert-text-color: #871010;
+$alert-bg-color: #d8afaf;
+$alert-border-color: $alert-text-color;
+
+body {
+  background-color: $bg-color;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+  text-align: center;
+}
+
+%display-inherit {
+  display: inherit;
+}
+
+%display-none {
+  display: none;
+}
+
+@each $state in connecting, ready, disconnected, error {
+  ##{$state} {
+    @extend %display-none;
+  }
+
+  #content {
+    &.#{$state} {
+      ##{$state} {
+        @extend %display-inherit;
+      }
+    }
+  }
+}
+
+#content {
+  .jsoneditor {
+    border-style: none;
+  }
+
+  .jsoneditor-menu {
+    @extend %display-none;
+  }
+
+  .jsoneditor-outer {
+    margin: inherit;
+    padding: inherit;
+  }
+}
+
+.editor {
+  margin: 1em 0;
+  -webkit-box-shadow: 0 3px 10px 0 $focused-editor-shadow-color;
+  box-shadow: 0 3px 10px 0 $focused-editor-shadow-color;
+  border: $focused-editor-border-color solid 1px;
+
+  .editor-title,
+  .editor-control-wrapper {
+    margin: 0;
+    border-width: 1px;
+    border-color: $focused-editor-bg-color;
+    color: $focused-editor-title-text-color;
+  }
+
+  .editor-title {
+    border-bottom-style: solid;
+    background-color: $focused-editor-bg-color;
+    padding: 0.2em 0.5em;
+  }
+
+  .editor-control-wrapper {
+    border-top-style: solid;
+    background-color: $focused-editor-controls-bg-color;
+    padding: 0.1em 0.2em 0.1em 0.5em;
+
+    button {
+      margin: 0.1em;
+      outline: none;
+      border-width: 1px;
+      border-style: solid;
+      border-radius: 5px;
+      border-color: $editor-button-border-color;
+      background-color: $editor-button-bg-color;
+      cursor: pointer;
+      padding: 0.3em 0.5em;
+      color: $editor-button-text-color;
+      font-size: 0.8em;
+
+      &:active {
+        border-color: $editor-button-active-border-color;
+        background-color: $editor-button-active-bg-color;
+        color: $editor-button-active-text-color;
+      }
+    }
+  }
+}
+
+#state-editor {
+  height: 400px;
+}
+
+#context-editor {
+  height: 200px;
+}
+
+#patch-editor {
+  height: 200px;
+}
+
+#alert {
+  .toast {
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    left: 0.5em;
+    z-index: 100;
+    margin: 0 auto;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    border-color: $alert-text-color;
+    background-color: $alert-bg-color;
+    padding: 0.3em;
+    text-align: center;
+    color: $alert-border-color;
+    font-size: 1.2em;
+  }
+}
+
+.toast {
+  transition: 200ms;
+  opacity: 0;
+
+  &.shown {
+    opacity: 1;
+  }
+}

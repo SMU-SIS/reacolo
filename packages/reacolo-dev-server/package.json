@@ -16,15 +16,13 @@
   "scripts": {
     "test": "echo \"No test specified\"",
     "build": "webpack --config server_interface/webpack.config.js",
-    "start": "node ./bin/start-server.js",
-    "prepare": "yarn run build"
+    "start": "node ./bin/start-server.js"
   },
   "author": "Quentin Roy <quentin@quentinroy.fr>",
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.4",
     "jsonpatch": "^3.0.1",
-    "object-pick": "^0.1.2",
     "sockjs": "^0.3.18"
   },
   "private": true,
@@ -35,12 +33,14 @@
     "babel-preset-env": "^1.6.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.4",
-    "deep-equal": "^1.0.1",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
     "jsoneditor": "^5.9.3",
+    "lodash": "^4.17.4",
+    "node-sass": "^4.5.3",
     "query-string": "^5.0.0",
     "reacolo-dev-model": "^4.1.0-beta.1",
+    "sass-loader": "^6.0.6",
     "source-map-loader": "^0.2.1",
     "uglifyjs-webpack-plugin": "^1.0.0-beta.2",
     "url-loader": "^0.5.9",

@@ -25,12 +25,16 @@ module.exports = {
         enforce: 'pre'
       },
       {
-        test: /\.css$/,
+        test: /\.s?css$/,
         use: ExtractTextPlugin.extract({
           use: [
             {
               loader: 'css-loader',
               options: { sourceMap: true }
+            },
+            {
+              loader: 'sass-loader',
+              options: { sourceMap: true } // compiles Sass to CSS
             }
           ]
         })
@@ -59,7 +63,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin([{ from: '**/*.html', to: './' }]),
     new webpack.optimize.ModuleConcatenationPlugin(),
-    new UglifyJsPlugin({ sourceMap: true, parallel: true }),
+    // new UglifyJsPlugin({ sourceMap: true, parallel: true }),
     new webpack.optimize.OccurrenceOrderPlugin()
   ]
 };

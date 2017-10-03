@@ -5,7 +5,7 @@ import {
   PATCH_DATA_MSG_TYPE,
   GET_DATA_MSG_TYPE,
   GET_META_DATA_MSG_TYPE
-} from '../message-types.js';
+} from '../constants/message-types.js';
 
 describe('`mergeRequests`', () => {
   test('does not merge incompatible requests', () => {

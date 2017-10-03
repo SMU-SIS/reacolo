@@ -1,6 +1,7 @@
 import JSONEditor from 'jsoneditor';
-import 'jsoneditor/dist/jsoneditor.min.css';
-import deepEqual from 'deep-equal';
+import 'jsoneditor/dist/jsoneditor.css';
+import deepEqual from 'lodash/isEqual';
+import filterValues from './filter-values';
 
 export default ({ dataSetter, dataGetter, targetNode, onError, readOnly }) => {
   let editor;
@@ -8,7 +9,7 @@ export default ({ dataSetter, dataGetter, targetNode, onError, readOnly }) => {
   let ignoreUpdates = false;
 
   // Create the handler called when new data arrive.
-  const newDataHandler = (newData = {}) => {
+  const dataHandler = (newData = {}) => {
     if (ignoreUpdates) return;
     let editorData;
     try {
@@ -16,7 +17,15 @@ export default ({ dataSetter, dataGetter, targetNode, onError, readOnly }) => {
     } catch (e) {
       editorData = undefined;
     }
-    if (!editorData || !deepEqual(editorData, newData)) {
+    if (
+      !editorData ||
+      !deepEqual(
+        editorData,
+        // Undefined properties are not representable as json so we need to
+        // remove them or they would invalid the comparison.
+        filterValues(newData, x => x !== undefined)
+      )
+    ) {
       editor.set(newData);
     }
   };
@@ -38,11 +47,12 @@ export default ({ dataSetter, dataGetter, targetNode, onError, readOnly }) => {
         .catch((err) => {
           ignoreUpdates = false;
           onError(err);
-          return newDataHandler(dataGetter());
+          return dataHandler(dataGetter());
         })
-        .then(() => {
+        .then((updatedData) => {
           if (lastDataUpdateTime === thisDataUpdateTime) {
             ignoreUpdates = false;
+            dataHandler(updatedData);
           }
         });
     }
@@ -56,5 +66,5 @@ export default ({ dataSetter, dataGetter, targetNode, onError, readOnly }) => {
   });
 
   // Return the new data handler.
-  return newDataHandler;
+  return dataHandler;
 };
