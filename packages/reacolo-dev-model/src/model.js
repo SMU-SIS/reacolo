@@ -5,8 +5,6 @@
 
 import EventEmitter from 'eventemitter3';
 import jsonPatch from 'jsonpatch';
-import ReacoloSocket from './reacolo-socket.js';
-import ModelData from './model-data.js';
 import mergeRequest from './merge-requests.js';
 import scopePatch from './scope-path.js';
 import {
@@ -21,10 +19,7 @@ import {
   USER_EVENT_MSG_TYPE,
   KEEP_ALIVE_MSG_TYPE
 } from './constants/message-types.js';
-import {
-  MODEL_UPDATE_EVT,
-  STATUS_UPDATE_EVT
-} from './constants/events.js';
+import { MODEL_UPDATE_EVT } from './constants/events.js';
 import {
   CONNECTING_STATUS,
   READY_STATUS,
@@ -36,29 +31,12 @@ import { AlreadyConnectedError } from './constants/errors.js';
 /**
  * Creates a ReacoloDevModel.
  *
- * @param {string} [serverAddress] - The address of the reacolo-dev-sever to
- * synchronize with.
- * @param {string} [initClientRole] - The role of this client.
- * @param {Object} [options] - A list of additional options.
- * @param {number} [options.requestThrottle] - The minimum time between two
- * server requests.
- * @param {number} [options.requestTimeout] - The maximum time to wait for a
- * server response.
- * @alias module:reacolo-dev-model.create
+ * @param {func} createInterface - Server interface factory.
+ * @param {func} createModelData - Model data factory.
+ * @param {string} [initClientRole] - The initial client role.
  * @return {module:reacolo-dev-model~Model} The model.
  */
-export default (
-  serverAddress = `http://${location.host}/socket`,
-  initClientRole = undefined,
-  { requestThrottle = 50, requestTimeout = 20000 } = {}
-) => {
-  /**
-   * The current connectivity status of the model.
-   * @type {string}
-   * @private
-   */
-  let status = CONNECTING_STATUS;
-
+export default (createInterface, createModelData, initClientRole) => {
   /**
    * Manage the model's event.
    * @private
@@ -66,23 +44,28 @@ export default (
   const emitter = new EventEmitter();
 
   /**
+   * Store the data and manage the model's context and state.
+   * @type {module:reacolo-dev-model~ModelData}
+   * @private
+   */
+  const modelData = createModelData({
+    initClientRole,
+    initModelStatus: CONNECTING_STATUS,
+    onUpdate(modelValue) {
+      emitter.emit(MODEL_UPDATE_EVT, modelValue, true);
+    }
+  });
+
+  /**
    * The server socket.
    * @type {reacolo-socket~ReacoloSocket}
    * @private
    */
-  const socket = new ReacoloSocket(
-    serverAddress,
+  const serverInterface = createInterface({
+    // Merge requests together.
     mergeRequest,
-    requestTimeout,
-    requestThrottle
-  );
 
-  const onModelUpdate = (modelValue) => {
-    emitter.emit(MODEL_UPDATE_EVT, modelValue, true);
-  };
-  const modelData = ModelData({ initClientRole, onUpdate: onModelUpdate });
-
-  /**
+    /**
    * Process socket messages.
    *
    * @param {string|number} messageType - The type of the message.
@@ -91,82 +74,82 @@ export default (
    *
    * @private
    */
-  socket.onmessage = (messageType, messageData) => {
-    if (status !== READY_STATUS) return;
-    switch (messageType) {
-      case DATA_MSG_TYPE:
-        modelData.setData(messageData.data, messageData.revision);
-        break;
-      case DATA_PATCH_MSG_TYPE:
-        if (modelData.getDataRevision() !== messageData.from) {
-          // If the patch is applied on a revision different from the current
-          // revision, we do not apply the patch and instead ask the server
-          // for a full data update.
-          // eslint-disable-next-line no-console
-          console.warn(
-            `Received a data patch from unknown revision: ${messageData.from} (current is ${modelData.getDataRevision()}). Requesting a full data update.`
-          );
-          socket.sendRequest(GET_DATA_MSG_TYPE);
-        } else {
+    onMessage(messageType, messageData) {
+      if (modelData.getModelStatus() !== READY_STATUS) return;
+      switch (messageType) {
+        case DATA_MSG_TYPE:
+          modelData.setData(messageData.data, messageData.revision);
+          break;
+        case DATA_PATCH_MSG_TYPE:
+          if (modelData.getDataRevision() !== messageData.from) {
+            // If the patch is applied on a revision different from the current
+            // revision, we do not apply the patch and instead ask the server
+            // for a full data update.
+            // eslint-disable-next-line no-console
+            console.warn(
+              `Received a data patch from unknown revision: ${messageData.from} (current is ${modelData.getDataRevision()}). Requesting a full data update.`
+            );
+            serverInterface.sendRequest(GET_DATA_MSG_TYPE);
+          } else {
+            modelData.set({
+              data: {
+                value: jsonPatch.apply_patch(
+                  modelData.getData(),
+                  messageData.patch
+                ),
+                revision: messageData.revision
+              }
+            });
+          }
+          break;
+        case META_DATA_MSG_TYPE:
           modelData.set({
-            data: {
-              value: jsonPatch.apply_patch(
-                modelData.getData(),
-                messageData.patch
-              ),
+            metaData: {
+              value: messageData.metaData,
               revision: messageData.revision
             }
           });
-        }
-        break;
-      case META_DATA_MSG_TYPE:
-        modelData.set({
-          metaData: {
-            value: messageData.metaData,
-            revision: messageData.revision
-          }
-        });
-        break;
-      case USER_EVENT_MSG_TYPE:
-        emitter.emit(messageData.eventName, messageData.data);
-        break;
-      case KEEP_ALIVE_MSG_TYPE:
-        break;
-      default:
-        // eslint-disable-next-line no-console
-        console.warn(`Unknown message type: ${messageType}`);
-    }
-  };
+          break;
+        case USER_EVENT_MSG_TYPE:
+          emitter.emit(messageData.eventName, messageData.data);
+          break;
+        case KEEP_ALIVE_MSG_TYPE:
+          break;
+        default:
+          // eslint-disable-next-line no-console
+          console.warn(`Unknown message type: ${messageType}`);
+      }
+    },
 
-  /**
-   * Manage socket disconnection.
-   *
-   * @return {undefined}
-   *
-   * @private
-   */
-  socket.onclose = () => {
-    status = DISCONNECTED_STATUS;
-    emitter.emit(STATUS_UPDATE_EVT, status);
-  };
+    /**
+     * Manage socket disconnection.
+     *
+     * @return {undefined}
+     *
+     * @private
+     */
+    onClose() {
+      modelData.set({ modelStatus: { value: DISCONNECTED_STATUS } });
+    }
+  });
 
   /**
    * @return {string} The role of this client.
    * @memberof module:reacolo-dev-model~Model#
    */
-  const getClientRole = modelData.getClientRole;
+  const getClientRole = () => modelData.getClientRole();
 
   /**
    * @return {object} The current state.
    * @memberof module:reacolo-dev-model~Model#
    */
-  const getState = modelData.getState;
+  const getState = () => modelData.getState();
 
   /**
    * @return {object} The current context.
    * @memberof module:reacolo-dev-model~Model#
    */
-  const getContext = modelData.getContext;
+  const getContext = () => modelData.getContext();
 
   /**
    * @return {('connecting'|'ready'|'disconnected'|'error')} The current status.
@@ -176,15 +159,14 @@ export default (
    * @see module:reacolo-dev-model.DISCONNECTED_STATUS
    * @see module:reacolo-dev-model.ERROR_STATUS
    */
-  const getStatus = () => status;
+  const getModelStatus = () => modelData.getModelStatus();
 
   /**
    * Register an event listener.
    *
-   * Events can be local events sent by the
-   * model (i.e. ['reacolo:model:update']{@link module:reacolo-dev-model.MODEL_UPDATE_EVT} and
-   * ['reacolo:status:update']{@link module:reacolo-dev-model.STATUS_UPDATE_EVT}), or events
-   * broadcasted by the user using
+   * Events can be local events sent by the model (i.e.
+   * ['reacolo:model:update']{@link module:reacolo-dev-model.MODEL_UPDATE_EVT}),
+   * or events broadcasted by the user using
    * {@link module:reacolo-dev-model~Model#broadcastEvent}.
    *
    * @param {string|Symbol} eventName - The name (or symbol) of the event to
@@ -228,7 +210,7 @@ export default (
    * @private
    */
   const patchServer = patch =>
-    socket
+    serverInterface
       .sendRequest(PATCH_DATA_MSG_TYPE, {
         patch,
         from: modelData.getDataRevision()
@@ -309,7 +291,7 @@ export default (
    * set.
    */
   const setClientRole = role =>
-    socket
+    serverInterface
       .sendRequest(SET_CLIENT_ROLE_MSG_TYPE, {
         role
       })
@@ -338,7 +320,7 @@ export default (
    * @memberof module:reacolo-dev-model~Model#
    */
   const broadcastEvent = (eventName, eventData) =>
-    socket
+    serverInterface
       .sendRequest(BROADCAST_USER_EVENT_MSG_TYPE, {
         eventName,
         eventData
@@ -358,7 +340,7 @@ export default (
    */
   const start = () =>
     // Start the socket.
-    socket
+    serverInterface
       .start()
       .then(() =>
         Promise.all([
@@ -367,35 +349,31 @@ export default (
           // the case a role has been defined, we can safely swap this request
           // to the roles request to fetch the roles.
           modelData.getClientRole() == null
-            ? socket.sendRequest(GET_META_DATA_MSG_TYPE)
-            : socket.sendRequest(SET_CLIENT_ROLE_MSG_TYPE, {
+            ? serverInterface.sendRequest(GET_META_DATA_MSG_TYPE)
+            : serverInterface.sendRequest(SET_CLIENT_ROLE_MSG_TYPE, {
               role: modelData.getClientRole()
             }),
-          socket.sendRequest(GET_DATA_MSG_TYPE)
+          serverInterface.sendRequest(GET_DATA_MSG_TYPE)
         ])
       )
       .then(([metaDataResponse, dataResponse]) => {
         // Initialize the data.
         modelData.set({
-          data: { value: dataResponse.data, revision: dataResponse.revision },
           clientRole: { value: metaDataResponse.clientRole },
+          modelStatus: { value: READY_STATUS },
+          data: { value: dataResponse.data, revision: dataResponse.revision },
           metaData: {
             value: metaDataResponse.metaData,
             revision: metaDataResponse.revision
           }
         });
-
-        // Update the status and notify for it.
-        status = READY_STATUS;
-        emitter.emit(STATUS_UPDATE_EVT, status);
       })
       .catch((e) => {
         // In case of an already connect error, we do not alter the status
         // as the model should remain functional. In all other cases,
         // we set the status to error.
         if (!(e instanceof AlreadyConnectedError)) {
-          status = ERROR_STATUS;
-          emitter.emit(STATUS_UPDATE_EVT, status);
+          modelData.set({ modelStatus: { value: ERROR_STATUS } });
         }
         throw e;
       });
@@ -407,7 +385,7 @@ export default (
     getClientRole,
     getState,
     getContext,
-    getStatus,
+    getModelStatus,
     addListener,
     removeListener,
     patchState,

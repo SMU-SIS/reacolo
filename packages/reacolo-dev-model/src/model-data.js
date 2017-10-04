@@ -6,6 +6,8 @@
  * ModelData factory.
  * @module module:reacolo-dev-model/model-data
  * @param {object} [options] The ModelData options.
+ * @param {string} options.initModelStatus=undefined The initial status of the
+ * model.
  * @param {string} [options.initClientRole=undefined] The initial client role.
  * @param {object} [options.initServerData=undefined] The initial server data.
  * @param {object} [options.initServerMetaData=undefined] The initial server
@@ -15,11 +17,19 @@
  * @return {module:reacolo-dev-model~ModelData} The model data.
  */
 export default ({
+  initModelStatus,
   initClientRole,
   initServerData,
   initServerMetaData,
   onUpdate = () => {}
 }) => {
+  /**
+   * The current connectivity status of the model.
+   * @type {string}
+   * @private
+   */
+  let modelStatus = initModelStatus;
+
   /**
    * The role of this client.
    * @type{string}
@@ -69,7 +79,6 @@ export default ({
   /**
    * @param {string} newClientRole The new client role.
    * @return {boolean} True if the context must be updated.
-   * @memberof module:reacolo-dev-model~ModelData#
    */
   const setClientRole = (newClientRole) => {
     if (clientRole === newClientRole) return false;
@@ -78,10 +87,19 @@ export default ({
   };
 
   /**
+   * @param {string} newStatus The new status of the model.
+   * @return {boolean} True if the context must be updated.
+   */
+  const setModelStatus = (newStatus) => {
+    if (modelStatus === newStatus) return false;
+    modelStatus = newStatus;
+    return true;
+  };
+
+  /**
    * @param {object} newData The new data.
    * @param {DataRevision} newRevision The revision id of the new data.
    * @return {boolean} True if the context must be updated.
-   * @memberof module:reacolo-dev-model~ModelData#
    */
   const setData = (newData, newRevision) => {
     if (data === newData && dataRevision === newRevision) return false;
@@ -95,7 +113,6 @@ export default ({
    * @param {object} newMetaData The new meta-data.
    * @param {DataRevision} newRevision The revision id of the new data.
    * @return {boolean} True if the context must be updated.
-   * @memberof module:reacolo-dev-model~ModelData#
    */
   const setMetaData = (newMetaData, newRevision) => {
     if (metaData === newMetaData && metaDataRevision === newRevision) {
@@ -118,9 +135,12 @@ export default ({
   const update = (recycleContext = false) => {
     const context = recycleContext
       ? value.context
-      : Object.assign({}, data ? data.context : undefined, metaData, {
-        clientRole
-      });
+      : Object.assign(
+        {},
+        data ? data.context : undefined,
+        metaData,
+        { clientRole, modelStatus }
+      );
     value = { context, state: data ? data.state : undefined };
   };
 
@@ -145,6 +165,12 @@ export default ({
      * @memberof module:reacolo-dev-model~ModelData#
      */
     getClientRole: () => clientRole,
+
+    /**
+     * @return {string} The status of this client.
+     * @memberof module:reacolo-dev-model~ModelData#
+     */
+    getModelStatus: () => modelStatus,
 
     /**
      * @return {object} The current state.
@@ -185,20 +211,23 @@ export default ({
     /**
      * Set the model data.
      *
-     * @param {object} mutation - The mutation to apply.
-     * @param {{ value: string }} mutation.clientRole - clientRole mutation.
-     * @param {{ value: string, revision: DataRevision }} mutation.data - data
+     * @param {object} mutations - The mutation to apply.
+     * @param {{ value: string }} mutations.clientRole - model status mutation.
+     * @param {{ value: string }} mutations.clientRole - client role mutation.
+     * @param {{ value: string, revision: DataRevision }} mutations.data - data
      *  mutation
-     * @param {{ value: string, revision: DataRevision }} mutation.metaData -
+     * @param {{ value: string, revision: DataRevision }} mutations.metaData -
      * metaData mutation
      * @return {undefined}
      */
     set({
+      modelStatus: modelStatusMutation,
       clientRole: clientRoleMutation,
       data: dataMutation,
       metaData: metaDataMutation
     }) {
       const mustUpdateContext = [
+        modelStatusMutation && setModelStatus(modelStatusMutation.value),
         clientRoleMutation && setClientRole(clientRoleMutation.value),
         dataMutation && setData(dataMutation.value, dataMutation.revision),
         metaDataMutation &&

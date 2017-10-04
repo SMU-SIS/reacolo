@@ -34,6 +34,8 @@ export default class ReacoloSocket {
    * Create the socket.
    *
    * @param {string} serverAddress - The address of the server.
+   * @param {func} onMessage - Called when the socket receives a message.
+   * @param {func} onClose - Called when the socket gets closed.
    * @param {module:reacolo-dev-model/reacolo-socket~requestMerger}
    * requestMerger - The function used to merge requests together.
    * @param {number} ackTimeout - Maximum time to wait for a request
@@ -42,6 +44,8 @@ export default class ReacoloSocket {
    */
   constructor(
     serverAddress,
+    onMessage = () => {},
+    onClose = () => {},
     requestMerger = () => undefined,
     ackTimeout,
     throttleDelay
@@ -68,8 +72,8 @@ export default class ReacoloSocket {
     this._nextSendingSchedule = undefined;
 
     // Server message callback (no op per default).
-    this.onmessage = () => {};
-    this.onclose = () => {};
+    this.onmessage = onMessage;
+    this.onclose = onClose;
   }
 
   /**
