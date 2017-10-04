@@ -7,7 +7,12 @@ import createToast from './toast';
 import './app.scss';
 
 const TOAST_DURATION = 2200;
-const READONLY_CONTEXT_PROPERTIES = ['observers', 'roles', 'clientRole'];
+const READONLY_CONTEXT_PROPERTIES = [
+  'observers',
+  'roles',
+  'clientRole',
+  'modelStatus'
+];
 
 
 window.addEventListener('load', () => {
@@ -61,9 +66,7 @@ window.addEventListener('load', () => {
   reacoloModel.addListener(reacoloDevModel.MODEL_UPDATE_EVT, () => {
     newStateHandler(reacoloModel.getState());
     contextHandler(reacoloModel.getContext());
-  });
-  reacoloModel.addListener(reacoloDevModel.STATUS_UPDATE_EVT, (newStatus) => {
-    contentDiv.className = newStatus;
+    contentDiv.className = reacoloModel.getContext().modelStatus;
   });
 
   // Start the model sync.
@@ -79,5 +82,5 @@ window.addEventListener('load', () => {
       toastError(error);
     });
 
-  contentDiv.className = reacoloModel.getStatus();
+  contentDiv.className = reacoloModel.getContext().modelStatus;
 });
