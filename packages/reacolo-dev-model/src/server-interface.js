@@ -9,12 +9,14 @@ import {
   SET_DATA_MSG_TYPE,
   SET_CLIENT_ROLE_MSG_TYPE,
   PATCH_DATA_MSG_TYPE,
+  MERGE_PATCH_DATA_MSG_TYPE,
   GET_DATA_MSG_TYPE,
   GET_META_DATA_MSG_TYPE,
   BROADCAST_USER_EVENT_MSG_TYPE,
   META_DATA_MSG_TYPE,
   DATA_MSG_TYPE,
   DATA_PATCH_MSG_TYPE,
+  DATA_MERGE_PATCH_MSG_TYPE,
   USER_EVENT_MSG_TYPE,
   KEEP_ALIVE_MSG_TYPE
 } from './constants/message-types.js';
@@ -61,6 +63,18 @@ export default (
      * @returns {undefined}
      */
     onDataPatch = NO_OP,
+
+    /**
+     * Handle merge patches of the data.
+     * @function
+     * @memberof module:reacolo-dev-model~ServerInterfaceHandlers#
+     * @param {object} mergePatch - The [RFC 6902](http://tools.ietf.org/html/rfc6902)
+     * patch.
+     * @param {DataRevision} revision - The data revision resulting after
+     * applying the patch.
+     * @returns {undefined}
+     */
+    onDataMergePatch = NO_OP,
 
     /**
      * Handle updates of the meta-data.
@@ -111,6 +125,13 @@ export default (
         case USER_EVENT_MSG_TYPE:
           onUserEvent(messageData.eventName, messageData.eventData);
           break;
+        case DATA_MERGE_PATCH_MSG_TYPE:
+          onDataMergePatch(
+            messageData.from,
+            messageData.mergePatch,
+            messageData.revision
+          );
+          break;
         case KEEP_ALIVE_MSG_TYPE:
           break;
         default:
@@ -142,17 +163,30 @@ export default (
 
     /**
      * Patch the application data.
-     * @param {DataRevision} from - The current (known)
-     * revision.
+     * @param {DataRevision} from - The current (known) revision.
      * @param {object} patch - An [RFC 6902](http://tools.ietf.org/html/rfc6902)
      * compatible patch.
-     * @return {Promise<{revision:DataRevision}>}  A promise resolved once the data has been
-     * patched.
+     * @return {Promise<{revision:DataRevision, from: DataRevision}>}  A promise
+     * resolved once the data has been patched.
      * @memberof module:reacolo-dev-model~ServerInterface#
      */
     patchData: (from, patch) =>
       socket
         .sendRequest(PATCH_DATA_MSG_TYPE, { patch, from })
+        .then(resp => pick(resp, ['revision'])),
+
+    /**
+     * Patch the application data.
+     * @param {DataRevision} from - The current (known) revision.
+     * @param {object} mergePatch - An
+     * [RFC 7396](http://tools.ietf.org/html/rfc7396) compatible merge patch.
+     * @return {Promise<{revision:DataRevision, from: DataRevision}>}  A promise
+     * resolved once the data has been patched.
+     * @memberof module:reacolo-dev-model~ServerInterface#
+     */
+    mergePatchData: (from, mergePatch) =>
+      socket
+        .sendRequest(MERGE_PATCH_DATA_MSG_TYPE, { mergePatch, from })
         .then(resp => pick(resp, ['revision'])),
 
     /**

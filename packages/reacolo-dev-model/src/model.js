@@ -4,7 +4,8 @@
  */
 
 import EventEmitter from 'eventemitter3';
-import jsonPatch from 'jsonpatch';
+import { apply_patch as jsonPatch } from 'jsonpatch';
+import { apply as jsonMergePatch } from 'json-merge-patch';
 import mergeRequest from './merge-requests.js';
 import scopePatch from './scope-patch.js';
 import { MODEL_UPDATE_EVT } from './constants/events.js';
@@ -59,6 +60,21 @@ export default (createServerInterface, createModelData, initClientRole) => {
   });
 
   /**
+   * Request the current data revision from the server and udpates it.
+   * @private
+   * @func
+   * @param {module:reacolo-dev-model~ServerInterface} serverInterface - The
+   * server interface to use.
+   * @return {Promise<undefined>} A promise resolved once the data has been set.
+   */
+  const updateDataFromServer = serverInterface =>
+    serverInterface.getData().then((resp) => {
+      modelData.set({
+        data: { value: resp.data, revision: resp.revision }
+      });
+    });
+
+  /**
    * The interface to communicate with the server.
    * @type {module:reacolo-dev-model~ServerInterface}
    * @private
@@ -77,15 +93,28 @@ export default (createServerInterface, createModelData, initClientRole) => {
         console.warn(
           `Received a data patch from unknown revision: ${from} (current is ${modelData.getDataRevision()}). Requesting a full data update.`
         );
-        serverInterface.getData().then((resp) => {
-          modelData.set({
-            data: { value: resp.data, revision: resp.revision }
-          });
-        });
+        updateDataFromServer(serverInterface);
       } else {
         modelData.set({
           data: {
-            value: jsonPatch.apply_patch(modelData.getData(), patch),
+            value: jsonPatch(modelData.getData(), patch),
+            revision
+          }
+        });
+      }
+    },
+    onDataMergePatch(from, mergePatch, revision) {
+      if (modelData.getDataRevision() !== from) {
+        // Same as above.
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Received a data merge patch from unknown revision: ${from} (current is ${modelData.getDataRevision()}). Requesting a full data update.`
+        );
+        updateDataFromServer(serverInterface);
+      } else {
+        modelData.set({
+          data: {
+            value: jsonMergePatch(modelData.getData(), mergePatch),
             revision
           }
         });
@@ -187,12 +216,33 @@ export default (createServerInterface, createModelData, initClientRole) => {
     serverInterface.patchData(modelData.getDataRevision(), patch).then((resp) => {
       modelData.set({
         data: {
-          value: jsonPatch.apply_patch(modelData.getData(), patch),
+          value: jsonPatch(modelData.getData(), patch),
           revision: resp.revision
         }
       });
       return modelData.getData();
     });
+
+  /**
+   * Merge the server data.
+   *
+   * @param {object} mergePatch - An [RFC 7386](https://tools.ietf.org/html/rfc7386)
+   * compatible patch.
+   * @return {Promise} A promise resolved with the new server data once it
+   * it has been set.
+   * @private
+   */
+  const mergeData = mergePatch =>
+    serverInterface.mergePatchData(modelData.getDataRevision(), mergePatch)
+      .then((resp) => {
+        modelData.set({
+          data: {
+            value: jsonMergePatch(modelData.getData(), mergePatch),
+            revision: resp.revision
+          }
+        });
+        return modelData.getData();
+      });
 
   /**
    * Patch the state.
@@ -218,6 +268,26 @@ export default (createServerInterface, createModelData, initClientRole) => {
     patchData(scopePatch('/state', patch)).then(getState);
 
   /**
+   * Merge the state.
+   *
+   * @param {object} mergePatch - An [RFC 6902](http://tools.ietf.org/html/rfc6902)
+   * compatible patch.
+   * @return {Promise} A promise resolved with the new state once it has been
+   * set.
+   *
+   * @memberof module:reacolo-dev-model~Model#
+   *
+   * @example
+   * model.mergeState({
+   *   a: { a1: 3 }
+   * }).then(state => {
+   *   console.log('state', state);
+   * });
+   */
+  const mergeState = mergePatch =>
+    mergeData({ state: mergePatch }).then(getState);
+
+  /**
    * Patch the context.
    *
    * @param {object} patch - An [RFC 6902](http://tools.ietf.org/html/rfc6902)
@@ -230,6 +300,19 @@ export default (createServerInterface, createModelData, initClientRole) => {
    */
   const patchContext = patch =>
     patchData(scopePatch('/context', patch)).then(getContext);
+
+  /**
+   * Merge the context.
+   *
+   * @param {object} mergePatch - An [RFC 6902](http://tools.ietf.org/html/rfc6902)
+   * compatible patch.
+   * @return {Promise} A promise resolved with the new state once it has been
+   * set.
+   *
+   * @memberof module:reacolo-dev-model~Model#
+   */
+  const mergeContext = mergePatch =>
+    mergeData({ context: mergePatch }).then(getState);
 
   /**
    * Set the state, entirely overwriting it.
@@ -350,6 +433,8 @@ export default (createServerInterface, createModelData, initClientRole) => {
     removeListener,
     patchState,
     patchContext,
+    mergeState,
+    mergeContext,
     setState,
     setContext,
     setClientRole,
