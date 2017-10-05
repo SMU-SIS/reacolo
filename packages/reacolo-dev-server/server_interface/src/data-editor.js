@@ -59,11 +59,14 @@ export default ({ dataSetter, dataGetter, targetNode, onError, readOnly }) => {
   };
 
   // Create the editor.
-  editor = new JSONEditor(targetNode, {
-    mode: 'code',
-    onChange,
-    onEditable: readOnly ? () => false : undefined
-  });
+  editor = new JSONEditor(
+    targetNode.getElementsByClassName('editor-content')[0],
+    {
+      mode: 'code',
+      onChange,
+      onEditable: readOnly ? () => false : undefined
+    }
+  );
 
   // Return the new data handler.
   return dataHandler;

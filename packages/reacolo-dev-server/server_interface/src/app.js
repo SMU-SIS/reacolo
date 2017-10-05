@@ -59,6 +59,21 @@ window.addEventListener('load', () => {
           console.error(e);
           toastError(e);
         });
+    },
+    defaultContent: []
+  });
+
+  // Create the merge patch editor.
+  createPatchEditor({
+    parent: document.getElementById('merge-patch-editor'),
+    onPatch(patch) {
+      reacoloModel
+        .mergeState(patch)
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          toastError(e);
+        });
     }
   });
 
