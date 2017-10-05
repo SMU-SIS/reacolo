@@ -13,7 +13,7 @@ const getDisplayName = Component => Component.displayName || Component.name;
 const portal = (
   WrappedComponent,
   callbackNames,
-  portalId = getDisplayName(WrappedComponent)
+  portalId = `portal(${getDisplayName(WrappedComponent)})`
 ) => {
   if (!portalId) {
     throw new Error(
@@ -25,7 +25,7 @@ const portal = (
   const callbackEvents = callbackNames.reduce(
     (result, callbackName) =>
       Object.assign(result, {
-        [callbackName]: `_portal(${portalId}):${callbackName}`
+        [callbackName]: `${portalId}:${callbackName}`
       }),
     {}
   );

@@ -23,12 +23,12 @@ export default (WrappedComponent, portalId, callbackEvents) => {
     }
     componentDidMount() {
       this._listenerEntries.forEach(([eventName, callback]) => {
-        this.context.ecologyBroadcaster.subscribe(eventName, callback);
+        this.context.reacoloModel.addListener(eventName, callback);
       });
     }
     componentWillUnmount() {
       this._listenerEntries.forEach(([eventName, callback]) => {
-        this.context.ecologyBroadcaster.unsubscribe(eventName, callback);
+        this.context.reacoloModel.removeListener(eventName, callback);
       });
     }
     render() {
@@ -37,9 +37,12 @@ export default (WrappedComponent, portalId, callbackEvents) => {
     }
   }
   PortalOut.contextTypes = {
-    ecologyBroadcaster: propTypes.object.isRequired
+    reacoloModel: propTypes.shape({
+      addListener: propTypes.func.isRequired,
+      removeListener: propTypes.func.isRequired
+    }).isRequired
   };
-  PortalOut.displayName = `portal(${portalId}).Out`;
+  PortalOut.displayName = `${portalId}.Out`;
 
   return PortalOut;
 };

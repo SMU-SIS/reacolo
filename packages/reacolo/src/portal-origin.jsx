@@ -16,7 +16,7 @@ export default (WrappedComponent, portalId, callbackEvents) => {
             [callbackName]: (...args) => {
               // Arguments are packed (sent as an array). PortalOut
               // is supposed to unpack them.
-              context.ecologyBroadcaster.publish(evtName, args);
+              context.reacoloModel.broadcastEvent(evtName, args);
             }
           }),
         {}
@@ -27,9 +27,11 @@ export default (WrappedComponent, portalId, callbackEvents) => {
     }
   }
   Origin.contextTypes = {
-    ecologyBroadcaster: propTypes.object.isRequired
+    reacoloModel: propTypes.shape({
+      broadcastEvent: propTypes.func.isRequired
+    }).isRequired
   };
-  Origin.displayName = `portal(${portalId}).Origin`;
+  Origin.displayName = `${portalId}.Origin`;
 
   return Origin;
 };

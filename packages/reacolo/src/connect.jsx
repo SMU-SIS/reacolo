@@ -17,37 +17,27 @@ const getDisplayName = WrappedComponent =>
   WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
 const connect = (WrappedComponent, model) => {
-  const setData = model.setAppData.bind(model);
-  const patchData = model.patchAppData
-    ? model.patchAppData.bind(model)
+  const setState = (...args) => model.setState(...args);
+  const patchState = model.patchState
+    ? (...args) => model.patchState(...args)
     : undefined;
 
   class Connected extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        data: model.data || {},
-        context: model.context || {},
-        isConnected: model.isConnected
+        modelState: model.getState(),
+        context: model.getContext()
       };
 
       // Create the handlers.
       this._modelHandlers = [
-        [Symbol.for('connected'), () => this.updateStateFromModel()],
-        [Symbol.for('disconnected'), () => this.updateStateFromModel()],
-        [
-          Symbol.for('data:update'),
-          newData => this.setState({ data: newData })
-        ],
-        [
-          Symbol.for('context:update'),
-          newContext => this.setState({ context: newContext })
-        ]
+        ['reacolo:model:update', () => this.updateStateFromModel()]
       ];
     }
 
     getChildContext() {
-      return { ecologyBroadcaster: model.eventBroadcaster };
+      return { reacoloModel: model };
     }
 
     componentWillMount() {
@@ -62,23 +52,19 @@ const connect = (WrappedComponent, model) => {
     }
 
     updateStateFromModel() {
-      const isConnected = model.isConnected;
       this.setState({
-        data: isConnected ? model.data : undefined,
-        context: model.context,
-        isConnected
+        modelState: model.getState(),
+        context: model.getContext()
       });
     }
 
     render() {
-      const { data, context, isConnected } = this.state;
       return (
         <WrappedComponent
-          data={data}
-          context={context}
-          isConnected={isConnected}
-          setData={setData}
-          patchData={patchData}
+          state={this.state.modelState}
+          context={this.state.context}
+          setState={setState}
+          patchState={patchState}
           {...this.props}
         />
       );
@@ -90,7 +76,7 @@ const connect = (WrappedComponent, model) => {
   )})`;
 
   Connected.childContextTypes = {
-    ecologyBroadcaster: PropTypes.objectOf(PropTypes.func).isRequired
+    reacoloModel: PropTypes.objectOf(PropTypes.func).isRequired
   };
 
   return Connected;

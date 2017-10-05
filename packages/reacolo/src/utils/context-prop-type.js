@@ -5,5 +5,7 @@ export default PropTypes.shape({
   roles: PropTypes.oneOfType([
     PropTypes.objectOf(PropTypes.number),
     PropTypes.arrayOf(PropTypes.string)
-  ]).isRequired
+  ]),
+  modelStatus: PropTypes.string.isRequired,
+  observers: PropTypes.number
 });
