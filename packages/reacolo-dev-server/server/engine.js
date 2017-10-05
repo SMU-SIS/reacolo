@@ -1,6 +1,7 @@
 /** @module engine */
 
 const jsonpatch = require('jsonpatch');
+const jsonMergePatch = require('json-merge-patch');
 const createClientRegistry = require('./client-registry');
 const createDataRegistry = require('./data-registry');
 
@@ -59,6 +60,12 @@ module.exports = function createEngine() {
       patch,
       revision: data.revision
     });
+  const sendAppDataMergePatch = (clients, mergePatch, from) =>
+    sendMessage(clients, 'dataMergePatch', {
+      from,
+      mergePatch,
+      revision: data.revision
+    });
   const sendMetaData = clients =>
     sendMessage(clients, 'metaData', {
       metaData: getMetaData(),
@@ -104,7 +111,7 @@ module.exports = function createEngine() {
       try {
         if (messageData.from !== data.revision) {
           print(
-            `warning: Attempt to apply a patch built for an outdated data revision (patch's revision: ${messageData.from}, current data revision: ${data.revision})`
+            `warning: Attempting to apply a patch for an outdated data revision (patch's revision: ${messageData.from}, current data revision: ${data.revision})`
           );
         }
         const currentRevision = data.revision;
@@ -114,7 +121,44 @@ module.exports = function createEngine() {
           messageData.patch,
           currentRevision
         );
-        sendAck(true, client, messageId, { revision: data.revision });
+        sendAck(true, client, messageId, {
+          revision: data.revision,
+          from: currentRevision
+        });
+      } catch (e) {
+        const error = `Patch application failed: ${e.message}`;
+        process.stderr.write(`${error}\n`);
+        sendAck(false, client, messageId, error);
+      }
+    },
+
+    /**
+     * Patch the application data.
+     * @param {{from, mergePatch}} messageData - The message data containing the id
+     * of the revision it is applied on an RFC 6902 patch to apply.
+     * @param {string} messageId - The identifier of the message (important
+     * for the acknowledgement).
+     * @param {module:engine~Client} client - The client that sent the message.
+     * @return {undefined}
+     */
+    mergePatchData(messageData, messageId, client) {
+      try {
+        if (messageData.from !== data.revision) {
+          print(
+            `warning: Attempting to apply a patch for an outdated data revision (patch's revision: ${messageData.from}, current data revision: ${data.revision})`
+          );
+        }
+        const currentRevision = data.revision;
+        data.set(jsonMergePatch.apply(data.get(), messageData.mergePatch));
+        sendAppDataMergePatch(
+          clientRegistry.clients().filter(c => c !== client),
+          messageData.mergePatch,
+          currentRevision
+        );
+        sendAck(true, client, messageId, {
+          revision: data.revision,
+          from: currentRevision
+        });
       } catch (e) {
         const error = `Patch application failed: ${e.message}`;
         process.stderr.write(`${error}\n`);
