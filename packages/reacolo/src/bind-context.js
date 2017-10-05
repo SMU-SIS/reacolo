@@ -1,4 +1,4 @@
-import except from 'except';
+import omit from 'object.omit';
 import PropTypes from 'prop-types';
 
 const OMITTED_CONTEXT_PROPS_FROM_TARGETS = ['default', 'children'];
@@ -14,10 +14,10 @@ const bindContext = (propsToTargets = identity) => {
   // Define its getTargets function from paramToTargets.
   if (typeof propsToTargets === 'function') {
     Context.getTargets = element =>
-      propsToTargets(except(element.props, OMITTED_CONTEXT_PROPS_FROM_TARGETS));
+      propsToTargets(omit(element.props, OMITTED_CONTEXT_PROPS_FROM_TARGETS));
   } else {
     Context.getTargets = element =>
-      Object.assign({}, propsToTargets, except(element.props, OMITTED_CONTEXT_PROPS_FROM_TARGETS));
+      Object.assign({}, propsToTargets, omit(element.props, OMITTED_CONTEXT_PROPS_FROM_TARGETS));
   }
 
   // Define other properties.

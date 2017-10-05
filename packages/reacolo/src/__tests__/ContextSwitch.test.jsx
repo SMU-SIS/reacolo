@@ -2,7 +2,7 @@
 
 import React from 'react';
 import renderer from 'react-test-renderer';
-import except from 'except';
+import omit from 'object.omit';
 import ContextSwitch from '../ContextSwitch.jsx';
 import wouldPass from '../filtering/would-pass.js';
 
@@ -25,8 +25,9 @@ describe('ContextSwitch with non nested Context', () => {
 
 
   it('properly calls wouldPass until it returns true', () => {
-    wouldPass.mockReturnValueOnce(false)
-             .mockReturnValueOnce(true);
+    wouldPass
+      .mockReturnValueOnce(false)
+      .mockReturnValueOnce(true);
     renderer.create(
       <ContextSwitch context={{ contextProp: 'bar' }}>
         {[
@@ -123,7 +124,7 @@ describe('ContextSwitch with nested Context components', () => {
     wouldPass.mockReset();
     wouldPass.mockImplementation((_, { pass }) => pass);
     const Context = jest.fn();
-    Context.getTargets = instance => except(instance.props, ['children', 'default']);
+    Context.getTargets = instance => omit(instance.props, ['children', 'default']);
     Context.isDefault = instance => !!instance.props.default;
     Context.isContext = true;
     component = renderer.create(
