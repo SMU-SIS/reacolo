@@ -181,8 +181,8 @@ module.exports = function createEngine() {
     },
 
     /**
-     * Set the role of the requesting client.
-     * @param {string} messageData - The data of the event to broadcast.
+     * Broadcast a custom event to every other clients.
+     * @param {{ eventName, eventData }} messageData - The event to broadcast.
      * @param {string} messageId - The identifier of the message (important
      * for the acknowledgement).
      * @param {module:engine~Client} client - The client that sent the message.

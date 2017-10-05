@@ -20,6 +20,7 @@ import {
  * @param  {{type: string, data: object}} newRequest - The new request.
  * @return {{type: string, data: object}} The request merged or undefined if the
  * two requests cannot be merged.
+ * @private
  * @type {module:reacolo-dev-model/reacolo-socket~requestMerger}
  */
 export default function mergeRequests(lastRequest, newRequest) {

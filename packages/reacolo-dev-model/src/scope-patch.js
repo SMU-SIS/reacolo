@@ -1,5 +1,5 @@
 /**
- * @module reacolo-dev-mode/scope-path
+ * @module reacolo-dev-model/scope-patch
  * @private
  */
 
@@ -11,6 +11,7 @@
  * compatible patch.
  * @return {object} A new [RFC 6902](http://tools.ietf.org/html/rfc6902)
  * patch scoped to `basePath`.
+ * @private
  *
  * @example
  * scopePath(
@@ -20,7 +21,7 @@
  * // Returns [{ op: 'test', path: '/state/a/b/c', value: 'foo' }]
  *
  */
-export default function scopePath(basePath, patch) {
+export default function scopePatch(basePath, patch) {
   return patch.map(operation =>
     Object.assign({}, operation, {
       path: operation.path != null ? `${basePath}${operation.path}` : undefined,

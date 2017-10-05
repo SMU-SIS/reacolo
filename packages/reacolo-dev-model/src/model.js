@@ -1,24 +1,12 @@
 /**
- * @module reacolo-dev-model/create
+ * @module reacolo-dev-model/model
  * @private
  */
 
 import EventEmitter from 'eventemitter3';
 import jsonPatch from 'jsonpatch';
 import mergeRequest from './merge-requests.js';
-import scopePatch from './scope-path.js';
-import {
-  SET_CLIENT_ROLE_MSG_TYPE,
-  PATCH_DATA_MSG_TYPE,
-  GET_DATA_MSG_TYPE,
-  GET_META_DATA_MSG_TYPE,
-  BROADCAST_USER_EVENT_MSG_TYPE,
-  META_DATA_MSG_TYPE,
-  DATA_MSG_TYPE,
-  DATA_PATCH_MSG_TYPE,
-  USER_EVENT_MSG_TYPE,
-  KEEP_ALIVE_MSG_TYPE
-} from './constants/message-types.js';
+import scopePatch from './scope-patch.js';
 import { MODEL_UPDATE_EVT } from './constants/events.js';
 import {
   CONNECTING_STATUS,
@@ -29,14 +17,28 @@ import {
 import { AlreadyConnectedError } from './constants/errors.js';
 
 /**
+ * Server Interface factory.
+ * @callback CreateServerInterface
+ * @param {module:reacolo-dev-model~ServerInterfaceHandlers} handlers - The
+ * server interface's handlers.
+ * @return {module:reacolo-dev-model~ServerInterface}
+ */
+
+/**
  * Creates a ReacoloDevModel.
  *
- * @param {func} createInterface - Server interface factory.
- * @param {func} createModelData - Model data factory.
+ * Technically, this function, bridges the server interface and the model
+ * data, and exposes an API for both.
+ *
+ * @param {module:reacolo-dev-model/model~CreateServerInterface}
+ * createServerInterface - Server interface factory.
+ * @param {module:reacolo-dev-model/model-data} createModelData - Model data
+ * factory.
  * @param {string} [initClientRole] - The initial client role.
  * @return {module:reacolo-dev-model~Model} The model.
+ * @private
  */
-export default (createInterface, createModelData, initClientRole) => {
+export default (createServerInterface, createModelData, initClientRole) => {
   /**
    * Manage the model's event.
    * @private
@@ -57,78 +59,50 @@ export default (createInterface, createModelData, initClientRole) => {
   });
 
   /**
-   * The server socket.
-   * @type {reacolo-socket~ReacoloSocket}
+   * The interface to communicate with the server.
+   * @type {module:reacolo-dev-model~ServerInterface}
    * @private
    */
-  const serverInterface = createInterface({
-    // Merge requests together.
+  const serverInterface = createServerInterface({
     mergeRequest,
-
-    /**
-   * Process socket messages.
-   *
-   * @param {string|number} messageType - The type of the message.
-   * @param {object} messageData - The data of the message.
-   * @return {undefined}
-   *
-   * @private
-   */
-    onMessage(messageType, messageData) {
-      if (modelData.getModelStatus() !== READY_STATUS) return;
-      switch (messageType) {
-        case DATA_MSG_TYPE:
-          modelData.setData(messageData.data, messageData.revision);
-          break;
-        case DATA_PATCH_MSG_TYPE:
-          if (modelData.getDataRevision() !== messageData.from) {
-            // If the patch is applied on a revision different from the current
-            // revision, we do not apply the patch and instead ask the server
-            // for a full data update.
-            // eslint-disable-next-line no-console
-            console.warn(
-              `Received a data patch from unknown revision: ${messageData.from} (current is ${modelData.getDataRevision()}). Requesting a full data update.`
-            );
-            serverInterface.sendRequest(GET_DATA_MSG_TYPE);
-          } else {
-            modelData.set({
-              data: {
-                value: jsonPatch.apply_patch(
-                  modelData.getData(),
-                  messageData.patch
-                ),
-                revision: messageData.revision
-              }
-            });
-          }
-          break;
-        case META_DATA_MSG_TYPE:
+    onDataUpdate(data, revision) {
+      modelData.set({ data: { value: data, revision } });
+    },
+    onDataPatch(from, patch, revision) {
+      if (modelData.getDataRevision() !== from) {
+        // If the patch is applied on a revision different from the current
+        // revision, we do not apply the patch and instead ask the server
+        // for a full data update.
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Received a data patch from unknown revision: ${from} (current is ${modelData.getDataRevision()}). Requesting a full data update.`
+        );
+        serverInterface.getData().then((resp) => {
           modelData.set({
-            metaData: {
-              value: messageData.metaData,
-              revision: messageData.revision
-            }
+            data: { value: resp.data, revision: resp.revision }
           });
-          break;
-        case USER_EVENT_MSG_TYPE:
-          emitter.emit(messageData.eventName, messageData.data);
-          break;
-        case KEEP_ALIVE_MSG_TYPE:
-          break;
-        default:
-          // eslint-disable-next-line no-console
-          console.warn(`Unknown message type: ${messageType}`);
+        });
+      } else {
+        modelData.set({
+          data: {
+            value: jsonPatch.apply_patch(modelData.getData(), patch),
+            revision
+          }
+        });
       }
     },
-
-    /**
-     * Manage socket disconnection.
-     *
-     * @return {undefined}
-     *
-     * @private
-     */
-    onClose() {
+    onMetaDataUpdate(metaData, revision) {
+      modelData.set({
+        metaData: {
+          value: metaData,
+          revision
+        }
+      });
+    },
+    onUserEvent(eventName, eventData) {
+      emitter.emit(eventName, eventData);
+    },
+    onDisconnected() {
       modelData.set({ modelStatus: { value: DISCONNECTED_STATUS } });
     }
   });
@@ -209,21 +183,16 @@ export default (createInterface, createModelData, initClientRole) => {
    * it has been set.
    * @private
    */
-  const patchServer = patch =>
-    serverInterface
-      .sendRequest(PATCH_DATA_MSG_TYPE, {
-        patch,
-        from: modelData.getDataRevision()
-      })
-      .then((resp) => {
-        modelData.set({
-          data: {
-            value: jsonPatch.apply_patch(modelData.getData(), patch),
-            revision: resp.revision
-          }
-        });
-        return modelData.getData();
+  const patchData = patch =>
+    serverInterface.patchData(modelData.getDataRevision(), patch).then((resp) => {
+      modelData.set({
+        data: {
+          value: jsonPatch.apply_patch(modelData.getData(), patch),
+          revision: resp.revision
+        }
       });
+      return modelData.getData();
+    });
 
   /**
    * Patch the state.
@@ -246,7 +215,7 @@ export default (createInterface, createModelData, initClientRole) => {
    * });
    */
   const patchState = patch =>
-    patchServer(scopePatch('/state', patch)).then(getState);
+    patchData(scopePatch('/state', patch)).then(getState);
 
   /**
    * Patch the context.
@@ -260,7 +229,7 @@ export default (createInterface, createModelData, initClientRole) => {
    * @see module:reacolo-dev-model~Model#patchState
    */
   const patchContext = patch =>
-    patchServer(scopePatch('/context', patch)).then(getContext);
+    patchData(scopePatch('/context', patch)).then(getContext);
 
   /**
    * Set the state, entirely overwriting it.
@@ -292,9 +261,7 @@ export default (createInterface, createModelData, initClientRole) => {
    */
   const setClientRole = role =>
     serverInterface
-      .sendRequest(SET_CLIENT_ROLE_MSG_TYPE, {
-        role
-      })
+      .setClientRole(role)
       .then(
         ({
           metaData: newMetaData,
@@ -320,28 +287,23 @@ export default (createInterface, createModelData, initClientRole) => {
    * @memberof module:reacolo-dev-model~Model#
    */
   const broadcastEvent = (eventName, eventData) =>
-    serverInterface
-      .sendRequest(BROADCAST_USER_EVENT_MSG_TYPE, {
-        eventName,
-        eventData
-      })
-      .then(() => {
-        // Once the event has been sent to the other devices, also emit the event
-        // locally.
-        emitter.emit(eventName, eventData);
-      });
+    serverInterface.broadcastEvent(eventName, eventData).then(() => {
+      // Once the event has been sent to the other devices, also emit the event
+      // locally.
+      emitter.emit(eventName, eventData);
+    });
 
   /**
    * Start the model synchronization.
    *
-   * @return {Promise} A promise resolved once the model is started.
+   * @return {Promise<undefined>} A promise resolved once the model is started.
    *
    * @memberof module:reacolo-dev-model~Model#
    */
   const start = () =>
     // Start the socket.
     serverInterface
-      .start()
+      .connect()
       .then(() =>
         Promise.all([
           // If no client roles have been defined we asked the list of roles.
@@ -349,11 +311,9 @@ export default (createInterface, createModelData, initClientRole) => {
           // the case a role has been defined, we can safely swap this request
           // to the roles request to fetch the roles.
           modelData.getClientRole() == null
-            ? serverInterface.sendRequest(GET_META_DATA_MSG_TYPE)
-            : serverInterface.sendRequest(SET_CLIENT_ROLE_MSG_TYPE, {
-              role: modelData.getClientRole()
-            }),
-          serverInterface.sendRequest(GET_DATA_MSG_TYPE)
+            ? serverInterface.getMetaData()
+            : serverInterface.setClientRole(modelData.getClientRole()),
+          serverInterface.getData()
         ])
       )
       .then(([metaDataResponse, dataResponse]) => {

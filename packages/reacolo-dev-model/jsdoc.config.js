@@ -1,7 +1,6 @@
-
-
 module.exports = {
   plugins: ['plugins/markdown'],
+  recurseDepth: 10,
   source: {
     include: ['src', 'package.json', 'README.md']
   },
@@ -12,6 +11,7 @@ module.exports = {
     destination: './docs/',
     template: '../../node_modules/minami',
     encoding: 'utf8',
-    private: true
+    recurse: true,
+    private: false
   }
 };

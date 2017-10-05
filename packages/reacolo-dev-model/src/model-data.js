@@ -15,6 +15,7 @@
  * @param {func} [options.onModelUpdate=undefined] Callback to be called on
  * updates.
  * @return {module:reacolo-dev-model~ModelData} The model data.
+ * @private
  */
 export default ({
   initModelStatus,
@@ -152,6 +153,7 @@ export default ({
    * data, metadata and clientRole changes.
    *
    * @interface module:reacolo-dev-model~ModelData
+   * @private
    */
   return {
     /**
