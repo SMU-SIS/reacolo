@@ -36,7 +36,6 @@ export const valuesFilter = (values, targetGroup) => {
   // Extract the number of values.
   const presentValuesNb = entries(values)
     .filter(([, count]) => count > 0)
-    .map(([val]) => val)
     .length;
 
   if (wildcaseTarget.length > 0) {
