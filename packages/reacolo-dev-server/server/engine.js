@@ -101,7 +101,8 @@ module.exports = function createEngine() {
     /**
      * Patch the application data.
      * @param {{from, patch}} messageData - The message data containing the id
-     * of the revision it is applied on an RFC 6902 patch to apply.
+     * of the revision it is applied on an
+     * [RFC 6902](https://tools.ietf.org/html/rfc6902) patch to apply.
      * @param {string} messageId - The identifier of the message (important
      * for the acknowledgement).
      * @param {module:engine~Client} client - The client that sent the message.
@@ -135,7 +136,8 @@ module.exports = function createEngine() {
     /**
      * Patch the application data.
      * @param {{from, mergePatch}} messageData - The message data containing the id
-     * of the revision it is applied on an RFC 6902 patch to apply.
+     * of the revision it is applied on an
+     * [RFC 7396](https://tools.ietf.org/html/rfc7396) patch to apply.
      * @param {string} messageId - The identifier of the message (important
      * for the acknowledgement).
      * @param {module:engine~Client} client - The client that sent the message.
