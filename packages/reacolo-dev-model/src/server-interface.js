@@ -68,7 +68,7 @@ export default (
      * Handle merge patches of the data.
      * @function
      * @memberof module:reacolo-dev-model~ServerInterfaceHandlers#
-     * @param {object} mergePatch - The [RFC 6902](http://tools.ietf.org/html/rfc6902)
+     * @param {object} mergePatch - The [RFC 7396](https://tools.ietf.org/html/rfc7396)
      * patch.
      * @param {DataRevision} revision - The data revision resulting after
      * applying the patch.

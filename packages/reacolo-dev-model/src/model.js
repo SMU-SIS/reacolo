@@ -226,7 +226,7 @@ export default (createServerInterface, createModelData, initClientRole) => {
   /**
    * Merge the server data.
    *
-   * @param {object} mergePatch - An [RFC 7386](https://tools.ietf.org/html/rfc7386)
+   * @param {object} mergePatch - An [RFC 7396](https://tools.ietf.org/html/rfc7396)
    * compatible patch.
    * @return {Promise} A promise resolved with the new server data once it
    * it has been set.
@@ -270,7 +270,7 @@ export default (createServerInterface, createModelData, initClientRole) => {
   /**
    * Merge the state.
    *
-   * @param {object} mergePatch - An [RFC 6902](http://tools.ietf.org/html/rfc6902)
+   * @param {object} mergePatch - An [RFC 7396](http://tools.ietf.org/html/rfc7396)
    * compatible patch.
    * @return {Promise} A promise resolved with the new state once it has been
    * set.
@@ -304,7 +304,7 @@ export default (createServerInterface, createModelData, initClientRole) => {
   /**
    * Merge the context.
    *
-   * @param {object} mergePatch - An [RFC 6902](http://tools.ietf.org/html/rfc6902)
+   * @param {object} mergePatch - An [RFC 7396](http://tools.ietf.org/html/rfc7396)
    * compatible patch.
    * @return {Promise} A promise resolved with the new state once it has been
    * set.
