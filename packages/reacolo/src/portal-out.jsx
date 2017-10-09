@@ -9,16 +9,16 @@ export default (WrappedComponent, portalId, callbackEvents) => {
       // Create the event listeners and mapped them with the corresponding
       // callback name.
       this._listenerEntries = Object.entries(
-        callbackEvents
+        callbackEvents,
       ).map(([callbackName, eventName]) => [
         eventName,
-        (args) => {
+        args => {
           const callback = this.props[callbackName];
           if (callback) {
             // Unpack the arguments (that should be packed by origin).
             callback(...args);
           }
-        }
+        },
       ]);
     }
     componentDidMount() {
@@ -39,8 +39,8 @@ export default (WrappedComponent, portalId, callbackEvents) => {
   PortalOut.contextTypes = {
     reacoloModel: propTypes.shape({
       addListener: propTypes.func.isRequired,
-      removeListener: propTypes.func.isRequired
-    }).isRequired
+      removeListener: propTypes.func.isRequired,
+    }).isRequired,
   };
   PortalOut.displayName = `${portalId}.Out`;
 

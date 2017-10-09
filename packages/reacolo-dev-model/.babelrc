@@ -1,47 +1,15 @@
 {
-  "presets": [
-    [
-      "env",
-      {
-        "targets": {
-          "browsers": ">1%"
-        },
-        "modules": false,
-        "loose": true
-      }
-    ]
-  ],
-
+  "presets": [["env", { "modules": false, "loose": true }]],
   "env": {
     "test": {
       "presets": [["env", { "node": "current" }]],
       "plugins": ["transform-es2015-modules-commonjs"]
     },
     "production": {
-      "plugins": [
-        [
-          "transform-runtime",
-          {
-            "helpers": false,
-            "polyfill": false,
-            "regenerator": true
-          }
-        ],
-        "external-helpers"
-      ]
+      "plugins": ["external-helpers"]
     },
     "development": {
-      "plugins": [
-        [
-          "transform-runtime",
-          {
-            "helpers": false,
-            "polyfill": false,
-            "regenerator": true
-          }
-        ],
-        "external-helpers"
-      ]
+      "plugins": ["external-helpers"]
     }
   }
 }

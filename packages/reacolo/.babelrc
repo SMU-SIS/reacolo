@@ -1,15 +1,5 @@
 {
-  "presets": [
-    ["env", {
-      "targets": {
-        "browsers": ">1%"
-      },
-      "modules": false,
-      "loose": true
-    }],
-    "react"
-  ],
-
+  "presets": [["env", { "modules": false, "loose": true }], "react"],
   "env": {
     "test": {
       "presets": [["env", { "node": "current" }]],

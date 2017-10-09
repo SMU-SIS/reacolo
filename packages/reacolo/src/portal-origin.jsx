@@ -17,9 +17,9 @@ export default (WrappedComponent, portalId, callbackEvents) => {
               // Arguments are packed (sent as an array). PortalOut
               // is supposed to unpack them.
               context.reacoloModel.broadcastEvent(evtName, args);
-            }
+            },
           }),
-        {}
+        {},
       );
     }
     render() {
@@ -28,8 +28,8 @@ export default (WrappedComponent, portalId, callbackEvents) => {
   }
   Origin.contextTypes = {
     reacoloModel: propTypes.shape({
-      broadcastEvent: propTypes.func.isRequired
-    }).isRequired
+      broadcastEvent: propTypes.func.isRequired,
+    }).isRequired,
   };
   Origin.displayName = `${portalId}.Origin`;
 

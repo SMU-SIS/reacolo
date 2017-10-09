@@ -1,0 +1,16 @@
+env:
+  browser: true
+root: true
+extends:
+  - airbnb
+  - prettier
+plugins:
+  - prettier
+rules:
+  prettier/prettier: error
+  valid-jsdoc: error
+  no-underscore-dangle: 0
+  import/extensions:
+    - 'off'
+    - always
+  class-methods-use-this: 0

@@ -23,7 +23,7 @@ export default ({ dataSetter, dataGetter, targetNode, onError, readOnly }) => {
         editorData,
         // Undefined properties are not representable as json so we need to
         // remove them or they would invalid the comparison.
-        filterValues(newData, x => x !== undefined)
+        filterValues(newData, x => x !== undefined),
       )
     ) {
       editor.set(newData);
@@ -44,12 +44,12 @@ export default ({ dataSetter, dataGetter, targetNode, onError, readOnly }) => {
       lastDataUpdateTime = thisDataUpdateTime;
       ignoreUpdates = true;
       dataSetter(newData)
-        .catch((err) => {
+        .catch(err => {
           ignoreUpdates = false;
           onError(err);
           return dataHandler(dataGetter());
         })
-        .then((updatedData) => {
+        .then(updatedData => {
           if (lastDataUpdateTime === thisDataUpdateTime) {
             ignoreUpdates = false;
             dataHandler(updatedData);
@@ -64,8 +64,8 @@ export default ({ dataSetter, dataGetter, targetNode, onError, readOnly }) => {
     {
       mode: 'code',
       onChange,
-      onEditable: readOnly ? () => false : undefined
-    }
+      onEditable: readOnly ? () => false : undefined,
+    },
   );
 
   // Return the new data handler.

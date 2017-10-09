@@ -27,12 +27,12 @@ const connect = (WrappedComponent, model) => {
       super(props);
       this.state = {
         modelState: model.getState(),
-        context: model.getContext()
+        context: model.getContext(),
       };
 
       // Create the handlers.
       this._modelHandlers = [
-        ['reacolo:model:update', () => this.updateStateFromModel()]
+        ['reacolo:model:update', () => this.updateStateFromModel()],
       ];
     }
 
@@ -54,7 +54,7 @@ const connect = (WrappedComponent, model) => {
     updateStateFromModel() {
       this.setState({
         modelState: model.getState(),
-        context: model.getContext()
+        context: model.getContext(),
       });
     }
 
@@ -71,12 +71,10 @@ const connect = (WrappedComponent, model) => {
     }
   }
 
-  Connected.displayName = `Connected(${getDisplayName(
-    WrappedComponent
-  )})`;
+  Connected.displayName = `Connected(${getDisplayName(WrappedComponent)})`;
 
   Connected.childContextTypes = {
-    reacoloModel: PropTypes.objectOf(PropTypes.func).isRequired
+    reacoloModel: PropTypes.objectOf(PropTypes.func).isRequired,
   };
 
   return Connected;

@@ -3,9 +3,12 @@ import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 
 export default {
-  entry: 'src/index.js',
-  format: 'umd',
-  moduleName: 'ReacoloDevModel',
+  input: 'src/index.js',
+  output: {
+    file: 'lib/reacolo-dev-model.js',
+    format: 'umd'
+  },
+  name: 'ReacoloDevModel',
   amd: {
     id: 'reacolo-dev-model'
   },
@@ -16,7 +19,6 @@ export default {
       exclude: 'node_modules/**' // only transpile our source code
     })
   ],
-  dest: 'lib/reacolo-dev-model.js',
   external: [
     'babel-runtime/regenerator',
     'sockjs-client',
@@ -29,5 +31,5 @@ export default {
     eventemitter3: 'EventEmitter',
     'babel-runtime/regenerator': 'regeneratorRuntime'
   },
-  sourceMap: true
+  sourcemap: true
 };

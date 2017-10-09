@@ -9,7 +9,7 @@ import {
   RequestTimeoutError,
   NotConnectedError,
   AlreadyConnectedError,
-  RequestFailedError
+  RequestFailedError,
 } from './constants/errors';
 import { ACK_MSG_TYPE, BUNDLE_MSG_TYPE } from './constants/message-types.js';
 
@@ -23,7 +23,6 @@ import { ACK_MSG_TYPE, BUNDLE_MSG_TYPE } from './constants/message-types.js';
  * @return {{type: string, data: object}} The request merged or undefined if the
  * two requests cannot be merged.
  */
-
 
 /**
  * Handle the transmissions of the requests to the reacolo dev server.
@@ -48,7 +47,7 @@ export default class ReacoloSocket {
     onClose = () => {},
     requestMerger = () => undefined,
     ackTimeout,
-    throttleDelay
+    throttleDelay,
   ) {
     this._serverAddress = serverAddress;
     // Time to wait for an acknowledgement after a request has been sent to the server.
@@ -92,7 +91,7 @@ export default class ReacoloSocket {
       const socket = new SockJS(this._serverAddress);
       socket.onopen = () => resolve(socket);
       socket.onerror = err => reject(err);
-    }).then((socket) => {
+    }).then(socket => {
       this._socket = socket;
 
       // Bind the handlers.
@@ -120,7 +119,6 @@ export default class ReacoloSocket {
     return this._nextSendingSchedule && !this._nextSendingSchedule.isDone;
   }
 
-
   /**
    * Send a request.
    * @param {{type: string, data: object}|string} requestOrType - The request or
@@ -135,15 +133,21 @@ export default class ReacoloSocket {
     }
     // Allow the request to be passed as two arguments (type, data) or as an object
     // ({ type, data }).
-    const request = typeof requestOrType === 'string'
-      ? { type: requestOrType, data }
-      : requestOrType;
+    const request =
+      typeof requestOrType === 'string'
+        ? { type: requestOrType, data }
+        : requestOrType;
 
     let requestMessage;
     // If there is already a message waiting to be sent, attempt to merge the requests
-    const lastPendingMessage = this._pendingMessages[this._pendingMessages.length - 1];
+    const lastPendingMessage = this._pendingMessages[
+      this._pendingMessages.length - 1
+    ];
     if (lastPendingMessage) {
-      const mergedRequest = this._requestMerger(lastPendingMessage.request, request);
+      const mergedRequest = this._requestMerger(
+        lastPendingMessage.request,
+        request,
+      );
       // If the merger has been successful, just replace the request of the last message with
       // the merged request.
       if (mergedRequest) {
@@ -187,24 +191,31 @@ export default class ReacoloSocket {
         clearTimeout(timeoutId);
         resolve(...args);
       };
-      message.startAckTimeout = (timeout) => {
+      message.startAckTimeout = timeout => {
         if (timeoutId) {
           throw new Error('Timeout already started');
         }
         timeoutId = setTimeout(() => {
-          reject(new RequestTimeoutError(`Message ${id} (${request.type}) timed out.`));
+          reject(
+            new RequestTimeoutError(
+              `Message ${id} (${request.type}) timed out.`,
+            ),
+          );
         }, timeout);
       };
-    }).then((a) => {
-      this._ackCallbacks.delete(id);
-      return a;
-    }, (e) => {
-      this._ackCallbacks.delete(id);
-      throw e;
-    });
+    }).then(
+      a => {
+        this._ackCallbacks.delete(id);
+        return a;
+      },
+      e => {
+        this._ackCallbacks.delete(id);
+        throw e;
+      },
+    );
 
     // Create the message response promise.
-    message.responsePromise = ackPromise.then((ack) => {
+    message.responsePromise = ackPromise.then(ack => {
       const [, success, response] = ack;
       if (success) {
         return response;
@@ -239,7 +250,9 @@ export default class ReacoloSocket {
       // Send the messages.
       this._sendMessages(pendingMessages);
       // Now that each message has been sent, start their ack timeout.
-      pendingMessages.forEach(message => message.startAckTimeout(this._ackTimeout));
+      pendingMessages.forEach(message =>
+        message.startAckTimeout(this._ackTimeout),
+      );
       // Schedule the next sending after the throttle delay.
       this._scheduleNextSending(this._throttleDelay);
     }
@@ -249,7 +262,7 @@ export default class ReacoloSocket {
     // Create the bundle by picking the properties to send from each message.
     const messagesToSend = messages.map(
       ({ request: { type, data }, id }) =>
-        (data != null ? [type, id, data] : [type, id])
+        data != null ? [type, id, data] : [type, id],
     );
     // If there is only one waiting message, unpack it before sending it.
     const bundle =
@@ -259,7 +272,6 @@ export default class ReacoloSocket {
     // Send the message.
     this._socket.send(JSON.stringify(bundle));
   }
-
 
   _onSocketMessage(originalMessage) {
     const [type, data] = JSON.parse(originalMessage.data);
@@ -284,7 +296,7 @@ export default class ReacoloSocket {
       // eslint-disable-next-line no-console
       console.warn(
         `Received unexpected acknowledgement for message: ${messageData.messageId}.` +
-        ' It may be a server error or because the request timed out.'
+          ' It may be a server error or because the request timed out.',
       );
     }
   }

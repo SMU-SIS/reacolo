@@ -25,7 +25,7 @@ export * from './constants/status.js';
 export const create = (
   serverAddress = `http://${window.location.host}/socket`,
   initClientRole = undefined,
-  { requestThrottle = 50, requestTimeout = 20000 } = {}
+  { requestThrottle = 50, requestTimeout = 20000 } = {},
 ) => {
   const createSocket = ({ onMessage, onClose, mergeRequest }) =>
     new ReacoloSocket(
@@ -34,7 +34,7 @@ export const create = (
       onClose,
       mergeRequest,
       requestTimeout,
-      requestThrottle
+      requestThrottle,
     );
   const createInterface = handlers => ServerInterface(createSocket, handlers);
   return createModel(createInterface, createModelData, initClientRole);

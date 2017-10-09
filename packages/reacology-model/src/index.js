@@ -8,7 +8,7 @@ const Events = {
   CONNECTED: Symbol.for('connected'),
   DISCONNECTED: Symbol.for('disconnected'),
   DATA_UPDATE: Symbol.for('data:update'),
-  CONTEXT_UPDATE: Symbol.for('context:update')
+  CONTEXT_UPDATE: Symbol.for('context:update'),
 };
 
 export class CordovaEcologyModelSync extends EventEmitter {
@@ -17,7 +17,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
     this._data = {};
     this._context = {
       clientRole: undefined,
-      roles: {}
+      roles: {},
     };
     this._isConnected = false;
     this._deviceId = null;
@@ -28,7 +28,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
       enumerable: true,
       configurable: false,
       writable: false,
-      value: new EcologyEventBroadcaster()
+      value: new EcologyEventBroadcaster(),
     });
   }
 
@@ -70,9 +70,9 @@ export class CordovaEcologyModelSync extends EventEmitter {
    * @return {undefined}
    */
   setAppData(newData) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       cordova.plugins.CordovaEcology.setData('data', newData, () =>
-        resolve(newData)
+        resolve(newData),
       );
     });
   }
@@ -98,8 +98,12 @@ export class CordovaEcologyModelSync extends EventEmitter {
     // event has an odd behavior: if the device is already ready, the event is
     // immediately emitted once subscribed.
     await promisifyEvent(
-      (l) => { document.addEventListener('deviceready', l); },
-      (l) => { document.removeEventListener('deviceready', l); }
+      l => {
+        document.addEventListener('deviceready', l);
+      },
+      l => {
+        document.removeEventListener('deviceready', l);
+      },
     );
 
     // Do not fetch this before 'deviceready' or may still be undefined.
@@ -108,7 +112,7 @@ export class CordovaEcologyModelSync extends EventEmitter {
     // Subscribe to the disconnected cordova event.
     await cordovaPlugin.subscribeEvent(
       'ecology:disconnected',
-      this._onDisconnected.bind(this)
+      this._onDisconnected.bind(this),
     );
 
     if (!await cordovaPlugin.isConnected()) {
@@ -117,8 +121,12 @@ export class CordovaEcologyModelSync extends EventEmitter {
       // FIXME: if the connection parameters have changed, they are just
       // silently ignored...
       const prom = promisifyEvent(
-        (l) => { cordovaPlugin.subscribeEvent('ecology:connected', l); },
-        (l) => { cordovaPlugin.unsubscribeEvent('ecology:connected', l); }
+        l => {
+          cordovaPlugin.subscribeEvent('ecology:connected', l);
+        },
+        l => {
+          cordovaPlugin.unsubscribeEvent('ecology:connected', l);
+        },
       );
       // Connect to the ecology. Throws if ecology is already created.
       await cordovaPlugin.ecologyConnect(this._ecologyConfig);
@@ -132,10 +140,10 @@ export class CordovaEcologyModelSync extends EventEmitter {
     const [clientRole, data, roles] = await Promise.all([
       cordovaPlugin.getMyDeviceId(),
       cordovaPlugin.getData('data'),
-      cordovaPlugin.getAvailableDevices()
+      cordovaPlugin.getAvailableDevices(),
     ]);
     this._onContextUpdate(
-      Object.assign({}, this._context, { clientRole, roles })
+      Object.assign({}, this._context, { clientRole, roles }),
     );
     this._onDataUpdate(data);
     // Once data and client role has been initialized, notify the connection.
@@ -150,16 +158,14 @@ export class CordovaEcologyModelSync extends EventEmitter {
         this._onDataUpdate(newValue);
         break;
       case 'context':
-        cordova.plugins.CordovaEcology
-          .getAvailableDevices()
-          .then((roles) => {
-            const contextData = {
-              roles,
-              clientRole: this._deviceId
-            };
-            const newContextData = Object.assign({}, newValue, contextData);
-            this._onContextUpdate(newContextData);
-          });
+        cordova.plugins.CordovaEcology.getAvailableDevices().then(roles => {
+          const contextData = {
+            roles,
+            clientRole: this._deviceId,
+          };
+          const newContextData = Object.assign({}, newValue, contextData);
+          this._onContextUpdate(newContextData);
+        });
         break;
       default:
         throw new Error(`Received unexpected data key: ${key}`);

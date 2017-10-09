@@ -25,7 +25,7 @@ export default function scopePatch(basePath, patch) {
   return patch.map(operation =>
     Object.assign({}, operation, {
       path: operation.path != null ? `${basePath}${operation.path}` : undefined,
-      from: operation.from != null ? `${basePath}${operation.from}` : undefined
-    })
+      from: operation.from != null ? `${basePath}${operation.from}` : undefined,
+    }),
   );
 }

@@ -88,7 +88,7 @@ const schedule = (delay, f, onCanceled) => {
      */
     get isDone() {
       return isCanceled || hasRun;
-    }
+    },
   };
 };
 

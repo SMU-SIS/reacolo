@@ -13,11 +13,11 @@ const getDisplayName = Component => Component.displayName || Component.name;
 const portal = (
   WrappedComponent,
   callbackNames,
-  portalId = `portal(${getDisplayName(WrappedComponent)})`
+  portalId = `portal(${getDisplayName(WrappedComponent)})`,
 ) => {
   if (!portalId) {
     throw new Error(
-      'Cannot infer an id for portal: wrapped component has no displayName and portalId is not provided'
+      'Cannot infer an id for portal: wrapped component has no displayName and portalId is not provided',
     );
   }
 
@@ -25,15 +25,15 @@ const portal = (
   const callbackEvents = callbackNames.reduce(
     (result, callbackName) =>
       Object.assign(result, {
-        [callbackName]: `${portalId}:${callbackName}`
+        [callbackName]: `${portalId}:${callbackName}`,
       }),
-    {}
+    {},
   );
 
   // Create the origin and the exit of the portal.
   return {
     Origin: portalOrigin(WrappedComponent, portalId, callbackEvents),
-    Out: portalOut(WrappedComponent, portalId, callbackEvents)
+    Out: portalOut(WrappedComponent, portalId, callbackEvents),
   };
 };
 

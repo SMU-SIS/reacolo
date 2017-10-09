@@ -13,7 +13,7 @@ import {
   CONNECTING_STATUS,
   READY_STATUS,
   DISCONNECTED_STATUS,
-  ERROR_STATUS
+  ERROR_STATUS,
 } from './constants/status.js';
 import { AlreadyConnectedError } from './constants/errors.js';
 
@@ -56,7 +56,7 @@ export default (createServerInterface, createModelData, initClientRole) => {
     initModelStatus: CONNECTING_STATUS,
     onUpdate(modelValue) {
       emitter.emit(MODEL_UPDATE_EVT, modelValue, true);
-    }
+    },
   });
 
   /**
@@ -68,9 +68,9 @@ export default (createServerInterface, createModelData, initClientRole) => {
    * @return {Promise<undefined>} A promise resolved once the data has been set.
    */
   const updateDataFromServer = serverInterface =>
-    serverInterface.getData().then((resp) => {
+    serverInterface.getData().then(resp => {
       modelData.set({
-        data: { value: resp.data, revision: resp.revision }
+        data: { value: resp.data, revision: resp.revision },
       });
     });
 
@@ -91,15 +91,15 @@ export default (createServerInterface, createModelData, initClientRole) => {
         // for a full data update.
         // eslint-disable-next-line no-console
         console.warn(
-          `Received a data patch from unknown revision: ${from} (current is ${modelData.getDataRevision()}). Requesting a full data update.`
+          `Received a data patch from unknown revision: ${from} (current is ${modelData.getDataRevision()}). Requesting a full data update.`,
         );
         updateDataFromServer(serverInterface);
       } else {
         modelData.set({
           data: {
             value: jsonPatch(modelData.getData(), patch),
-            revision
-          }
+            revision,
+          },
         });
       }
     },
@@ -108,15 +108,15 @@ export default (createServerInterface, createModelData, initClientRole) => {
         // Same as above.
         // eslint-disable-next-line no-console
         console.warn(
-          `Received a data merge patch from unknown revision: ${from} (current is ${modelData.getDataRevision()}). Requesting a full data update.`
+          `Received a data merge patch from unknown revision: ${from} (current is ${modelData.getDataRevision()}). Requesting a full data update.`,
         );
         updateDataFromServer(serverInterface);
       } else {
         modelData.set({
           data: {
             value: jsonMergePatch(modelData.getData(), mergePatch),
-            revision
-          }
+            revision,
+          },
         });
       }
     },
@@ -124,8 +124,8 @@ export default (createServerInterface, createModelData, initClientRole) => {
       modelData.set({
         metaData: {
           value: metaData,
-          revision
-        }
+          revision,
+        },
       });
     },
     onUserEvent(eventName, eventData) {
@@ -133,7 +133,7 @@ export default (createServerInterface, createModelData, initClientRole) => {
     },
     onDisconnected() {
       modelData.set({ modelStatus: { value: DISCONNECTED_STATUS } });
-    }
+    },
   });
 
   /**
@@ -213,12 +213,12 @@ export default (createServerInterface, createModelData, initClientRole) => {
    * @private
    */
   const patchData = patch =>
-    serverInterface.patchData(modelData.getDataRevision(), patch).then((resp) => {
+    serverInterface.patchData(modelData.getDataRevision(), patch).then(resp => {
       modelData.set({
         data: {
           value: jsonPatch(modelData.getData(), patch),
-          revision: resp.revision
-        }
+          revision: resp.revision,
+        },
       });
       return modelData.getData();
     });
@@ -233,13 +233,14 @@ export default (createServerInterface, createModelData, initClientRole) => {
    * @private
    */
   const mergeData = mergePatch =>
-    serverInterface.mergePatchData(modelData.getDataRevision(), mergePatch)
-      .then((resp) => {
+    serverInterface
+      .mergePatchData(modelData.getDataRevision(), mergePatch)
+      .then(resp => {
         modelData.set({
           data: {
             value: jsonMergePatch(modelData.getData(), mergePatch),
-            revision: resp.revision
-          }
+            revision: resp.revision,
+          },
         });
         return modelData.getData();
       });
@@ -349,14 +350,14 @@ export default (createServerInterface, createModelData, initClientRole) => {
         ({
           metaData: newMetaData,
           revision: newMetaDataRevision,
-          clientRole: newClientRole
+          clientRole: newClientRole,
         }) => {
           modelData.set({
             clientRole: { value: newClientRole },
-            metaData: { value: newMetaData, revision: newMetaDataRevision }
+            metaData: { value: newMetaData, revision: newMetaDataRevision },
           });
           return modelData.getContext();
-        }
+        },
       );
 
   /**
@@ -396,8 +397,8 @@ export default (createServerInterface, createModelData, initClientRole) => {
           modelData.getClientRole() == null
             ? serverInterface.getMetaData()
             : serverInterface.setClientRole(modelData.getClientRole()),
-          serverInterface.getData()
-        ])
+          serverInterface.getData(),
+        ]),
       )
       .then(([metaDataResponse, dataResponse]) => {
         // Initialize the data.
@@ -407,11 +408,11 @@ export default (createServerInterface, createModelData, initClientRole) => {
           data: { value: dataResponse.data, revision: dataResponse.revision },
           metaData: {
             value: metaDataResponse.metaData,
-            revision: metaDataResponse.revision
-          }
+            revision: metaDataResponse.revision,
+          },
         });
       })
-      .catch((e) => {
+      .catch(e => {
         // In case of an already connect error, we do not alter the status
         // as the model should remain functional. In all other cases,
         // we set the status to error.
@@ -439,6 +440,6 @@ export default (createServerInterface, createModelData, initClientRole) => {
     setContext,
     setClientRole,
     broadcastEvent,
-    start
+    start,
   };
 };

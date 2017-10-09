@@ -22,7 +22,7 @@ export default ({
   initClientRole,
   initServerData,
   initServerMetaData,
-  onUpdate = () => {}
+  onUpdate = () => {},
 }) => {
   /**
    * The current connectivity status of the model.
@@ -81,7 +81,7 @@ export default ({
    * @param {string} newClientRole The new client role.
    * @return {boolean} True if the context must be updated.
    */
-  const setClientRole = (newClientRole) => {
+  const setClientRole = newClientRole => {
     if (clientRole === newClientRole) return false;
     clientRole = newClientRole;
     return true;
@@ -91,7 +91,7 @@ export default ({
    * @param {string} newStatus The new status of the model.
    * @return {boolean} True if the context must be updated.
    */
-  const setModelStatus = (newStatus) => {
+  const setModelStatus = newStatus => {
     if (modelStatus === newStatus) return false;
     modelStatus = newStatus;
     return true;
@@ -136,12 +136,10 @@ export default ({
   const update = (recycleContext = false) => {
     const context = recycleContext
       ? value.context
-      : Object.assign(
-        {},
-        data ? data.context : undefined,
-        metaData,
-        { clientRole, modelStatus }
-      );
+      : Object.assign({}, data ? data.context : undefined, metaData, {
+          clientRole,
+          modelStatus,
+        });
     value = { context, state: data ? data.state : undefined };
   };
 
@@ -226,17 +224,17 @@ export default ({
       modelStatus: modelStatusMutation,
       clientRole: clientRoleMutation,
       data: dataMutation,
-      metaData: metaDataMutation
+      metaData: metaDataMutation,
     }) {
       const mustUpdateContext = [
         modelStatusMutation && setModelStatus(modelStatusMutation.value),
         clientRoleMutation && setClientRole(clientRoleMutation.value),
         dataMutation && setData(dataMutation.value, dataMutation.revision),
         metaDataMutation &&
-          setMetaData(metaDataMutation.value, metaDataMutation.revision)
+          setMetaData(metaDataMutation.value, metaDataMutation.revision),
       ];
       update(!mustUpdateContext.some(x => x));
       onUpdate(value);
-    }
+    },
   };
 };

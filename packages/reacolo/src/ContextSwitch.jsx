@@ -4,10 +4,13 @@ import wouldPass from './filtering/would-pass.js';
 // Try to find a context that passes amongst the provided children.
 const lookupContexts = (children, context) => {
   // Look for the first contexts that passes.
-  const passingChild = children
-    .find(child => child.type.getTargets && wouldPass(context, child.type.getTargets(child)));
+  const passingChild = children.find(
+    child =>
+      child.type.getTargets && wouldPass(context, child.type.getTargets(child)),
+  );
   // If no context passed, look for a default context.
-  const selectedChild = passingChild ||
+  const selectedChild =
+    passingChild ||
     children.find(child => child.type.isDefault && child.type.isDefault(child));
 
   // If nothing have been selected, return.
@@ -28,9 +31,7 @@ const lookupContexts = (children, context) => {
   return undefined;
 };
 
-const ContextSwitch = ({ children, context }) => lookupContexts(
-  React.Children.toArray(children),
-  context
-) || null;
+const ContextSwitch = ({ children, context }) =>
+  lookupContexts(React.Children.toArray(children), context) || null;
 
 export default ContextSwitch;

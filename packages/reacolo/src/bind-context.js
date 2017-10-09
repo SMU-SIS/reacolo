@@ -8,8 +8,9 @@ const identity = x => x;
 const bindContext = (propsToTargets = identity) => {
   // Create the context.
   const Context = () => {
-    throw new Error('Context components cannot be rendered directly. They must be contained either ' +
-      'in a Filter component or a parent Context component.');
+    throw new Error(
+      'Context components cannot be rendered directly. They must be contained either in a Filter component or a parent Context component.',
+    );
   };
   // Define its getTargets function from paramToTargets.
   if (typeof propsToTargets === 'function') {
@@ -17,7 +18,11 @@ const bindContext = (propsToTargets = identity) => {
       propsToTargets(omit(element.props, OMITTED_CONTEXT_PROPS_FROM_TARGETS));
   } else {
     Context.getTargets = element =>
-      Object.assign({}, propsToTargets, omit(element.props, OMITTED_CONTEXT_PROPS_FROM_TARGETS));
+      Object.assign(
+        {},
+        propsToTargets,
+        omit(element.props, OMITTED_CONTEXT_PROPS_FROM_TARGETS),
+      );
   }
 
   // Define other properties.
@@ -25,10 +30,10 @@ const bindContext = (propsToTargets = identity) => {
   Context.isContext = true;
   Context.propTypes = {
     default: PropTypes.bool,
-    children: PropTypes.node
+    children: PropTypes.node,
   };
   Context.defaultProps = {
-    default: false
+    default: false,
   };
   return Context;
 };

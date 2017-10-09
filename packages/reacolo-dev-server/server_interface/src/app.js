@@ -11,9 +11,8 @@ const READONLY_CONTEXT_PROPERTIES = [
   'observers',
   'roles',
   'clientRole',
-  'modelStatus'
+  'modelStatus',
 ];
-
 
 window.addEventListener('load', () => {
   // Fetch node elements.
@@ -21,8 +20,8 @@ window.addEventListener('load', () => {
 
   // Create the model sync.
   const reacoloModel = reacoloDevModel.create(
-    `http://${location.host}/socket`,
-    queryString.parse(location.search).role
+    `http://${window.location.host}/socket`,
+    queryString.parse(window.location.search).role,
   );
 
   // Function to toast errors.
@@ -36,7 +35,7 @@ window.addEventListener('load', () => {
     targetNode: document.getElementById('state-editor'),
     dataSetter: state => reacoloModel.setState(state),
     dataGetter: () => reacoloModel.getState(),
-    onError: toastError
+    onError: toastError,
   });
 
   // Create the meta-data editor and get a function to handle new meta-data.
@@ -45,36 +44,32 @@ window.addEventListener('load', () => {
     dataSetter: context =>
       reacoloModel.setContext(omit(context, READONLY_CONTEXT_PROPERTIES)),
     dataGetter: () => reacoloModel.getContext(),
-    onError: toastError
+    onError: toastError,
   });
 
   // Create the patch editor.
   createPatchEditor({
     parent: document.getElementById('patch-editor'),
     onPatch(patch) {
-      reacoloModel
-        .patchState(patch)
-        .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.error(e);
-          toastError(e);
-        });
+      reacoloModel.patchState(patch).catch(e => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        toastError(e);
+      });
     },
-    defaultContent: []
+    defaultContent: [],
   });
 
   // Create the merge patch editor.
   createPatchEditor({
     parent: document.getElementById('merge-patch-editor'),
     onPatch(patch) {
-      reacoloModel
-        .mergeState(patch)
-        .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.error(e);
-          toastError(e);
-        });
-    }
+      reacoloModel.mergeState(patch).catch(e => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        toastError(e);
+      });
+    },
   });
 
   // Connect model sync events.
@@ -91,7 +86,7 @@ window.addEventListener('load', () => {
       newStateHandler(reacoloModel.getState());
       contextHandler(reacoloModel.getContext());
     })
-    .catch((error) => {
+    .catch(error => {
       // eslint-disable-next-line no-console
       console.error(error.message, error.stack);
       toastError(error);

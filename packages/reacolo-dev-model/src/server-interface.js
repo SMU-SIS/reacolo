@@ -18,7 +18,7 @@ import {
   DATA_PATCH_MSG_TYPE,
   DATA_MERGE_PATCH_MSG_TYPE,
   USER_EVENT_MSG_TYPE,
-  KEEP_ALIVE_MSG_TYPE
+  KEEP_ALIVE_MSG_TYPE,
 } from './constants/message-types.js';
 
 /**
@@ -102,8 +102,8 @@ export default (
      * @memberof module:reacolo-dev-model~ServerInterfaceHandlers#
      * @returns {undefined}
      */
-    onDisconnected = NO_OP
-  }
+    onDisconnected = NO_OP,
+  },
 ) => {
   const socket = createSocket({
     mergeRequest,
@@ -116,7 +116,7 @@ export default (
           onDataPatch(
             messageData.from,
             messageData.patch,
-            messageData.revision
+            messageData.revision,
           );
           break;
         case META_DATA_MSG_TYPE:
@@ -129,7 +129,7 @@ export default (
           onDataMergePatch(
             messageData.from,
             messageData.mergePatch,
-            messageData.revision
+            messageData.revision,
           );
           break;
         case KEEP_ALIVE_MSG_TYPE:
@@ -139,7 +139,7 @@ export default (
           console.warn(`Unknown message type: ${messageType}`);
       }
     },
-    onClose: onDisconnected
+    onClose: onDisconnected,
   });
 
   /**
@@ -242,6 +242,6 @@ export default (
      * has been established.
      * @memberof module:reacolo-dev-model~ServerInterface#
      */
-    connect: () => socket.start().then(NO_OP)
+    connect: () => socket.start().then(NO_OP),
   };
 };

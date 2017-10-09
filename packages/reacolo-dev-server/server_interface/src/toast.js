@@ -6,7 +6,7 @@ export default (parent, duration) => {
   // Timeout id to cancel the toast disappearance.
   let toastTimeOut;
   // Return the toast function.
-  return (message) => {
+  return message => {
     // Clear any potential previous toast timeout.
     clearTimeout(toastTimeOut);
     // Set up the toast message.

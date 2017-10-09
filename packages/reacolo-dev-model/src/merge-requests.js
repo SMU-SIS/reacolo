@@ -8,7 +8,7 @@ import {
   SET_CLIENT_ROLE_MSG_TYPE,
   PATCH_DATA_MSG_TYPE,
   GET_DATA_MSG_TYPE,
-  GET_META_DATA_MSG_TYPE
+  GET_META_DATA_MSG_TYPE,
 } from './constants/message-types.js';
 
 /**
@@ -35,18 +35,18 @@ export default function mergeRequests(lastRequest, newRequest) {
     case SET_DATA_MSG_TYPE:
       // Set app data request also overwrites patch data.
       return lastRequest.type === newRequest.type ||
-      lastRequest.type === PATCH_DATA_MSG_TYPE
+        lastRequest.type === PATCH_DATA_MSG_TYPE
         ? newRequest
         : undefined;
     case PATCH_DATA_MSG_TYPE:
       return lastRequest.type === newRequest.type
         ? {
-          type: PATCH_DATA_MSG_TYPE,
-          data: {
-            patch: [...lastRequest.data.patch, ...newRequest.data.patch],
-            from: lastRequest.data.from
+            type: PATCH_DATA_MSG_TYPE,
+            data: {
+              patch: [...lastRequest.data.patch, ...newRequest.data.patch],
+              from: lastRequest.data.from,
+            },
           }
-        }
         : undefined;
     default:
       // By default it is safer not to merge.

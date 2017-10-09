@@ -4,7 +4,7 @@ import 'jsoneditor/dist/jsoneditor.css';
 export default ({ parent, onPatch, defaultContent = {} }) => {
   const patchEditor = new JSONEditor(
     parent.getElementsByClassName('editor-content')[0],
-    { mode: 'code' }
+    { mode: 'code' },
   );
   patchEditor.set(defaultContent);
 
