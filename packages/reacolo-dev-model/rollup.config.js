@@ -6,30 +6,18 @@ export default {
   input: 'src/index.js',
   output: {
     file: 'lib/reacolo-dev-model.js',
-    format: 'umd'
+    format: 'umd',
   },
   name: 'ReacoloDevModel',
   amd: {
-    id: 'reacolo-dev-model'
+    id: 'reacolo-dev-model',
   },
-  plugins: [
-    resolve(),
-    commonjs(),
-    babel({
-      exclude: 'node_modules/**' // only transpile our source code
-    })
-  ],
-  external: [
-    'babel-runtime/regenerator',
-    'sockjs-client',
-    'eventemitter3',
-    'jsonpatch'
-  ],
+  plugins: [resolve(), commonjs(), babel()],
+  external: ['sockjs-client', 'eventemitter3', 'jsonpatch'],
   globals: {
     jsonpatch: 'jsonpatch',
     'sockjs-client': 'SockJS',
     eventemitter3: 'EventEmitter',
-    'babel-runtime/regenerator': 'regeneratorRuntime'
   },
-  sourcemap: true
+  sourcemap: true,
 };

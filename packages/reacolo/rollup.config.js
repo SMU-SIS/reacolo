@@ -7,10 +7,10 @@ export default {
   input: 'src/index.js',
   output: {
     file: 'lib/reacolo.js',
-    format: 'umd'
+    format: 'umd',
   },
   amd: {
-    id: 'reacolo'
+    id: 'reacolo',
   },
   name: 'Reacolo',
   plugins: [
@@ -18,13 +18,13 @@ export default {
     commonjs(),
     pegjs(),
     babel({
-      exclude: 'node_modules/**' // only transpile our source code
-    })
+      exclude: 'node_modules/**', // only transpile our source code
+    }),
   ],
   external: ['react', 'prop-types'],
   globals: {
     'prop-types': 'PropTypes',
-    react: 'React'
+    react: 'React',
   },
-  sourcemap: true
+  sourcemap: true,
 };
