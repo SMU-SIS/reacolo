@@ -21,6 +21,9 @@ const connect = (WrappedComponent, model) => {
   const patchState = model.patchState
     ? (...args) => model.patchState(...args)
     : undefined;
+  const mergeState = model.mergeState
+    ? (...args) => model.mergeState(...args)
+    : undefined;
 
   class Connected extends Component {
     constructor(props) {
@@ -65,6 +68,7 @@ const connect = (WrappedComponent, model) => {
           context={this.state.context}
           setState={setState}
           patchState={patchState}
+          mergeState={mergeState}
           {...this.props}
         />
       );
