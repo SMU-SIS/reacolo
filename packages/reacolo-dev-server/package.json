@@ -11,7 +11,7 @@
     "server_interface/dist"
   ],
   "engines": {
-    "node": ">=7"
+    "node": ">=6"
   },
   "scripts": {
     "test": "echo \"No test specified\"",
@@ -22,9 +22,9 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.4",
-    "json-merge-patch": "^0.2.3",
     "jsonpatch": "^3.0.1",
-    "sockjs": "^0.3.18"
+    "sockjs": "^0.3.18",
+    "tiny-merge-patch": "^0.1.2"
   },
   "private": true,
   "devDependencies": {

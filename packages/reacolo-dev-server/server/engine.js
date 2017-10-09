@@ -1,7 +1,7 @@
 /** @module engine */
 
 const jsonpatch = require('jsonpatch');
-const jsonMergePatch = require('json-merge-patch');
+const jsonMergePatch = require('tiny-merge-patch');
 const createClientRegistry = require('./client-registry');
 const createDataRegistry = require('./data-registry');
 
