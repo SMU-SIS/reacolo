@@ -5,7 +5,7 @@
 
 import EventEmitter from 'eventemitter3';
 import { apply_patch as jsonPatch } from 'jsonpatch';
-import { apply as jsonMergePatch } from 'json-merge-patch';
+import jsonMergePatch from 'tiny-merge-patch';
 import mergeRequest from './merge-requests.js';
 import scopePatch from './scope-patch.js';
 import { MODEL_UPDATE_EVT } from './constants/events.js';
@@ -60,7 +60,7 @@ export default (createServerInterface, createModelData, initClientRole) => {
   });
 
   /**
-   * Request the current data revision from the server and udpates it.
+   * Request the current data revision from the server and updates it.
    * @private
    * @func
    * @param {module:reacolo-dev-model~ServerInterface} serverInterface - The
