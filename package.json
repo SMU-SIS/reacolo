@@ -2,34 +2,34 @@
   "name": "reacolo",
   "scripts": {
     "lint": "eslint 'packages/**/src/*.@(js|jsx)'",
-    "lint:msg": "validate-commit-msg",
-    "validate": "npm ls",
-    "commit": "git cz",
+    "commit": "git-cz",
     "test": "lerna run test",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 1",
+    "build": "lerna run build",
+    "bootstrap": "lerna bootstrap",
     "postrewrite": "yarn git-hook",
     "precommit": "yarn git-hook",
     "prepush": "yarn git-hook",
-    "commitmsg": "yarn lint:msg",
+    "commitmsg": "commitlint -e",
     "git-hook": "yarn lint && yarn test",
-    "build": "lerna run build",
-    "bootstrap": "lerna bootstrap"
+    "release": "standard-version"
   },
   "devDependencies": {
-    "commitizen": "^2.9.5",
-    "conventional-changelog-cli": "^1.2.0",
-    "cz-conventional-changelog": "^2.0.0",
+    "@commitlint/cli": "^4.1.0",
+    "@commitlint/config-angular": "^3.1.1",
+    "@commitlint/config-lerna-scopes": "^3.1.1",
+    "@commitlint/prompt": "^4.1.0",
+    "commitizen": "^2.9.6",
     "eslint": "^4.8.0",
     "eslint-config-airbnb": "^16.0.0",
-    "eslint-plugin-import": "^2.7.0",
     "eslint-config-prettier": "^2.6.0",
+    "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-prettier": "^2.3.1",
     "eslint-plugin-react": "^7.4.0",
-    "prettier": "^1.7.4",
     "husky": "^0.14.3",
     "lerna": "^2.1.2",
-    "validate-commit-msg": "^2.8.2"
+    "prettier": "^1.7.4",
+    "standard-version": "^4.2.0"
   },
   "keywords": [
     "ecology",
@@ -40,25 +40,8 @@
   "private": true,
   "repository": "https://github.com/SMU-SIS/reacolo.git",
   "config": {
-    "validate-commit-msg": {
-      "types": [
-        "feat",
-        "fix",
-        "docs",
-        "style",
-        "refactor",
-        "perf",
-        "test",
-        "chore",
-        "revert",
-        "build",
-        "ci"
-      ],
-      "warnOnFail": false,
-      "maxSubjectLength": 100
-    },
     "commitizen": {
-      "path": "node_modules/cz-conventional-changelog"
+      "path": "@commitlint/prompt"
     }
   }
 }
