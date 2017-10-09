@@ -14,9 +14,9 @@
     "release": "standard-version"
   },
   "devDependencies": {
-    "@commitlint/cli": "^4.1.0",
+    "@commitlint/cli": "^4.1.1",
     "@commitlint/config-angular": "^3.1.1",
-    "@commitlint/config-lerna-scopes": "^3.1.1",
+    "@commitlint/config-lerna-scopes": "^4.1.1",
     "@commitlint/prompt": "^4.1.0",
     "commitizen": "^2.9.6",
     "eslint": "^4.8.0",
@@ -27,7 +27,7 @@
     "eslint-plugin-prettier": "^2.3.1",
     "eslint-plugin-react": "^7.4.0",
     "husky": "^0.14.3",
-    "lerna": "^2.1.2",
+    "lerna": "^2.4.0",
     "prettier": "^1.7.4",
     "standard-version": "^4.2.0"
   },
