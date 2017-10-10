@@ -29,7 +29,7 @@ const connect = (WrappedComponent, model) => {
     constructor(props) {
       super(props);
       this.state = {
-        modelState: model.getState(),
+        state: model.getState(),
         context: model.getContext(),
       };
 
@@ -56,7 +56,7 @@ const connect = (WrappedComponent, model) => {
 
     updateStateFromModel() {
       this.setState({
-        modelState: model.getState(),
+        state: model.getState(),
         context: model.getContext(),
       });
     }
@@ -64,7 +64,7 @@ const connect = (WrappedComponent, model) => {
     render() {
       return (
         <WrappedComponent
-          state={this.state.modelState}
+          state={this.state.state}
           context={this.state.context}
           setState={setState}
           patchState={patchState}
