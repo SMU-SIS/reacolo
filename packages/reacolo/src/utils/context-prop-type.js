@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 
 export default PropTypes.shape({
-  clientRole: PropTypes.string,
-  roles: PropTypes.oneOfType([
+  role: PropTypes.string,
+  availableRoles: PropTypes.oneOfType([
     PropTypes.objectOf(PropTypes.number),
-    PropTypes.arrayOf(PropTypes.string)
+    PropTypes.arrayOf(PropTypes.string),
   ]),
-  modelStatus: PropTypes.string.isRequired,
-  observers: PropTypes.number
+  status: PropTypes.string.isRequired,
+  observers: PropTypes.number,
 });
