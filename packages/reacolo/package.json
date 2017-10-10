@@ -51,8 +51,11 @@
   "jest": {
     "transform": {
       "\\.jsx?$": "babel-jest",
-      "\\.pegjs$": "<rootDir>/jest-transforms/pegjs-transformer.js"
-    }
+      "\\.pegjs$": "<rootDir>/jest-tools/pegjs-transformer.js"
+    },
+    "setupFiles": [
+      "<rootDir>/jest-tools/raf-polyfill.js"
+    ]
   },
   "version": "5.0.0-pre-alpha"
 }
