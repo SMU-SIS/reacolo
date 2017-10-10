@@ -1,7 +1,7 @@
 {
   "name": "reacolo",
   "scripts": {
-    "lint": "eslint 'packages/**/src/*.@(js|jsx)'",
+    "lint": "eslint 'packages/**/src/**/*.@(js|jsx)'",
     "commit": "git-cz",
     "test": "lerna run test",
     "build": "lerna run build",
