@@ -8,9 +8,8 @@
     "bootstrap": "lerna bootstrap",
     "postrewrite": "yarn git-hook",
     "precommit": "yarn git-hook",
-    "prepush": "yarn git-hook",
     "commitmsg": "commitlint -e",
-    "git-hook": "yarn lint && yarn test"
+    "git-hook": "lint-staged && yarn test"
   },
   "devDependencies": {
     "@commitlint/cli": "^4.1.1",
@@ -28,6 +27,7 @@
     "eslint-plugin-react": "^7.4.0",
     "husky": "^0.14.3",
     "lerna": "^2.4.0",
+    "lint-staged": "^4.2.3",
     "prettier": "^1.7.4"
   },
   "keywords": [
@@ -42,5 +42,11 @@
     "commitizen": {
       "path": "@commitlint/prompt"
     }
-  }
+  },
+  "lint-staged": {
+    "*.@(js|jsx)": [
+      "eslint"
+    ]
+  },
+  "dependencies": {}
 }
