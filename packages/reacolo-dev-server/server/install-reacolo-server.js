@@ -44,7 +44,7 @@ const installSocketHandlers = (sockJsServer, keepAlive = 100) => {
   };
 
   // Listen for socket connection.
-  sockJsServer.on('connection', (socket) => {
+  sockJsServer.on('connection', socket => {
     // Set up keep alive if needed.
     let keepAliveIntervalId;
     const setupKeepAlive = () => {
@@ -62,10 +62,10 @@ const installSocketHandlers = (sockJsServer, keepAlive = 100) => {
         keepAlive == null
           ? socket.write.bind(socket)
           : (...args) => {
-            // Reset the keep alive interval.
-            setupKeepAlive();
-            socket.write(...args);
-          }
+              // Reset the keep alive interval.
+              setupKeepAlive();
+              socket.write(...args);
+            },
     };
 
     engine.addClient(socketEntry);

@@ -1,9 +1,8 @@
-
 /**
  * Create a data registry: register handle the role of the different clients.
  * Also maintain a revision.
  * @module
- * @return {client-registry~ClientRegistry} The data registy
+ * @return {client-registry~ClientRegistry} The data registry
  */
 const createClientRegistry = () => {
   const clients = new Map();
@@ -96,7 +95,7 @@ const createClientRegistry = () => {
      */
     get size() {
       return clients.size;
-    }
+    },
   };
 };
 

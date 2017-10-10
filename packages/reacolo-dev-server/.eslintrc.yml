@@ -1,0 +1,17 @@
+env:
+  node: true
+  browser: false
+overrides:
+  - files:
+    - server_interface/**
+    env:
+      node: false
+      browser: true
+    settings:
+      import/resolver:
+        webpack:
+          config: 'server_interface/webpack.config.js'
+    rules:
+      import/no-extraneous-dependencies:
+        - error
+        - devDependencies: true

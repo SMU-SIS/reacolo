@@ -41,7 +41,7 @@ const createDataRegistry = (initData, initRevision = 0) => {
      */
     get revision() {
       return revision;
-    }
+    },
   };
 };
 

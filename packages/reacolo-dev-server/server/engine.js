@@ -29,7 +29,7 @@ module.exports = function createEngine() {
   // present or not.
   const getMetaData = () => ({
     roles: clientRegistry.clientRoles(),
-    observers: clientRegistry.observerCount()
+    observers: clientRegistry.observerCount(),
   });
   const getMetaDataRevision = () => clientRegistry.revision;
 
@@ -40,7 +40,7 @@ module.exports = function createEngine() {
     if (clientOrClients.send) {
       clientOrClients.send(msg);
     } else {
-      clientOrClients.forEach((client) => {
+      clientOrClients.forEach(client => {
         client.send(msg);
       });
     }
@@ -52,24 +52,24 @@ module.exports = function createEngine() {
   const sendAppData = clients =>
     sendMessage(clients, 'data', {
       revision: data.revision,
-      data: data.get()
+      data: data.get(),
     });
   const sendAppDataPatch = (clients, patch, from) =>
     sendMessage(clients, 'dataPatch', {
       from,
       patch,
-      revision: data.revision
+      revision: data.revision,
     });
   const sendAppDataMergePatch = (clients, mergePatch, from) =>
     sendMessage(clients, 'dataMergePatch', {
       from,
       mergePatch,
-      revision: data.revision
+      revision: data.revision,
     });
   const sendMetaData = clients =>
     sendMessage(clients, 'metaData', {
       metaData: getMetaData(),
-      revision: getMetaDataRevision()
+      revision: getMetaDataRevision(),
     });
   const sendUserEvent = (clients, messageData) =>
     sendMessage(clients, 'userEvent', messageData);
@@ -124,7 +124,7 @@ module.exports = function createEngine() {
         );
         sendAck(true, client, messageId, {
           revision: data.revision,
-          from: currentRevision
+          from: currentRevision,
         });
       } catch (e) {
         const error = `Patch application failed: ${e.message}`;
@@ -159,7 +159,7 @@ module.exports = function createEngine() {
         );
         sendAck(true, client, messageId, {
           revision: data.revision,
-          from: currentRevision
+          from: currentRevision,
         });
       } catch (e) {
         const error = `Patch application failed: ${e.message}`;
@@ -180,7 +180,7 @@ module.exports = function createEngine() {
     getData(messageData, messageId, client) {
       sendAck(true, client, messageId, {
         revision: data.revision,
-        data: data.get()
+        data: data.get(),
       });
     },
 
@@ -196,7 +196,7 @@ module.exports = function createEngine() {
     getMetaData(_, messageId, client) {
       sendAck(true, client, messageId, {
         metaData: getMetaData(),
-        revision: getMetaDataRevision()
+        revision: getMetaDataRevision(),
       });
     },
 
@@ -221,7 +221,7 @@ module.exports = function createEngine() {
         sendAck(true, client, messageId, {
           clientRole: role,
           metaData: getMetaData(),
-          revision: getMetaDataRevision()
+          revision: getMetaDataRevision(),
         });
       }
     },
@@ -240,7 +240,7 @@ module.exports = function createEngine() {
         messageData
       );
       sendAck(true, client, messageId);
-    }
+    },
   };
 
   /**
@@ -313,6 +313,6 @@ module.exports = function createEngine() {
       print(
         `${new Date()} A user disconnected (#connected: ${clientRegistry.size})`
       );
-    }
+    },
   };
 };

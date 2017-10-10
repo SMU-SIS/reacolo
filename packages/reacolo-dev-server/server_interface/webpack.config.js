@@ -34,40 +34,40 @@ module.exports = {
           use: [
             {
               loader: 'css-loader',
-              options: { sourceMap: true }
+              options: { sourceMap: true },
             },
             {
               loader: 'sass-loader',
-              options: { sourceMap: true } // compiles Sass to CSS
-            }
-          ]
-        })
+              options: { sourceMap: true }, // compiles Sass to CSS
+            },
+          ],
+        }),
       },
       {
         test: /\.js$/,
         include: path.resolve(__dirname, 'src'),
-        use: ['babel-loader']
+        use: ['babel-loader'],
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
         use: [
           {
-            loader: 'url-loader'
-          }
-        ]
-      }
-    ]
+            loader: 'url-loader',
+          },
+        ],
+      },
+    ],
   },
 
   plugins: [
     new ExtractTextPlugin({
       filename: '[name].css',
       disable: false,
-      allChunks: true
+      allChunks: true,
     }),
     new CopyWebpackPlugin([{ from: '**/*.html', to: './' }]),
     new webpack.optimize.ModuleConcatenationPlugin(),
-    // new UglifyJsPlugin({ sourceMap: true, parallel: true }),
-    new webpack.optimize.OccurrenceOrderPlugin()
-  ]
+    new UglifyJsPlugin({ sourceMap: true, parallel: true }),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+  ],
 };
