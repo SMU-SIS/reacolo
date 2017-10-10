@@ -4,7 +4,7 @@
   "scripts": {
     "test": "jest",
     "build": "rollup -c --environment NODE_ENV:production",
-    "prepare": "yarn run build"
+    "prepublish": "in-publish && yarn run build || not-in-publish"
   },
   "peerDependencies": {
     "react": "^16.0.0"
@@ -20,7 +20,10 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.1.8",
     "babel-preset-react": "^6.23.0",
+    "in-publish": "^2.0.0",
     "jest": "^21.2.1",
+    "object.omit": "^3.0.0",
+    "pegjs": "^0.10.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-test-renderer": "^16.0.0",
@@ -44,8 +47,6 @@
     "access": "restricted"
   },
   "dependencies": {
-    "object.omit": "^3.0.0",
-    "pegjs": "^0.10.0",
     "prop-types": "^15.5.10"
   },
   "jest": {

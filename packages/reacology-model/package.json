@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "rollup -c --environment NODE_ENV:production",
-    "prepare": "yarn run build",
+    "prepublish": "in-publish && yarn run build || not-in-publish",
     "test": "jest"
   },
   "peerDependencies": {
@@ -23,6 +23,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "eventemitter3": "^2.0.2",
+    "in-publish": "^2.0.0",
     "jest": "^21.2.1",
     "rollup": "^0.50.0",
     "rollup-plugin-babel": "^3.0.2",

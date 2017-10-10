@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "rollup -c --environment NODE_ENV:production",
-    "prepare": "yarn run build",
+    "prepublish": "in-publish && yarn run build || not-in-publish",
     "generate-docs": "jsdoc --configure jsdoc.config.js --verbose",
     "test": "jest"
   },
@@ -19,6 +19,7 @@
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.1.8",
     "eventemitter3": "^2.0.2",
+    "in-publish": "^2.0.0",
     "jest": "^21.1.0",
     "jsdoc": "^3.5.5",
     "minami": "^1.2.3",
