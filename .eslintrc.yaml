@@ -24,3 +24,4 @@ overrides:
       import/no-extraneous-dependencies:
         - error
         - devDependencies: true
+      react/no-multi-comp: 0
