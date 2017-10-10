@@ -1,20 +1,22 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import bindContext from '../bind-context.js';
+import { bindContext } from '../Context.js';
 
 describe('bindContext', () => {
-  it('creates contextes that cannot be directly rendered', () => {
+  it('creates contexts that cannot be directly rendered', () => {
     const Context = bindContext();
     expect(() => {
       renderer.create(<Context />);
     }).toThrow();
   });
-  it('creates contextes that are default in function of the default props', () => {
+
+  it('creates contexts that are default in function of the default props', () => {
     const Context = bindContext();
     expect(Context.isDefault(<Context />)).toBe(false);
     expect(Context.isDefault(<Context default />)).toBe(true);
     expect(Context.isDefault(<Context default={false} />)).toBe(false);
   });
+
   it(
     'creates contexts whose targets are the props minus the default and children by default' +
       ' props',
@@ -33,6 +35,7 @@ describe('bindContext', () => {
       ).toEqual({ foo: 'foo', bar: 'bar' });
     },
   );
+
   it('properly uses propsToTargets when provided as a function to fetch its targets', () => {
     const targets = {};
     const propsToTargets = jest.fn(() => targets);
@@ -46,6 +49,7 @@ describe('bindContext', () => {
     expect(contextTargets).toBe(targets);
     expect(propsToTargets.mock.calls).toEqual([[{ bar: 'bar' }]]);
   });
+
   it('properly uses propsToTargets when provided as an object to extends its targets', () => {
     const Context = bindContext({ foo: 'foo' });
     const contextElement = (
@@ -58,6 +62,7 @@ describe('bindContext', () => {
       foo: 'foo',
     });
   });
+
   it('gives the priority on its own properties rather than propsToTargets', () => {
     const Context = bindContext({ foo: 'foo' });
     const contextElement = (

@@ -5,7 +5,7 @@ const OMITTED_CONTEXT_PROPS_FROM_TARGETS = ['default', 'children'];
 const identity = x => x;
 
 // bindContext HOC.
-const bindContext = (propsToTargets = identity) => {
+export const bindContext = (propsToTargets = identity) => {
   // Create the context.
   const Context = () => {
     throw new Error(
@@ -38,4 +38,4 @@ const bindContext = (propsToTargets = identity) => {
   return Context;
 };
 
-export default bindContext;
+export default bindContext();
