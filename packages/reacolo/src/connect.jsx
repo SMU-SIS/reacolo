@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { modelPropType } from './utils/prop-types';
 
 const attachModelHandlers = (model, handlers) => {
   handlers.forEach(([evt, handler]) => {
@@ -78,7 +78,8 @@ const connect = (WrappedComponent, model) => {
   Connected.displayName = `Connected(${getDisplayName(WrappedComponent)})`;
 
   Connected.childContextTypes = {
-    reacoloModel: PropTypes.objectOf(PropTypes.func).isRequired,
+    // eslint-disable-next-line react/no-typos
+    reacoloModel: modelPropType.isRequired,
   };
 
   return Connected;
