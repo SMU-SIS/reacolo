@@ -28,7 +28,7 @@ module.exports = function createEngine() {
   // Metadata getters. Currently the meta data is only about what roles are
   // present or not.
   const getMetaData = () => ({
-    roles: clientRegistry.clientRoles(),
+    availableRoles: clientRegistry.clientRoles(),
     observers: clientRegistry.observerCount(),
   });
   const getMetaDataRevision = () => clientRegistry.revision;
