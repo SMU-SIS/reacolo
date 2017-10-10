@@ -7,22 +7,26 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: {
-    app: ['babel-polyfill', './app']
+    app: ['babel-polyfill', './app'],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
-    filename: './[name].js'
+    filename: './[name].js',
   },
   devtool: 'source-map',
   context: path.resolve(__dirname, 'src'),
-
+  resolve: {
+    alias: {
+      'reacolo-dev-model': '@quentinroy-private/reacolo-dev-model',
+    },
+  },
   module: {
     rules: [
       {
         test: /\.js$/,
         use: ['source-map-loader'],
-        enforce: 'pre'
+        enforce: 'pre',
       },
       {
         test: /\.s?css$/,

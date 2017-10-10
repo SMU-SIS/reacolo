@@ -33,6 +33,7 @@
     "access": "restricted"
   },
   "devDependencies": {
+    "@quentinroy-private/reacolo-dev-model": "^5.0.0-pre-alpha.982fe184",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.1",
     "babel-polyfill": "^6.26.0",
@@ -45,7 +46,6 @@
     "lodash": "^4.17.4",
     "node-sass": "^4.5.3",
     "query-string": "^5.0.0",
-    "reacolo-dev-model": "^4.1.0-beta.1",
     "sass-loader": "^6.0.6",
     "source-map-loader": "^0.2.1",
     "uglifyjs-webpack-plugin": "^1.0.0-beta.2",
