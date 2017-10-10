@@ -35,11 +35,11 @@ import { AlreadyConnectedError } from './constants/errors.js';
  * createServerInterface - Server interface factory.
  * @param {module:reacolo-dev-model/model-data} createModelData - Model data
  * factory.
- * @param {string} [initClientRole] - The initial client role.
+ * @param {string} [initRole] - The initial client role.
  * @return {module:reacolo-dev-model~Model} The model.
  * @private
  */
-export default (createServerInterface, createModelData, initClientRole) => {
+export default (createServerInterface, createModelData, initRole) => {
   /**
    * Manage the model's event.
    * @private
@@ -47,12 +47,12 @@ export default (createServerInterface, createModelData, initClientRole) => {
   const emitter = new EventEmitter();
 
   /**
-   * Store the data and manage the model's context and state.
+   * Store the data and manage the model's context and store.
    * @type {module:reacolo-dev-model~ModelData}
    * @private
    */
   const modelData = createModelData({
-    initClientRole,
+    initRole,
     initModelStatus: CONNECTING_STATUS,
     onUpdate(modelValue) {
       emitter.emit(MODEL_UPDATE_EVT, modelValue, true);
@@ -132,7 +132,7 @@ export default (createServerInterface, createModelData, initClientRole) => {
       emitter.emit(eventName, eventData);
     },
     onDisconnected() {
-      modelData.set({ modelStatus: { value: DISCONNECTED_STATUS } });
+      modelData.set({ status: { value: DISCONNECTED_STATUS } });
     },
   });
 
@@ -140,13 +140,13 @@ export default (createServerInterface, createModelData, initClientRole) => {
    * @return {string} The role of this client.
    * @memberof module:reacolo-dev-model~Model#
    */
-  const getClientRole = () => modelData.getClientRole();
+  const getRole = () => modelData.getRole();
 
   /**
-   * @return {object} The current state.
+   * @return {object} The current store.
    * @memberof module:reacolo-dev-model~Model#
    */
-  const getState = () => modelData.getState();
+  const getStore = () => modelData.getStore();
 
   /**
    * @return {object} The current context.
@@ -162,7 +162,7 @@ export default (createServerInterface, createModelData, initClientRole) => {
    * @see module:reacolo-dev-model.DISCONNECTED_STATUS
    * @see module:reacolo-dev-model.ERROR_STATUS
    */
-  const getModelStatus = () => modelData.getModelStatus();
+  const getStatus = () => modelData.getStatus();
 
   /**
    * Register an event listener.
@@ -172,6 +172,7 @@ export default (createServerInterface, createModelData, initClientRole) => {
    * or events broadcasted by the user using
    * {@link module:reacolo-dev-model~Model#broadcastEvent}.
    *
+   * @func
    * @param {string|Symbol} eventName - The name (or symbol) of the event to
    * listen to.
    * @param {function} listener - The listener.
@@ -193,6 +194,7 @@ export default (createServerInterface, createModelData, initClientRole) => {
   /**
    * Remove an event listener.
    *
+   * @func
    * @param {string|Symbol} eventName - The name (or symbol) of the event to
    * listen to.
    * @param {function} listener - The listener.
@@ -246,11 +248,11 @@ export default (createServerInterface, createModelData, initClientRole) => {
       });
 
   /**
-   * Patch the state.
+   * Patch the store.
    *
    * @param {object} patch - An [RFC 6902](http://tools.ietf.org/html/rfc6902)
    * compatible patch.
-   * @return {Promise} A promise resolved with the new state once it has been
+   * @return {Promise} A promise resolved with the new store once it has been
    * set.
    *
    * @memberof module:reacolo-dev-model~Model#
@@ -261,32 +263,32 @@ export default (createServerInterface, createModelData, initClientRole) => {
    *   { op: 'replace', 'path': '/a/b/c', value: 42 },
    *   { op: 'move', from: '/a/b/c', path: '/a/b/d' },
    *   { op: 'copy', from: '/a/b/d', path: '/a/b/e' }
-   * ]).then(state => {
-   *   console.log('state', state);
+   * ]).then(store => {
+   *   console.log('store', store);
    * });
    */
-  const patchState = patch =>
-    patchData(scopePatch('/state', patch)).then(getState);
+  const patchStore = patch =>
+    patchData(scopePatch('/store', patch)).then(getStore);
 
   /**
-   * Merge the state.
+   * Merge the store.
    *
    * @param {object} mergePatch - An [RFC 7396](http://tools.ietf.org/html/rfc7396)
    * compatible patch.
-   * @return {Promise} A promise resolved with the new state once it has been
+   * @return {Promise} A promise resolved with the new store once it has been
    * set.
    *
    * @memberof module:reacolo-dev-model~Model#
    *
    * @example
-   * model.mergeState({
+   * model.mergeStore({
    *   a: { a1: 3 }
-   * }).then(state => {
-   *   console.log('state', state);
+   * }).then(store => {
+   *   console.log('store', store);
    * });
    */
-  const mergeState = mergePatch =>
-    mergeData({ state: mergePatch }).then(getState);
+  const mergeStore = mergePatch =>
+    mergeData({ store: mergePatch }).then(getStore);
 
   /**
    * Patch the context.
@@ -297,7 +299,7 @@ export default (createServerInterface, createModelData, initClientRole) => {
    * set.
    *
    * @memberof module:reacolo-dev-model~Model#
-   * @see module:reacolo-dev-model~Model#patchState
+   * @see module:reacolo-dev-model~Model#patchStore
    */
   const patchContext = patch =>
     patchData(scopePatch('/context', patch)).then(getContext);
@@ -307,30 +309,30 @@ export default (createServerInterface, createModelData, initClientRole) => {
    *
    * @param {object} mergePatch - An [RFC 7396](http://tools.ietf.org/html/rfc7396)
    * compatible patch.
-   * @return {Promise} A promise resolved with the new state once it has been
+   * @return {Promise} A promise resolved with the new store once it has been
    * set.
    *
    * @memberof module:reacolo-dev-model~Model#
    */
   const mergeContext = mergePatch =>
-    mergeData({ context: mergePatch }).then(getState);
+    mergeData({ context: mergePatch }).then(getStore);
 
   /**
-   * Set the state, entirely overwriting it.
+   * Set the store, entirely overwriting it.
    *
-   * @param {object} value - The new state.
-   * @return {Promise} A promise resolved with the new state once the state has
+   * @param {object} value - The new store.
+   * @return {Promise} A promise resolved with the new store once the store has
    * been set.
    *
    * @memberof module:reacolo-dev-model~Model#
    */
-  const setState = value => patchState([{ op: 'add', path: '', value }]);
+  const setStore = value => patchStore([{ op: 'add', path: '', value }]);
 
   /**
    * Set the context, entirely overwriting it.
    *
-   * @param {object} value - The new state.
-   * @return {Promise} A promise resolved with the new state once the state has
+   * @param {object} value - The new store.
+   * @return {Promise} A promise resolved with the new store once the store has
    * been set.
    *
    * @memberof module:reacolo-dev-model~Model#
@@ -343,17 +345,17 @@ export default (createServerInterface, createModelData, initClientRole) => {
    * @return {Promise} A promise resolved once this client's role has been
    * set.
    */
-  const setClientRole = role =>
+  const setRole = role =>
     serverInterface
       .setClientRole(role)
       .then(
         ({
           metaData: newMetaData,
           revision: newMetaDataRevision,
-          clientRole: newClientRole,
+          clientRole: newRole,
         }) => {
           modelData.set({
-            clientRole: { value: newClientRole },
+            role: { value: newRole },
             metaData: { value: newMetaData, revision: newMetaDataRevision },
           });
           return modelData.getContext();
@@ -394,17 +396,17 @@ export default (createServerInterface, createModelData, initClientRole) => {
           // Because the set client role request also return the metadata, in
           // the case a role has been defined, we can safely swap this request
           // to the roles request to fetch the roles.
-          modelData.getClientRole() == null
+          modelData.getRole() == null
             ? serverInterface.getMetaData()
-            : serverInterface.setClientRole(modelData.getClientRole()),
+            : serverInterface.setClientRole(modelData.getRole()),
           serverInterface.getData(),
         ]),
       )
       .then(([metaDataResponse, dataResponse]) => {
         // Initialize the data.
         modelData.set({
-          clientRole: { value: metaDataResponse.clientRole },
-          modelStatus: { value: READY_STATUS },
+          role: { value: metaDataResponse.clientRole },
+          status: { value: READY_STATUS },
           data: { value: dataResponse.data, revision: dataResponse.revision },
           metaData: {
             value: metaDataResponse.metaData,
@@ -417,7 +419,7 @@ export default (createServerInterface, createModelData, initClientRole) => {
         // as the model should remain functional. In all other cases,
         // we set the status to error.
         if (!(e instanceof AlreadyConnectedError)) {
-          modelData.set({ modelStatus: { value: ERROR_STATUS } });
+          modelData.set({ status: { value: ERROR_STATUS } });
         }
         throw e;
       });
@@ -426,19 +428,19 @@ export default (createServerInterface, createModelData, initClientRole) => {
    * @interface module:reacolo-dev-model~Model
    */
   return {
-    getClientRole,
-    getState,
+    getRole,
+    getStore,
     getContext,
-    getModelStatus,
+    getStatus,
     addListener,
     removeListener,
-    patchState,
+    patchStore,
     patchContext,
-    mergeState,
+    mergeStore,
     mergeContext,
-    setState,
+    setStore,
     setContext,
-    setClientRole,
+    setRole,
     broadcastEvent,
     start,
   };

@@ -8,7 +8,7 @@
  * @param {object} [options] The ModelData options.
  * @param {string} options.initModelStatus=undefined The initial status of the
  * model.
- * @param {string} [options.initClientRole=undefined] The initial client role.
+ * @param {string} [options.initRole=undefined] The initial client role.
  * @param {object} [options.initServerData=undefined] The initial server data.
  * @param {object} [options.initServerMetaData=undefined] The initial server
  * meta data.
@@ -19,7 +19,7 @@
  */
 export default ({
   initModelStatus,
-  initClientRole,
+  initRole,
   initServerData,
   initServerMetaData,
   onUpdate = () => {},
@@ -29,18 +29,18 @@ export default ({
    * @type {string}
    * @private
    */
-  let modelStatus = initModelStatus;
+  let status = initModelStatus;
 
   /**
    * The role of this client.
    * @type{string}
    * @private
    */
-  let clientRole = initClientRole;
+  let role = initRole;
 
   /**
    * The server's data. The context property does not contain yet the metadata.
-   * @type {{ state: Object, context: Object}}
+   * @type {{ store: Object, context: Object}}
    * @private
    */
   let data;
@@ -78,12 +78,12 @@ export default ({
   let value;
 
   /**
-   * @param {string} newClientRole The new client role.
+   * @param {string} newRole The new client role.
    * @return {boolean} True if the context must be updated.
    */
-  const setClientRole = newClientRole => {
-    if (clientRole === newClientRole) return false;
-    clientRole = newClientRole;
+  const setRole = newRole => {
+    if (role === newRole) return false;
+    role = newRole;
     return true;
   };
 
@@ -92,8 +92,8 @@ export default ({
    * @return {boolean} True if the context must be updated.
    */
   const setModelStatus = newStatus => {
-    if (modelStatus === newStatus) return false;
-    modelStatus = newStatus;
+    if (status === newStatus) return false;
+    status = newStatus;
     return true;
   };
 
@@ -137,10 +137,10 @@ export default ({
     const context = recycleContext
       ? value.context
       : Object.assign({}, data ? data.context : undefined, metaData, {
-          clientRole,
-          modelStatus,
+          role,
+          status,
         });
-    value = { context, state: data ? data.state : undefined };
+    value = { context, store: data ? data.store : undefined };
   };
 
   // Update the model without notifying.
@@ -148,14 +148,14 @@ export default ({
 
   /**
    * The goal of this object is to control context's mutations by handling
-   * data, metadata and clientRole changes.
+   * data, metadata and role changes.
    *
    * @interface module:reacolo-dev-model~ModelData
    * @private
    */
   return {
     /**
-     * @return {{ context, state }} The current model value.
+     * @return {{ context, store }} The current model value.
      * @memberof module:reacolo-dev-model~ModelData#
      */
     get: () => value,
@@ -164,19 +164,19 @@ export default ({
      * @return {string} The role of this client.
      * @memberof module:reacolo-dev-model~ModelData#
      */
-    getClientRole: () => clientRole,
+    getRole: () => role,
 
     /**
      * @return {string} The status of this client.
      * @memberof module:reacolo-dev-model~ModelData#
      */
-    getModelStatus: () => modelStatus,
+    getStatus: () => status,
 
     /**
-     * @return {object} The current state.
+     * @return {object} The current store.
      * @memberof module:reacolo-dev-model~ModelData#
      */
-    getState: () => value.state,
+    getStore: () => value.store,
 
     /**
      * @return {object} The current context.
@@ -212,8 +212,8 @@ export default ({
      * Set the model data.
      *
      * @param {object} mutations - The mutation to apply.
-     * @param {{ value: string }} mutations.clientRole - model status mutation.
-     * @param {{ value: string }} mutations.clientRole - client role mutation.
+     * @param {{ value: string }} mutations.role - model status mutation.
+     * @param {{ value: string }} mutations.role - client role mutation.
      * @param {{ value: string, revision: DataRevision }} mutations.data - data
      *  mutation
      * @param {{ value: string, revision: DataRevision }} mutations.metaData -
@@ -221,14 +221,14 @@ export default ({
      * @return {undefined}
      */
     set({
-      modelStatus: modelStatusMutation,
-      clientRole: clientRoleMutation,
+      status: statusMutation,
+      role: roleMutation,
       data: dataMutation,
       metaData: metaDataMutation,
     }) {
       const mustUpdateContext = [
-        modelStatusMutation && setModelStatus(modelStatusMutation.value),
-        clientRoleMutation && setClientRole(clientRoleMutation.value),
+        statusMutation && setModelStatus(statusMutation.value),
+        roleMutation && setRole(roleMutation.value),
         dataMutation && setData(dataMutation.value, dataMutation.revision),
         metaDataMutation &&
           setMetaData(metaDataMutation.value, metaDataMutation.revision),
