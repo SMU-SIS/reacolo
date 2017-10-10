@@ -9,7 +9,8 @@
     "postrewrite": "yarn git-hook",
     "precommit": "yarn git-hook",
     "commitmsg": "commitlint -e",
-    "git-hook": "lint-staged && yarn test"
+    "git-hook": "lint-staged && yarn test",
+    "publish": "lerna publish"
   },
   "devDependencies": {
     "@commitlint/cli": "^4.1.1",
