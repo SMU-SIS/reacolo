@@ -1,14 +1,14 @@
 {
-  "name": "reacolo-dev-server",
-  "version": "4.1.0-beta.2",
+  "name": "@quentinroy-private/reacolo-dev-server",
   "main": "server/index.js",
   "description": "Small server for reacolo. It is meant to be used with reacolo-dev-model-sync.",
   "bin": {
-    "reacolo-dev-server": "./bin/start-server.js"
+    "reacolo-dev-server": "bin/start-server.js"
   },
   "files": [
     "server",
-    "server_interface/dist"
+    "server_interface/dist",
+    "bin"
   ],
   "engines": {
     "node": ">=6"
@@ -16,7 +16,8 @@
   "scripts": {
     "test": "echo \"No test specified\"",
     "build": "webpack --config server_interface/webpack.config.js",
-    "start": "node ./bin/start-server.js"
+    "start": "node ./bin/start-server.js",
+    "prepublish": "npm run build"
   },
   "author": "Quentin Roy <quentin@quentinroy.fr>",
   "license": "MIT",
@@ -26,7 +27,11 @@
     "sockjs": "^0.3.18",
     "tiny-merge-patch": "^0.1.2"
   },
-  "private": true,
+  "publishConfig": {
+    "registry": "http://localhost:4873",
+    "tag": "pre",
+    "access": "restricted"
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.1",
@@ -46,5 +51,6 @@
     "uglifyjs-webpack-plugin": "^1.0.0-beta.2",
     "url-loader": "^0.6.2",
     "webpack": "^3.5.5"
-  }
+  },
+  "version": "5.0.0-pre-alpha.982fe184"
 }

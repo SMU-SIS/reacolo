@@ -1,7 +1,12 @@
 {
-  "name": "reacology-model",
-  "version": "4.1.0-beta.1",
+  "name": "@quentinroy-private/reacology-model",
   "main": "lib/reacology-model.js",
+  "module": "src",
+  "files": [
+    "src",
+    "!src/**/__tests__",
+    "lib"
+  ],
   "scripts": {
     "build": "rollup -c --environment NODE_ENV:production",
     "prepare": "yarn run build",
@@ -32,5 +37,10 @@
   },
   "author": "Quentin Roy <quentinroy@smu.edu.sg>",
   "license": "UNLICENSED",
-  "private": true
+  "publishConfig": {
+    "registry": "http://localhost:4873",
+    "tag": "pre",
+    "access": "restricted"
+  },
+  "version": "5.0.0-pre-alpha.982fe184"
 }

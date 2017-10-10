@@ -1,6 +1,5 @@
 {
-  "name": "reacolo",
-  "version": "4.1.0-beta.0",
+  "name": "@quentinroy-private/reacolo",
   "main": "lib/reacolo.js",
   "scripts": {
     "test": "jest",
@@ -10,6 +9,9 @@
   "peerDependencies": {
     "react": "^15.6.1"
   },
+  "files": [
+    "lib"
+  ],
   "devDependencies": {
     "babel-core": "^6.23.1",
     "babel-eslint": "^8.0.1",
@@ -36,7 +38,11 @@
   ],
   "author": "Quentin Roy <quentinroy@smu.edu.sg>",
   "license": "UNLICENSED",
-  "private": true,
+  "publishConfig": {
+    "registry": "http://localhost:4873",
+    "tag": "pre",
+    "access": "restricted"
+  },
   "dependencies": {
     "object.omit": "^3.0.0",
     "pegjs": "^0.10.0",
@@ -47,5 +53,6 @@
       "\\.jsx?$": "babel-jest",
       "\\.pegjs$": "<rootDir>/jest-transforms/pegjs-transformer.js"
     }
-  }
+  },
+  "version": "5.0.0-pre-alpha.982fe184"
 }
