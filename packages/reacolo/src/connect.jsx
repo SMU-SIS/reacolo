@@ -17,25 +17,25 @@ const getDisplayName = WrappedComponent =>
   WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
 const connect = (WrappedComponent, model) => {
-  const setState = (...args) => model.setState(...args);
-  const patchState = model.patchState
-    ? (...args) => model.patchState(...args)
+  const setStore = (...args) => model.setStore(...args);
+  const patchStore = model.patchStore
+    ? (...args) => model.patchStore(...args)
     : undefined;
-  const mergeState = model.mergeState
-    ? (...args) => model.mergeState(...args)
+  const mergeStore = model.mergeStore
+    ? (...args) => model.mergeStore(...args)
     : undefined;
 
   class Connected extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        state: model.getState(),
+        store: model.getStore(),
         context: model.getContext(),
       };
 
       // Create the handlers.
       this._modelHandlers = [
-        ['reacolo:model:update', () => this.updateStateFromModel()],
+        ['reacolo:model:update', () => this.updateStoreFromModel()],
       ];
     }
 
@@ -47,16 +47,16 @@ const connect = (WrappedComponent, model) => {
       attachModelHandlers(model, this._modelHandlers);
       // We cannot do this in component did mount or we would trigger a
       // re-render.
-      this.updateStateFromModel();
+      this.updateStoreFromModel();
     }
 
     componentWillUnmount() {
       detachModelHandlers(model, this._modelHandlers);
     }
 
-    updateStateFromModel() {
+    updateStoreFromModel() {
       this.setState({
-        state: model.getState(),
+        store: model.getStore(),
         context: model.getContext(),
       });
     }
@@ -64,11 +64,11 @@ const connect = (WrappedComponent, model) => {
     render() {
       return (
         <WrappedComponent
-          state={this.state.state}
+          store={this.state.store}
           context={this.state.context}
-          setState={setState}
-          patchState={patchState}
-          mergeState={mergeState}
+          setStore={setStore}
+          patchStore={patchStore}
+          mergeStore={mergeStore}
           {...this.props}
         />
       );
