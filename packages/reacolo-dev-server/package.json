@@ -29,11 +29,11 @@
   },
   "publishConfig": {
     "registry": "http://localhost:4873",
-    "tag": "pre",
+    "tag": "pre-alpha",
     "access": "restricted"
   },
   "devDependencies": {
-    "@quentinroy-private/reacolo-dev-model": "^5.0.0-pre-alpha.982fe184",
+    "@quentinroy-private/reacolo-dev-model": "^5.0.0-pre-alpha",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.1",
     "babel-polyfill": "^6.26.0",
@@ -52,5 +52,5 @@
     "url-loader": "^0.6.2",
     "webpack": "^3.5.5"
   },
-  "version": "5.0.0-pre-alpha.982fe184"
+  "version": "5.0.0-pre-alpha"
 }

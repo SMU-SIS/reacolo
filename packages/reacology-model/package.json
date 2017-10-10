@@ -39,8 +39,8 @@
   "license": "UNLICENSED",
   "publishConfig": {
     "registry": "http://localhost:4873",
-    "tag": "pre",
+    "tag": "pre-alpha",
     "access": "restricted"
   },
-  "version": "5.0.0-pre-alpha.982fe184"
+  "version": "5.0.0-pre-alpha"
 }
