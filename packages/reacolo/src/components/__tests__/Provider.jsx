@@ -5,6 +5,20 @@ import Provider from '../Provider.js';
 import { MODEL_CONTEXT_KEY } from '../../constants';
 
 describe('Provider', () => {
+  // Mock the console.
+  const mockConsole = () => {
+    global.console = {
+      warn: jest.fn(),
+      log: jest.fn(),
+      error: jest.fn(),
+    };
+  };
+  // Make sure the console is restored after each tests.
+  const globalConsole = global.console;
+  afterEach(() => {
+    global.console = globalConsole;
+  });
+
   // Child cannot be a stateless function or findRenderedComponentWithType
   // does not work.
   // eslint-disable-next-line react/prefer-stateless-function
@@ -28,7 +42,7 @@ describe('Provider', () => {
       props,
     );
 
-  it('should add the store to the child context', () => {
+  it("should add the store to the child's context", () => {
     const model = createModel();
     const tree = TestUtils.renderIntoDocument(
       <Provider model={model}>
@@ -40,6 +54,9 @@ describe('Provider', () => {
   });
 
   it('should throw once when receiving a new store in props', () => {
+    // Avoid React's error message being thrown on jest's console.
+    mockConsole();
+
     const model1 = createModel();
     const model2 = createModel();
     const componentDidCatch = jest.fn();
