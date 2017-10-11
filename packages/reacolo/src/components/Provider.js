@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import propTypes from 'prop-types';
 import { modelPropType } from '../utils/prop-types';
+import { MODEL_CONTEXT_KEY } from '../constants';
 
 export default class Provider extends Component {
   constructor(props) {
@@ -8,7 +9,7 @@ export default class Provider extends Component {
     this.model = props.model;
   }
   getChildContext() {
-    return { model: this.model };
+    return { [MODEL_CONTEXT_KEY]: this.model };
   }
   componentWillReceiveProps(props) {
     if (props.model !== this.model) {
@@ -22,7 +23,7 @@ export default class Provider extends Component {
 
 Provider.childContextTypes = {
   // eslint-disable-next-line react/no-typos
-  model: modelPropType.isRequired,
+  [MODEL_CONTEXT_KEY]: modelPropType.isRequired,
 };
 
 Provider.propTypes = {

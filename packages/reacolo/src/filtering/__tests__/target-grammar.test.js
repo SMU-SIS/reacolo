@@ -1,6 +1,5 @@
 import targetParser from '../target-grammar.pegjs';
-
-const wildcase = '.';
+import { WILD_CASE } from '../../constants';
 
 const parseTargets = (...args) => targetParser.parse(...args);
 
@@ -34,22 +33,22 @@ describe('The target grammar', () => {
   });
 
   it('properly decodes the wildcase', () => {
-    expect(parseTargets(wildcase)).toEqual([
-      [{ name: wildcase, optional: false }],
+    expect(parseTargets(WILD_CASE)).toEqual([
+      [{ name: WILD_CASE, optional: false }],
     ]);
-    expect(parseTargets(`${wildcase}?`)).toEqual([
-      [{ name: wildcase, optional: true }],
+    expect(parseTargets(`${WILD_CASE}?`)).toEqual([
+      [{ name: WILD_CASE, optional: true }],
     ]);
-    expect(parseTargets(`${wildcase} & foo & bar`)).toEqual([
+    expect(parseTargets(`${WILD_CASE} & foo & bar`)).toEqual([
       [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'foo', optional: false },
         { name: 'bar', optional: false },
       ],
     ]);
-    expect(parseTargets(`${wildcase}? & foo & bar?`)).toEqual([
+    expect(parseTargets(`${WILD_CASE}? & foo & bar?`)).toEqual([
       [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'foo', optional: false },
         { name: 'bar', optional: true },
       ],
@@ -60,21 +59,21 @@ describe('The target grammar', () => {
     expect(parseTargets('  abc   & bcd   &    def ')).toEqual(
       parseTargets('abc&bcd&def'),
     );
-    expect(parseTargets(`abc   & ${wildcase}  &  def `)).toEqual(
-      parseTargets(`abc&${wildcase}&def`),
+    expect(parseTargets(`abc   & ${WILD_CASE}  &  def `)).toEqual(
+      parseTargets(`abc&${WILD_CASE}&def`),
     );
-    expect(parseTargets(`abc?   & ${wildcase}?  &  def `)).toEqual(
-      parseTargets(`abc?&${wildcase}?&def`),
+    expect(parseTargets(`abc?   & ${WILD_CASE}?  &  def `)).toEqual(
+      parseTargets(`abc?&${WILD_CASE}?&def`),
     );
   });
 
   it('supports multiple groups of targets (or operator)', () => {
-    const groups = parseTargets(`a & b | bc? | ${wildcase} & foo & bar?`);
+    const groups = parseTargets(`a & b | bc? | ${WILD_CASE} & foo & bar?`);
     expect(groups).toEqual(
       [].concat(
         parseTargets('a & b'),
         parseTargets(' bc?'),
-        parseTargets(`${wildcase} & foo & bar?`),
+        parseTargets(`${WILD_CASE} & foo & bar?`),
       ),
     );
   });
@@ -87,17 +86,17 @@ describe('The target grammar', () => {
       parseTargets('aa & cc | aa & bb'),
     );
     expect(
-      parseTargets(`a & ( b | c? ) | ( d & ( c | e & ${wildcase} ))`),
-    ).toEqual(parseTargets(`a & b | a & c? | d & c | d & e & ${wildcase}`));
+      parseTargets(`a & ( b | c? ) | ( d & ( c | e & ${WILD_CASE} ))`),
+    ).toEqual(parseTargets(`a & b | a & c? | d & c | d & e & ${WILD_CASE}`));
   });
 
   it("supports omission of the 'and' operator", () => {
     expect(parseTargets('aa bb cc')).toEqual(parseTargets('aa & bb & cc'));
-    expect(parseTargets(`a b c | d e ${wildcase}`)).toEqual(
-      parseTargets(`a & b & c | d & e & ${wildcase}`),
+    expect(parseTargets(`a b c | d e ${WILD_CASE}`)).toEqual(
+      parseTargets(`a & b & c | d & e & ${WILD_CASE}`),
     );
-    expect(parseTargets(`a? ( o1 | o2 ) ${wildcase} b`)).toEqual(
-      parseTargets(`a? & o1 & ${wildcase} & b | a? & o2 & ${wildcase} & b`),
+    expect(parseTargets(`a? ( o1 | o2 ) ${WILD_CASE} b`)).toEqual(
+      parseTargets(`a? & o1 & ${WILD_CASE} & b | a? & o2 & ${WILD_CASE} & b`),
     );
   });
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TestUtils from 'react-dom/test-utils';
 import propTypes from 'prop-types';
 import Provider from '../Provider.js';
+import { MODEL_CONTEXT_KEY } from '../../constants';
 
 describe('Provider', () => {
   // Child cannot be a stateless function or findRenderedComponentWithType
@@ -13,7 +14,7 @@ describe('Provider', () => {
     }
   }
   Child.contextTypes = {
-    model: propTypes.object.isRequired,
+    [MODEL_CONTEXT_KEY]: propTypes.object.isRequired,
   };
 
   const createModel = props =>
@@ -35,7 +36,7 @@ describe('Provider', () => {
       </Provider>,
     );
     const child = TestUtils.findRenderedComponentWithType(tree, Child);
-    expect(child.context.model).toBe(model);
+    expect(child.context[MODEL_CONTEXT_KEY]).toBe(model);
   });
 
   it('should throw once when receiving a new store in props', () => {
@@ -60,7 +61,7 @@ describe('Provider', () => {
 
     const container = TestUtils.renderIntoDocument(<ProviderContainer />);
     const child = TestUtils.findRenderedComponentWithType(container, Child);
-    expect(child.context.model).toEqual(model1);
+    expect(child.context[MODEL_CONTEXT_KEY]).toEqual(model1);
     expect(componentDidCatch.mock.calls.length).toBe(0);
 
     container.setState({ model: model2 });
@@ -71,6 +72,6 @@ describe('Provider', () => {
       '<Provider> does not support changing the model.',
     );
 
-    expect(child.context.model).toEqual(model1);
+    expect(child.context[MODEL_CONTEXT_KEY]).toEqual(model1);
   });
 });

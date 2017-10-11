@@ -3,8 +3,7 @@ import wouldPass, {
   valuesFilter,
   decodeContextVal,
 } from '../would-pass';
-
-const wildcase = '.';
+import { WILD_CASE } from '../../constants';
 
 describe('simple values filter', () => {
   it('returns true when there is one value > 0 corresponding to the sole provided target', () => {
@@ -339,138 +338,148 @@ describe('values filter with facultative argument', () => {
 describe('values filter with wildcase target', () => {
   it('Returns true if there is one non target value and wildcase is not optional', () => {
     expect(
-      valuesFilter({ foo: 1 }, [{ name: wildcase, optional: false }]),
+      valuesFilter({ foo: 1 }, [{ name: WILD_CASE, optional: false }]),
     ).toBe(true);
 
     expect(
       valuesFilter({ foo: 1, bar: 1 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(true);
 
     expect(
       valuesFilter({ foo: 1, bar: 1, stuff: 0 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(true);
 
     expect(
-      valuesFilter({ foo: 1, stuff: 0 }, [{ name: wildcase, optional: false }]),
+      valuesFilter({ foo: 1, stuff: 0 }, [
+        { name: WILD_CASE, optional: false },
+      ]),
     ).toBe(true);
   });
 
   it('Returns true if there is more than one non target value and wildcase is not optional', () => {
     expect(
-      valuesFilter({ foo: 1, foo2: 1 }, [{ name: wildcase, optional: false }]),
+      valuesFilter({ foo: 1, foo2: 1 }, [{ name: WILD_CASE, optional: false }]),
     ).toBe(true);
 
     expect(
       valuesFilter({ foo: 1, foo2: 1, bar: 1 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(true);
 
     expect(
       valuesFilter({ foo: 1, foo2: 1, bar: 1, stuff: 0 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(true);
 
     expect(
       valuesFilter({ foo: 1, foo2: 1, stuff: 0 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
       ]),
     ).toBe(true);
   });
 
   it('Returns false if there is not any non target value and wildcase is not optional', () => {
-    expect(valuesFilter({}, [{ name: wildcase, optional: false }])).toBe(false);
+    expect(valuesFilter({}, [{ name: WILD_CASE, optional: false }])).toBe(
+      false,
+    );
 
     expect(
-      valuesFilter({ foo: 0 }, [{ name: wildcase, optional: false }]),
+      valuesFilter({ foo: 0 }, [{ name: WILD_CASE, optional: false }]),
     ).toBe(false);
 
     expect(
       valuesFilter({ bar: 1 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
       valuesFilter({ foo: 0, bar: 1 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
       valuesFilter({ bar: 1, stuff: 0 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
       valuesFilter({ foo: 0, bar: 1, stuff: 0 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
-      valuesFilter({ foo: 0, stuff: 0 }, [{ name: wildcase, optional: false }]),
+      valuesFilter({ foo: 0, stuff: 0 }, [
+        { name: WILD_CASE, optional: false },
+      ]),
     ).toBe(false);
 
     expect(
-      valuesFilter({ stuff: 0 }, [{ name: wildcase, optional: false }]),
+      valuesFilter({ stuff: 0 }, [{ name: WILD_CASE, optional: false }]),
     ).toBe(false);
   });
   it('Returns false if there is not any non target value and wildcase is not optional', () => {
-    expect(valuesFilter({}, [{ name: wildcase, optional: false }])).toBe(false);
+    expect(valuesFilter({}, [{ name: WILD_CASE, optional: false }])).toBe(
+      false,
+    );
 
     expect(
-      valuesFilter({ foo: 0 }, [{ name: wildcase, optional: false }]),
+      valuesFilter({ foo: 0 }, [{ name: WILD_CASE, optional: false }]),
     ).toBe(false);
 
     expect(
       valuesFilter({ bar: 1 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
       valuesFilter({ foo: 0, bar: 1 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
       valuesFilter({ bar: 1, stuff: 0 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
       valuesFilter({ foo: 0, bar: 1, stuff: 0 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
-      valuesFilter({ foo: 0, stuff: 0 }, [{ name: wildcase, optional: false }]),
+      valuesFilter({ foo: 0, stuff: 0 }, [
+        { name: WILD_CASE, optional: false },
+      ]),
     ).toBe(false);
 
     expect(
-      valuesFilter({ stuff: 0 }, [{ name: wildcase, optional: false }]),
+      valuesFilter({ stuff: 0 }, [{ name: WILD_CASE, optional: false }]),
     ).toBe(false);
   });
 
@@ -480,7 +489,7 @@ describe('values filter with wildcase target', () => {
     () => {
       expect(
         valuesFilter({ foo: 0, bar: 1, stuff: 1 }, [
-          { name: wildcase, optional: false },
+          { name: WILD_CASE, optional: false },
           { name: 'stuff', optional: true },
           { name: 'bar', optional: false },
         ]),
@@ -491,78 +500,78 @@ describe('values filter with wildcase target', () => {
   it('Returns false if there is a target that is not here with non optional wildcase', () => {
     expect(
       valuesFilter({ bar: 0, foo: 1 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
       valuesFilter({ foo: 1 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
       valuesFilter({}, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
       valuesFilter({ foo: 0 }, [
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: false },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
   });
 
   it('Returns true if wildcase is optional and there is no additional targets', () => {
-    expect(valuesFilter({}, [{ name: wildcase, optional: true }])).toBe(true);
-
-    expect(valuesFilter({ foo: 0 }, [{ name: wildcase, optional: true }])).toBe(
-      true,
-    );
+    expect(valuesFilter({}, [{ name: WILD_CASE, optional: true }])).toBe(true);
 
     expect(
-      valuesFilter({ foo: 0, stuff: 0 }, [{ name: wildcase, optional: true }]),
+      valuesFilter({ foo: 0 }, [{ name: WILD_CASE, optional: true }]),
     ).toBe(true);
 
     expect(
-      valuesFilter({ stuff: 1 }, [{ name: wildcase, optional: true }]),
+      valuesFilter({ foo: 0, stuff: 0 }, [{ name: WILD_CASE, optional: true }]),
     ).toBe(true);
 
     expect(
-      valuesFilter({ stuff: 1, foo: 1 }, [{ name: wildcase, optional: true }]),
+      valuesFilter({ stuff: 1 }, [{ name: WILD_CASE, optional: true }]),
+    ).toBe(true);
+
+    expect(
+      valuesFilter({ stuff: 1, foo: 1 }, [{ name: WILD_CASE, optional: true }]),
     ).toBe(true);
   });
 
   it('Returns true if wildcase is optional and all targets are here', () => {
     expect(
       valuesFilter({ bar: 1 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
       ]),
     ).toBe(true);
 
     expect(
       valuesFilter({ foo: 0, bar: 1 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
       ]),
     ).toBe(true);
 
     expect(
       valuesFilter({ bar: 1, stuff: 0 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
       ]),
     ).toBe(true);
 
     expect(
       valuesFilter({ foo: 0, bar: 1, stuff: 0 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
       ]),
     ).toBe(true);
@@ -570,7 +579,7 @@ describe('values filter with wildcase target', () => {
     // with optional target
     expect(
       valuesFilter({ bar: 1 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
         { name: 'stuff', optional: true },
       ]),
@@ -578,7 +587,7 @@ describe('values filter with wildcase target', () => {
 
     expect(
       valuesFilter({ foo: 0, bar: 1 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
         { name: 'stuff', optional: true },
       ]),
@@ -586,7 +595,7 @@ describe('values filter with wildcase target', () => {
 
     expect(
       valuesFilter({ bar: 1, stuff: 0 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
         { name: 'stuff', optional: true },
       ]),
@@ -594,7 +603,7 @@ describe('values filter with wildcase target', () => {
 
     expect(
       valuesFilter({ foo: 0, bar: 1, stuff: 1 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
         { name: 'stuff', optional: true },
       ]),
@@ -604,28 +613,28 @@ describe('values filter with wildcase target', () => {
   it('Returns false if there is a target that is not here with optional wildcase', () => {
     expect(
       valuesFilter({ bar: 0, foo: 1 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
       valuesFilter({ foo: 1 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
       valuesFilter({}, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
 
     expect(
       valuesFilter({ foo: 0 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
       ]),
     ).toBe(false);
@@ -633,7 +642,7 @@ describe('values filter with wildcase target', () => {
     // with one more
     expect(
       valuesFilter({ bar: 0, foo: 1, stuff: 1 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
         { name: 'stuff', optional: false },
       ]),
@@ -641,7 +650,7 @@ describe('values filter with wildcase target', () => {
 
     expect(
       valuesFilter({ foo: 1, stuff: 1 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
         { name: 'stuff', optional: false },
       ]),
@@ -649,7 +658,7 @@ describe('values filter with wildcase target', () => {
 
     expect(
       valuesFilter({ stuff: 1 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
         { name: 'stuff', optional: false },
       ]),
@@ -657,7 +666,7 @@ describe('values filter with wildcase target', () => {
 
     expect(
       valuesFilter({ foo: 0, stuff: 1 }, [
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'bar', optional: false },
         { name: 'stuff', optional: false },
       ]),
@@ -717,15 +726,15 @@ describe('Doublons', () => {
   it('remain consistent for wildcase', () => {
     expect(
       valuesFilter({ foo: 0, stuff: 1 }, [
-        { name: wildcase, optional: true },
-        { name: wildcase, optional: true },
+        { name: WILD_CASE, optional: true },
+        { name: WILD_CASE, optional: true },
         { name: 'stuff', optional: false },
       ]),
     ).toBe(true);
     expect(
       valuesFilter({ foo: 0, stuff: 1 }, [
-        { name: wildcase, optional: true },
-        { name: wildcase, optional: false },
+        { name: WILD_CASE, optional: true },
+        { name: WILD_CASE, optional: false },
         { name: 'stuff', optional: false },
       ]),
     ).toBe(false);
@@ -871,7 +880,7 @@ describe('wouldPass', () => {
         },
         {
           contextProp1: 'prop1val',
-          contextProp2: wildcase,
+          contextProp2: WILD_CASE,
         },
       ),
     ).toBe(false);
@@ -897,7 +906,7 @@ describe('wouldPass', () => {
         },
         {
           prop1: 'prop1val',
-          prop2: `${wildcase}?`,
+          prop2: `${WILD_CASE}?`,
         },
       ),
     ).toBe(true);
