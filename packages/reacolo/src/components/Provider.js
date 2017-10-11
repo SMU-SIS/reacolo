@@ -3,6 +3,9 @@ import propTypes from 'prop-types';
 import { modelPropType } from '../utils/prop-types';
 import { MODEL_CONTEXT_KEY } from '../constants';
 
+/**
+ * Provides the reacolo model as a context property.
+ */
 export default class Provider extends Component {
   constructor(props) {
     super(props);
