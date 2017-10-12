@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`connect Does not update a component more than once on model updates 1`] = `
+<Connect(Component)>
+  <Component
+    aStuffToPassToB="a1"
+    mergeStore={[Function]}
+    patchStore={[Function]}
+    setStore={[Function]}
+  >
+    <div>
+      <Connect(Component)
+        aStuff="a1"
+      >
+        <Component
+          aStuff="a1"
+          bStuff="b1"
+          mergeStore={[Function]}
+          patchStore={[Function]}
+          setStore={[Function]}
+        >
+          <div>
+            a1
+            b1
+          </div>
+        </Component>
+      </Connect(Component)>
+    </div>
+  </Component>
+</Connect(Component)>
+`;
+
+exports[`connect Does not update a component more than once on model updates 2`] = `
+<Connect(Component)>
+  <Component
+    aStuffToPassToB="a2"
+    mergeStore={[Function]}
+    patchStore={[Function]}
+    setStore={[Function]}
+  >
+    <div>
+      <Connect(Component)
+        aStuff="a2"
+      >
+        <Component
+          aStuff="a2"
+          bStuff="b2"
+          mergeStore={[Function]}
+          patchStore={[Function]}
+          setStore={[Function]}
+        >
+          <div>
+            a2
+            b2
+          </div>
+        </Component>
+      </Connect(Component)>
+    </div>
+  </Component>
+</Connect(Component)>
+`;
+
+exports[`connect properly renders its child 1`] = `
+<Connect(Child)
+  prop1="prop1-value"
+  prop2="prop2-value"
+>
+  <Child
+    mergeStore={[Function]}
+    patchStore={[Function]}
+    prop1="prop1-value"
+    prop2="prop2-value"
+    setStore={[Function]}
+  >
+    <div>
+      test
+    </div>
+  </Child>
+</Connect(Child)>
+`;
