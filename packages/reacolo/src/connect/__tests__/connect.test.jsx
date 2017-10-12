@@ -99,7 +99,7 @@ describe('connect', () => {
     expect(wrapper.props()).toEqual({});
   });
 
-  it('does not subscribe to the model if there is not `mapStoreToProps` argument', () => {
+  it('does not subscribe to the model if there is not `mapStoreToProps` or `mapContextToProps` argument', () => {
     // Init the mock model.
     const model = createMockModel();
 
@@ -157,7 +157,21 @@ describe('connect', () => {
     expect(mockModel.mergeStore.mock.calls).toEqual([[{ x: 'test' }]]);
   });
 
-  it('subscribes and updates on model updates', () => {
+  it('does not provide any model setters if `mapModelToProps` is null', () => {
+    // Init the mock model.
+    const mockModel = createMockModel();
+
+    // Create and render.
+    const ConnectedChild = connect(null, null)(() => <div />);
+    const wrapper = shallow(<ConnectedChild />, {
+      context: { [MODEL_CONTEXT_KEY]: mockModel },
+    });
+
+    // Test!
+    expect(wrapper.props()).toEqual({});
+  });
+
+  it('subscribes and updates on store updates', () => {
     // Init the mock model.
     const model = createMockModel({
       getStore: jest
@@ -209,15 +223,74 @@ describe('connect', () => {
     });
   });
 
+  it('subscribes and updates on context updates', () => {
+    // Init the mock model.
+    const model = createMockModel({
+      getContext: jest
+        .fn()
+        .mockReturnValueOnce({ a: { b: 'test2' }, c: 'test1' }),
+    });
+
+    // The store mapper.
+    const mapContextToProps = store => ({ prop1: store.c, prop2: store.a.b });
+
+    // Create the components
+    // (must extends component for findRenderedComponentWithType).
+    // eslint-disable-next-line react/prefer-stateless-function
+    class Child extends Component {
+      render() {
+        return <div />;
+      }
+    }
+    const ConnectedChild = connect(undefined, undefined, mapContextToProps)(
+      Child,
+    );
+    const Base = () => <ConnectedChild />;
+
+    // Render the tree.
+    const tree = TestUtils.renderIntoDocument(
+      // Unfortunately we need to rely on Provider here as there is no other way
+      // to set the context with TestUtils.
+      // It is possible to provide the context with Enzyme, but Enzyme does not
+      // update on asynchronous updates
+      // (c.f. https://github.com/airbnb/enzyme/issues/450).
+      <Provider model={model}>
+        <Base />
+      </Provider>,
+    );
+    const child = TestUtils.findRenderedComponentWithType(tree, Child);
+
+    // Check the model listener.
+    expect(model.addListener.mock.calls.length).toBe(1);
+    expect(model.addListener.mock.calls[0][0]).toBe(MODEL_UPDATE_EVENT);
+    expect(typeof model.addListener.mock.calls[0][1]).toBe('function');
+
+    // Call the fetch model listener.
+    model.addListener.mock.calls[0][1]({
+      context: { a: { b: 'new-value-2' }, c: 'new-value-1' },
+    });
+
+    // Test!
+    expect(child.props).toMatchObject({
+      prop1: 'new-value-1',
+      prop2: 'new-value-2',
+    });
+  });
+
   it('unsubscribes to model updates', () => {
     // Create the mock model.
     const model = createMockModel({
       getStore: jest.fn().mockReturnValue({ x: 'x-val' }),
+      getContext: jest.fn().mockReturnValue({ y: 'y-val' }),
     });
 
     // Create test components.
     const A = () => <div />;
-    const ConnectedA = connect(store => store.x)(A);
+    const ConnectedA = connect(
+      store => store.x,
+      undefined,
+      context => context.y,
+    )(A);
     const Main = props => (props.empty ? null : <ConnectedA />);
 
     // Mount the tree.
