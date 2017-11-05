@@ -157,7 +157,7 @@ Nexted contexts can themselves contain nested contexts.
 
 ### connect
 
-The `connect` higher order component (HOC) is used to provide context and data synchronization to a component by connecting it to a [ReacoloModel](#reacolo-model-api) (see [reacolo dev model](../reacolo-dev-model) and [reacology model](../reacology-model)):
+The `connect` higher order component (HOC) is used to provide context and data synchronization to a component by connecting it to a [ReacoloModel](#reacolo-model-api) (see [reacolo dev model](../dev-model) and [reacology model](../reacology-model)):
 
 ```js
 const MyConnectedApp = connect(MyApp, myModel);

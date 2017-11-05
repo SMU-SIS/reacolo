@@ -16,11 +16,6 @@ module.exports = {
   },
   devtool: 'source-map',
   context: path.resolve(__dirname, 'src'),
-  resolve: {
-    alias: {
-      'reacolo-dev-model': '@quentinroy-private/reacolo-dev-model',
-    },
-  },
   module: {
     rules: [
       {

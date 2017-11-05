@@ -1,5 +1,5 @@
 {
-  "name": "@quentinroy-private/reacolo-dev-model",
+  "name": "@reacolo/dev-model",
   "main": "lib/reacolo-dev-model.js",
   "module": "src",
   "files": [

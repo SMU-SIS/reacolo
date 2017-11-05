@@ -1,6 +1,6 @@
 import queryString from 'query-string';
 import omit from 'lodash/omit';
-import * as reacoloDevModel from 'reacolo-dev-model';
+import * as reacoloDevModel from '@reacolo/dev-model';
 import createDataEditor from './data-editor';
 import createPatchEditor from './patch-editor';
 import createToast from './toast';

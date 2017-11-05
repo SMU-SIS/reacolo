@@ -1,5 +1,5 @@
 {
-  "name": "@quentinroy-private/reacology-model",
+  "name": "@reacolo/reacology-model",
   "main": "lib/reacology-model.js",
   "module": "src",
   "files": [

@@ -3,7 +3,7 @@ env:
   browser: false
 overrides:
   - files:
-    - server_interface/**
+    - server_interface/src/**
     env:
       node: false
       browser: true

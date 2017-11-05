@@ -1,5 +1,5 @@
 {
-  "name": "@quentinroy-private/reacolo-dev-server",
+  "name": "@reacolo/dev-server",
   "main": "server/index.js",
   "description": "Small server for reacolo. It is meant to be used with reacolo-dev-model-sync.",
   "bin": {
@@ -32,7 +32,7 @@
     "access": "restricted"
   },
   "devDependencies": {
-    "@quentinroy-private/reacolo-dev-model": "^5.0.0-pre-alpha",
+    "@reacolo/dev-model": "^5.0.0-pre-alpha",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.1",
     "babel-polyfill": "^6.26.0",
