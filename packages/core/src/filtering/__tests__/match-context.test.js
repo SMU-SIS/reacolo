@@ -2,7 +2,7 @@ import wouldPass, {
   valueGroupsFilter,
   valuesFilter,
   decodeContextVal,
-} from '../would-pass';
+} from '../match-context';
 import { WILD_CASE } from '../../constants';
 
 describe('simple values filter', () => {

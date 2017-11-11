@@ -1,12 +1,13 @@
 import React from 'react';
-import wouldPass from '../filtering/would-pass.js';
+import matchContext from '../filtering/match-context.js';
 
 // Try to find a context that passes amongst the provided children.
 const lookupContexts = (children, context) => {
   // Look for the first contexts that passes.
   const passingChild = children.find(
     child =>
-      child.type.getTargets && wouldPass(context, child.type.getTargets(child)),
+      child.type.getTargets &&
+      matchContext(context, child.type.getTargets(child)),
   );
   // If no context passed, look for a default context.
   const selectedChild =

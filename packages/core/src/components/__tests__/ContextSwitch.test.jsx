@@ -4,16 +4,16 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import omit from 'object.omit';
 import ContextSwitch from '../ContextSwitch.jsx';
-import wouldPass from '../../filtering/would-pass.js';
+import matchContext from '../../filtering/match-context.js';
 
-jest.mock('../../filtering/would-pass.js');
+jest.mock('../../filtering/match-context.js');
 
 describe('ContextSwitch with non nested Context', () => {
   let createMockContext;
 
   beforeEach(() => {
-    wouldPass.mockReset();
-    wouldPass.mockImplementation(() => false);
+    matchContext.mockReset();
+    matchContext.mockImplementation(() => false);
     createMockContext = jest.fn((targets = {}, isDefault = false) => {
       const Context = jest.fn();
       Context.getTargets = jest.fn(() => targets);
@@ -23,8 +23,8 @@ describe('ContextSwitch with non nested Context', () => {
     });
   });
 
-  it('properly calls wouldPass until it returns true', () => {
-    wouldPass.mockReturnValueOnce(false).mockReturnValueOnce(true);
+  it('properly calls matchContext until it returns true', () => {
+    matchContext.mockReturnValueOnce(false).mockReturnValueOnce(true);
     renderer.create(
       <ContextSwitch context={{ contextProp: 'bar' }}>
         {[
@@ -34,14 +34,14 @@ describe('ContextSwitch with non nested Context', () => {
         ].map((Context, i) => <Context key={i} />)}
       </ContextSwitch>,
     );
-    expect(wouldPass.mock.calls).toEqual([
+    expect(matchContext.mock.calls).toEqual([
       [{ contextProp: 'bar' }, { prop1: 'val1' }],
       [{ contextProp: 'bar' }, { prop2: 'val2' }],
     ]);
   });
 
   it('renders the first context that passes', () => {
-    wouldPass.mockImplementation((_, { pass }) => pass);
+    matchContext.mockImplementation((_, { pass }) => pass);
     const Context = createMockContext();
     const PassingContext = createMockContext({ pass: true });
     const component = renderer.create(
@@ -61,7 +61,7 @@ describe('ContextSwitch with non nested Context', () => {
   });
 
   it('does not render if no contexts would pass and there is no default context', () => {
-    wouldPass.mockReturnValue(false);
+    matchContext.mockReturnValue(false);
     const Context = createMockContext();
     const component = renderer.create(
       <ContextSwitch context={{ roles: {} }}>
@@ -77,7 +77,7 @@ describe('ContextSwitch with non nested Context', () => {
   });
 
   it('renders the default context if no contexts would pass', () => {
-    wouldPass.mockReturnValue(false);
+    matchContext.mockReturnValue(false);
     const Context = createMockContext();
     const DefaultContext = createMockContext(undefined, true);
 
@@ -98,7 +98,7 @@ describe('ContextSwitch with non nested Context', () => {
   });
 
   it('renders the context that passes even if there is a default context', () => {
-    wouldPass.mockImplementation((_, { pass }) => pass);
+    matchContext.mockImplementation((_, { pass }) => pass);
     const Context = createMockContext();
     const DefaultContext = createMockContext(undefined, true);
     const PassingContext = createMockContext({ pass: true });
@@ -125,7 +125,7 @@ describe('ContextSwitch with non nested Context', () => {
   });
 
   it('renders the context that passes even if it comes after the default context', () => {
-    wouldPass.mockImplementation((_, { pass }) => pass);
+    matchContext.mockImplementation((_, { pass }) => pass);
     const Context = createMockContext();
     const DefaultContext = createMockContext(undefined, true);
     const PassingContext = createMockContext({ pass: true });
@@ -153,8 +153,8 @@ describe('ContextSwitch with nested Context components', () => {
   let component;
 
   beforeEach(() => {
-    wouldPass.mockReset();
-    wouldPass.mockImplementation((_, { pass }) => pass);
+    matchContext.mockReset();
+    matchContext.mockImplementation((_, { pass }) => pass);
     const Context = jest.fn();
     Context.getTargets = instance =>
       omit(instance.props, ['children', 'default']);
@@ -196,8 +196,8 @@ describe('ContextSwitch with nested Context components', () => {
     );
   });
 
-  it('properly calls wouldPass on nested contexts if their parent passed', () => {
-    expect(wouldPass.mock.calls).toEqual([
+  it('properly calls matchContext on nested contexts if their parent passed', () => {
+    expect(matchContext.mock.calls).toEqual([
       [{ contextProp: 'foo' }, { prop1: 'val1' }],
       [{ contextProp: 'foo' }, { prop2: 'val2', pass: true }],
       [{ contextProp: 'foo' }, { prop21: 'val21' }],

@@ -78,7 +78,7 @@ export const decodeContextVal = val => {
 
 // Compare a context object against a targets object and returns true if the
 //  context matches the targets.
-const wouldPass = (context, targets) =>
+const matchContext = (context, targets) =>
   Object.keys(targets).every(targetName => {
     const targetVal = targets[targetName];
     if (targetVal == null) return true;
@@ -88,4 +88,4 @@ const wouldPass = (context, targets) =>
     return valueGroupsFilter(decodedContextVal, decodedTargetVal);
   });
 
-export default wouldPass;
+export default matchContext;
