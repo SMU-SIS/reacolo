@@ -23,3 +23,11 @@ export const modelPropType = PropTypes.shape({
  */
 export const getDisplayName = Component =>
   Component.displayName || Component.name || 'Component';
+
+/**
+ * @param {string} string A string.
+ * @return {string} The string with the first letter in lower case.
+ * @private
+ */
+export const lowerizeFirstLetter = string =>
+  string.charAt(0).toLowerCase() + string.slice(1);

@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Context does not render if \`matchContext returns false\` 1`] = `""`;
+
+exports[`Context renders using its component property if \`matchContext\` returns true and it has no render function 1`] = `<Child />`;
+
+exports[`Context renders using its render function if it is provided and if \`matchContext\` returns true 1`] = `
+<div>
+  test
+</div>
+`;
