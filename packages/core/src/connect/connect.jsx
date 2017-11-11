@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import { modelPropType } from '../utils/prop-types';
+import { modelPropType, getDisplayName } from '../utils';
 import { MODEL_CONTEXT_KEY, MODEL_UPDATE_EVENT } from '../constants';
 import ModelSubscription from './model-subscription';
-
-// Return the display name of a component.
-const getDisplayName = WrappedComponent =>
-  WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
 /**
  * Default map model to props used by connect.

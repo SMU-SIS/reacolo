@@ -1,15 +1,8 @@
 import PropTypes from 'prop-types';
 
-export const contextPropType = PropTypes.shape({
-  role: PropTypes.string,
-  availableRoles: PropTypes.oneOfType([
-    PropTypes.objectOf(PropTypes.number),
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-  status: PropTypes.string.isRequired,
-  observers: PropTypes.number,
-});
-
+/**
+ * The prop type of a reacolo model.
+ */
 export const modelPropType = PropTypes.shape({
   addListener: PropTypes.func.isRequired,
   removeListener: PropTypes.func.isRequired,
@@ -22,3 +15,11 @@ export const modelPropType = PropTypes.shape({
   patchStore: PropTypes.func,
   patchContext: PropTypes.func,
 });
+
+/**
+ * @param {Component} Component a React component.
+ * @return {string} The display name of the component or 'Component' if it could
+ * not be fetched.
+ */
+export const getDisplayName = Component =>
+  Component.displayName || Component.name || 'Component';

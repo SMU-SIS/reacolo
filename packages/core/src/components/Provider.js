@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import propTypes from 'prop-types';
-import { modelPropType } from '../utils/prop-types';
+import { modelPropType } from '../utils';
 import { MODEL_CONTEXT_KEY } from '../constants';
 
 /**
