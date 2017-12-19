@@ -13,22 +13,21 @@
     "publish": "lerna publish"
   },
   "devDependencies": {
-    "@commitlint/cli": "^4.1.1",
-    "@commitlint/config-angular": "^3.1.1",
-    "@commitlint/config-lerna-scopes": "^4.1.1",
-    "@commitlint/prompt": "^4.1.0",
+    "@commitlint/cli": "^5.2.5",
+    "@commitlint/config-angular": "^5.1.1",
+    "@commitlint/config-lerna-scopes": "^5.2.0",
+    "@commitlint/prompt": "^5.2.5",
     "commitizen": "^2.9.6",
     "eslint": "^4.8.0",
     "eslint-config-airbnb": "^16.0.0",
     "eslint-config-prettier": "^2.6.0",
-    "eslint-import-resolver-webpack": "^0.8.3",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-prettier": "^2.3.1",
     "eslint-plugin-react": "^7.4.0",
     "husky": "^0.14.3",
     "lerna": "^2.4.0",
-    "lint-staged": "^4.2.3",
+    "lint-staged": "^6.0.0",
     "prettier": "^1.7.4"
   },
   "keywords": [
