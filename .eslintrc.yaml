@@ -11,8 +11,8 @@ rules:
   valid-jsdoc: error
   no-underscore-dangle: 0
   import/extensions:
-    - 'off'
-    - always
+    - "always"
+    - ignorePackages: true
   class-methods-use-this: 0
 overrides:
   - files:
