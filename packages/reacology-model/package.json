@@ -22,10 +22,9 @@
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
-    "eventemitter3": "^2.0.2",
     "in-publish": "^2.0.0",
-    "jest": "^21.2.1",
-    "rollup": "^0.50.0",
+    "jest": "^22.0.3",
+    "rollup": "^0.52.3",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
@@ -34,6 +33,7 @@
   "dependencies": {
     "babel-runtime": "^6.25.0",
     "event-to-promise": "^0.8.0",
+    "eventemitter3": "^3.0.0",
     "global": "^4.3.1"
   },
   "author": "Quentin Roy <quentinroy@smu.edu.sg>",
