@@ -18,7 +18,7 @@ export const Context = props => {
   if (props.component) return <props.component />;
   if (props.children) return props.children;
   throw new Error(
-    'No render function nor component properties have been provided to <Context>',
+    'No render function, component properties nor children have been provided to <Context>',
   );
 };
 
@@ -40,7 +40,7 @@ Context.defaultProps = {
 };
 
 // Default export is a <ConnectedContext>, a <Context> that fetches its value
-// automatically from the React context.
+// automatically from React's context.
 export default connect(undefined, undefined, context => ({
   contextValue: context,
 }))(Context);

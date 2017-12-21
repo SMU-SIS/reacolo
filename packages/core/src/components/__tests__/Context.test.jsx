@@ -93,7 +93,7 @@ describe('Context', () => {
     expect(toJSON(wrapper)).toMatchSnapshot();
   });
 
-  it('throws if there is neither a render function nor a component property regardless of `matchContext` results', () => {
+  it('throws if there is no render function, no component property and no children', () => {
     matchContext.mockImplementation(() => true);
     expect(() => {
       shallow(
