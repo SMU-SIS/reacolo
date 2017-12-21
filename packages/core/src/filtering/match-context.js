@@ -3,9 +3,9 @@ import { WILD_CASE } from '../constants';
 
 const entries = obj => Object.entries(obj);
 
-export const valuesFilter = (values, targetGroup) => {
+export const valuesFilter = (values, matchGroup) => {
   // Extract every targets strictly required except the wildcase.
-  const requiredTargets = targetGroup
+  const requiredTargets = matchGroup
     .filter(({ name, optional }) => name !== WILD_CASE && !optional)
     .map(({ name }) => name);
 
@@ -17,7 +17,7 @@ export const valuesFilter = (values, targetGroup) => {
   // If there is wildcases and they are all optional (multiple wildcases is odd
   // but who knows), the only thing that matters is that the required targets
   //  are here (every other values are acceptable). Hence, the test succeeded.
-  const wildcaseTarget = targetGroup.filter(({ name }) => name === WILD_CASE);
+  const wildcaseTarget = matchGroup.filter(({ name }) => name === WILD_CASE);
   if (
     wildcaseTarget.length > 0 &&
     wildcaseTarget.every(({ optional }) => optional)
@@ -28,7 +28,7 @@ export const valuesFilter = (values, targetGroup) => {
   // Extract the number of targets that are present in values (wildcase and
   //  duplicate excepted).
   const presentTargetsNb = new Set(
-    targetGroup
+    matchGroup
       // To go a bit faster, because we know the required targets are all here,
       // we do not check them again.
       .filter(({ name, optional }) => name !== WILD_CASE && optional)
@@ -78,9 +78,9 @@ export const decodeContextVal = val => {
 
 // Compare a context object against a targets object and returns true if the
 //  context matches the targets.
-const matchContext = (context, targets) =>
-  Object.keys(targets).every(targetName => {
-    const targetVal = targets[targetName];
+const matchContext = (context, matcher) =>
+  Object.keys(matcher).every(targetName => {
+    const targetVal = matcher[targetName];
     if (targetVal == null) return true;
     const decodedTargetVal = decodeTargetVal(targetVal);
     const decodedContextVal = decodeContextVal(context[targetName]);
