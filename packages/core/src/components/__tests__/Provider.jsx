@@ -59,36 +59,19 @@ describe('Provider', () => {
 
     const model1 = createModel();
     const model2 = createModel();
-    const componentDidCatch = jest.fn();
 
-    class ProviderContainer extends Component {
-      constructor() {
-        super();
-        this.state = { model: model1 };
-        this.componentDidCatch = componentDidCatch;
-      }
-      render() {
-        return (
-          <Provider model={this.state.model}>
-            <Child />
-          </Provider>
-        );
-      }
-    }
-
-    const container = TestUtils.renderIntoDocument(<ProviderContainer />);
-    const child = TestUtils.findRenderedComponentWithType(container, Child);
-    expect(child.context[MODEL_CONTEXT_KEY]).toEqual(model1);
-    expect(componentDidCatch.mock.calls.length).toBe(0);
-
-    container.setState({ model: model2 });
-
-    expect(componentDidCatch.mock.calls.length).toBe(1);
-    expect(componentDidCatch.mock.calls[0][0]).toBeInstanceOf(Error);
-    expect(componentDidCatch.mock.calls[0][0].message).toBe(
-      '<Provider> does not support changing the model.',
+    const tree = TestUtils.renderIntoDocument(
+      <Provider model={model1}>
+        <Child />
+      </Provider>,
     );
 
-    expect(child.context[MODEL_CONTEXT_KEY]).toEqual(model1);
+    const child = TestUtils.findRenderedComponentWithType(tree, Child);
+
+    expect(() => {
+      tree.setProps({ model: model2 });
+    }).toThrow();
+
+    expect(child.context[MODEL_CONTEXT_KEY]).toBe(model1);
   });
 });
