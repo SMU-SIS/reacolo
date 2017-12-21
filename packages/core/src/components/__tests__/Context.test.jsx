@@ -4,8 +4,10 @@ import toJSON from 'enzyme-to-json';
 import EnzymeAdapter from 'enzyme-adapter-react-16';
 import { Context } from '../Context.jsx';
 import matchContext from '../../filtering/match-context.js';
+import createMatcher from '../../filtering/create-matcher.js';
 
 jest.mock('../../filtering/match-context.js');
+jest.mock('../../filtering/create-matcher.js');
 
 Enzyme.configure({ adapter: new EnzymeAdapter() });
 
@@ -13,30 +15,31 @@ describe('Context', () => {
   beforeEach(() => {
     matchContext.mockReset();
     matchContext.mockImplementation(() => false);
+    createMatcher.mockReset();
+    createMatcher.mockImplementation(() => ({}));
   });
 
-  it('properly calls `matchContext` with the context and the properties to match', () => {
+  it('properly calls `create-matcher` with its props', () => {
+    const props = {
+      prop1: 'val1',
+      prop2: 'val2',
+      prop3: 'val3',
+      render: () => <div />,
+      contextValue: { contextProp: 'val' },
+    };
+    shallow(<Context {...props} />);
+    expect(createMatcher.mock.calls).toEqual([
+      [Object.assign({}, Context.defaultProps, props)],
+    ]);
+  });
+
+  it('properly calls `matchContext` with the context and the matcher', () => {
+    createMatcher.mockImplementation(() => ({ matcherProp: 'valToMatch' }));
     shallow(
-      <Context
-        prop1="ignore me"
-        matchTest="test value"
-        match={{ a: 'a value', b: { bProp: 'value' } }}
-        prop2="ignore me again"
-        matchOtherTest={{ other: 'test' }}
-        render={() => <div />}
-        value={{ contextProp: 'val' }}
-      />,
+      <Context render={() => <div />} contextValue={{ contextProp: 'val' }} />,
     );
     expect(matchContext.mock.calls).toEqual([
-      [
-        { contextProp: 'val' },
-        {
-          test: 'test value',
-          a: 'a value',
-          b: { bProp: 'value' },
-          otherTest: { other: 'test' },
-        },
-      ],
+      [{ contextProp: 'val' }, { matcherProp: 'valToMatch' }],
     ]);
   });
 
@@ -45,7 +48,7 @@ describe('Context', () => {
       <Context
         render={() => <div>test</div>}
         matchProp="val"
-        value={{ contextProp: 'val' }}
+        contextValue={{ contextProp: 'val' }}
       />,
     );
     expect(toJSON(wrapper)).toMatchSnapshot();
@@ -54,7 +57,7 @@ describe('Context', () => {
   it('renders its children if there is any, `matchContext` returns true and there is no render function nor component property', () => {
     matchContext.mockImplementation(() => true);
     const wrapper = shallow(
-      <Context matchProp="val" value={{ contextProp: 'val' }}>
+      <Context matchProp="val" contextValue={{ contextProp: 'val' }}>
         <div>render that</div>
       </Context>,
     );
@@ -67,7 +70,7 @@ describe('Context', () => {
       <Context
         component={() => <div>render that</div>}
         matchProp="val"
-        value={{ contextProp: 'val' }}
+        contextValue={{ contextProp: 'val' }}
       >
         <div>do not render that</div>
       </Context>,
@@ -82,7 +85,7 @@ describe('Context', () => {
         render={() => <div>render that</div>}
         component={() => <div>do not render that</div>}
         matchProp="val"
-        value={{ contextProp: 'val' }}
+        contextValue={{ contextProp: 'val' }}
       >
         <div>do not render that</div>
       </Context>,
@@ -93,7 +96,9 @@ describe('Context', () => {
   it('throws if there is neither a render function nor a component property regardless of `matchContext` results', () => {
     matchContext.mockImplementation(() => true);
     expect(() => {
-      shallow(<Context matchProp="val" value={{ contextProp: 'val' }} />);
+      shallow(
+        <Context matchProp="val" contextValue={{ contextProp: 'val' }} />,
+      );
     }).toThrow();
   });
 });
