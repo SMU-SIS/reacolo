@@ -1,7 +1,7 @@
 import React from 'react';
 import Enzyme, { shallow } from 'enzyme';
-import toJSON from 'enzyme-to-json';
 import EnzymeAdapter from 'enzyme-adapter-react-16';
+import toJSON from 'enzyme-to-json';
 import { Context } from '../Context.jsx';
 import matchContext from '../../filtering/match-context.js';
 import createMatcher from '../../filtering/create-matcher.js';
@@ -19,7 +19,7 @@ describe('Context', () => {
     createMatcher.mockImplementation(() => ({}));
   });
 
-  it('properly calls `create-matcher` with its props', () => {
+  it('properly calls `createMatcher` with its props', () => {
     const props = {
       prop1: 'val1',
       prop2: 'val2',
@@ -100,5 +100,29 @@ describe('Context', () => {
         <Context matchProp="val" contextValue={{ contextProp: 'val' }} />,
       );
     }).toThrow();
+  });
+
+  it('renders in accordance with the computedMatchResult prop if it is provided', () => {
+    const notMatchedTree = shallow(
+      <Context
+        contextValue={{ contextProp: 'val' }}
+        computedMatch={{ matched: false }}
+        render={() => <div />}
+      />,
+    );
+    const matchedTree = shallow(
+      <Context
+        contextValue={{ contextProp: 'val' }}
+        computedMatch={{ matched: true }}
+        render={() => <div />}
+      />,
+    );
+
+    expect(toJSON(notMatchedTree)).toMatchSnapshot();
+    expect(toJSON(matchedTree)).toMatchSnapshot();
+
+    // These are not supposed to be called when computedMatchResult is provided.
+    expect(createMatcher.mock.calls.length).toBe(0);
+    expect(matchContext.mock.calls.length).toBe(0);
   });
 });

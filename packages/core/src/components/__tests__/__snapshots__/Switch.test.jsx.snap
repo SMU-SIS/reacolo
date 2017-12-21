@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Switch does not render if no contexts would pass and there is no default context 1`] = `null`;
+
+exports[`Switch renders the context that passes even if there is a default context 1`] = `
+<div
+  className="context"
+>
+  Rendered
+</div>
+`;
+
+exports[`Switch renders the default context if no contexts would pass 1`] = `
+<div
+  className="context"
+>
+  Rendered
+</div>
+`;
+
+exports[`Switch renders the first context that passes 1`] = `
+<div
+  className="context"
+>
+  Rendered
+</div>
+`;
