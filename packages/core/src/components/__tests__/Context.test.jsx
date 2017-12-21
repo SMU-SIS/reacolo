@@ -51,15 +51,26 @@ describe('Context', () => {
     expect(toJSON(wrapper)).toMatchSnapshot();
   });
 
+  it('renders its children if there is any, `matchContext` returns true and there is no render function nor component property', () => {
+    matchContext.mockImplementation(() => true);
+    const wrapper = shallow(
+      <Context matchProp="val" value={{ contextProp: 'val' }}>
+        <div>render that</div>
+      </Context>,
+    );
+    expect(toJSON(wrapper)).toMatchSnapshot();
+  });
+
   it('renders using its component property if `matchContext` returns true and it has no render function', () => {
-    const Child = () => <div>test</div>;
     matchContext.mockImplementation(() => true);
     const wrapper = shallow(
       <Context
-        component={Child}
+        component={() => <div>render that</div>}
         matchProp="val"
         value={{ contextProp: 'val' }}
-      />,
+      >
+        <div>do not render that</div>
+      </Context>,
     );
     expect(toJSON(wrapper)).toMatchSnapshot();
   });
@@ -68,10 +79,13 @@ describe('Context', () => {
     matchContext.mockImplementation(() => true);
     const wrapper = shallow(
       <Context
-        render={() => <div>test</div>}
+        render={() => <div>render that</div>}
+        component={() => <div>do not render that</div>}
         matchProp="val"
         value={{ contextProp: 'val' }}
-      />,
+      >
+        <div>do not render that</div>
+      </Context>,
     );
     expect(toJSON(wrapper)).toMatchSnapshot();
   });

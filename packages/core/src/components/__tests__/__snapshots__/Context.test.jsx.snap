@@ -2,10 +2,16 @@
 
 exports[`Context does not render if \`matchContext returns false\` 1`] = `""`;
 
-exports[`Context renders using its component property if \`matchContext\` returns true and it has no render function 1`] = `<Child />`;
+exports[`Context renders its children if there is any, \`matchContext\` returns true and there is no render function nor component property 1`] = `
+<div>
+  render that
+</div>
+`;
+
+exports[`Context renders using its component property if \`matchContext\` returns true and it has no render function 1`] = `<component />`;
 
 exports[`Context renders using its render function if it is provided and if \`matchContext\` returns true 1`] = `
 <div>
-  test
+  render that
 </div>
 `;

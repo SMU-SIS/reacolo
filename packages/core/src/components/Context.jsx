@@ -10,7 +10,7 @@ const MATCH_REGEXP = /^match(.*)$/;
 
 /**
  * @param {object} props The properties received by a Context component.
- * @return {object} A target object to match agains the context.
+ * @return {object} A target object to match against the context.
  * @private
  */
 const contextPropsToTarget = props =>
@@ -49,6 +49,7 @@ export const Context = props => {
   if (!shouldRender) return null;
   if (props.render) return props.render();
   if (props.component) return <props.component />;
+  if (props.children) return props.children;
   throw new Error(
     'No render function nor component properties have been provided to <Context>',
   );
@@ -61,12 +62,14 @@ Context.propTypes = {
   default: PropTypes.bool,
   render: PropTypes.func,
   component: PropTypes.func,
+  children: PropTypes.element,
 };
 
 Context.defaultProps = {
   default: false,
   render: undefined,
   component: undefined,
+  children: undefined,
 };
 
 export default connect(undefined, undefined, context => ({ value: context }))(
