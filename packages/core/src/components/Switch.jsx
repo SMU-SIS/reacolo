@@ -33,7 +33,12 @@ export const Switch = props => {
   // We return a *disconnected* context: no need to connect it, the context
   // has already been fetched.
   return result ? (
-    <Context {...result.props} computedMatchResult={{ matched: true }} />
+    <Context
+      {...result.props}
+      computedMatch={{ matched: true }}
+      // This is not very useful, but avoids a context prop warning.
+      contextValue={props.contextValue}
+    />
   ) : null;
 };
 
