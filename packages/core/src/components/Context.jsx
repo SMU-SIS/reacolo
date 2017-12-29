@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import matchContext from '../filtering/match-context.js';
 import createMatcher from '../filtering/create-matcher.js';
@@ -21,7 +21,7 @@ export const Context = props => {
   }
   if (props.render) return props.render();
   if (props.component) return <props.component />;
-  if (props.children) return props.children;
+  if (props.children) return <Fragment>{props.children}</Fragment>;
   throw new Error(
     'No render function, component properties nor children have been provided to <Context>',
   );

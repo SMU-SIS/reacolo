@@ -7,9 +7,11 @@ exports[`Context renders in accordance with the computedMatchResult prop if it i
 exports[`Context renders in accordance with the computedMatchResult prop if it is provided 2`] = `<div />`;
 
 exports[`Context renders its children if there is any, \`matchContext\` returns true and there is no render function nor component property 1`] = `
-<div>
-  render that
-</div>
+<React.Fragment>
+  <div>
+    render that
+  </div>
+</React.Fragment>
 `;
 
 exports[`Context renders using its component property if \`matchContext\` returns true and it has no render function 1`] = `<component />`;

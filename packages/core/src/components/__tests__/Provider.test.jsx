@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TestUtils from 'react-dom/test-utils';
 import propTypes from 'prop-types';
-import Provider from '../Provider.js';
+import Provider from '../Provider.jsx';
 import { MODEL_CONTEXT_KEY } from '../../constants';
 
 describe('Provider', () => {

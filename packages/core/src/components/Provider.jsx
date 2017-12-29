@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import propTypes from 'prop-types';
 import { modelPropType } from '../utils';
 import { MODEL_CONTEXT_KEY } from '../constants';
@@ -20,7 +20,7 @@ export default class Provider extends Component {
     }
   }
   render() {
-    return this.props.children;
+    return <Fragment>{this.props.children}</Fragment>;
   }
 }
 
