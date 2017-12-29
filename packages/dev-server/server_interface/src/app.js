@@ -31,10 +31,10 @@ window.addEventListener('load', () => {
   })();
 
   // Create the data editor and get a function to handle new data.
-  const newStateHandler = createDataEditor({
-    targetNode: document.getElementById('state-editor'),
-    dataSetter: state => reacoloModel.setState(state),
-    dataGetter: () => reacoloModel.getState(),
+  const newStoreHandler = createDataEditor({
+    targetNode: document.getElementById('store-editor'),
+    dataSetter: store => reacoloModel.setStore(store),
+    dataGetter: () => reacoloModel.getStore(),
     onError: toastError,
   });
 
@@ -51,7 +51,7 @@ window.addEventListener('load', () => {
   createPatchEditor({
     parent: document.getElementById('patch-editor'),
     onPatch(patch) {
-      reacoloModel.patchState(patch).catch(e => {
+      reacoloModel.patchStore(patch).catch(e => {
         // eslint-disable-next-line no-console
         console.error(e);
         toastError(e);
@@ -64,7 +64,7 @@ window.addEventListener('load', () => {
   createPatchEditor({
     parent: document.getElementById('merge-patch-editor'),
     onPatch(patch) {
-      reacoloModel.mergeState(patch).catch(e => {
+      reacoloModel.mergeStore(patch).catch(e => {
         // eslint-disable-next-line no-console
         console.error(e);
         toastError(e);
@@ -74,16 +74,16 @@ window.addEventListener('load', () => {
 
   // Connect model sync events.
   reacoloModel.addListener(reacoloDevModel.MODEL_UPDATE_EVT, () => {
-    newStateHandler(reacoloModel.getState());
+    newStoreHandler(reacoloModel.getStore());
     contextHandler(reacoloModel.getContext());
-    contentDiv.className = reacoloModel.getContext().modelStatus;
+    contentDiv.className = reacoloModel.getContext().status;
   });
 
   // Start the model sync.
   reacoloModel
     .start()
     .then(() => {
-      newStateHandler(reacoloModel.getState());
+      newStoreHandler(reacoloModel.getStore());
       contextHandler(reacoloModel.getContext());
     })
     .catch(error => {
@@ -92,5 +92,5 @@ window.addEventListener('load', () => {
       toastError(error);
     });
 
-  contentDiv.className = reacoloModel.getContext().modelStatus;
+  contentDiv.className = reacoloModel.getContext().status;
 });
