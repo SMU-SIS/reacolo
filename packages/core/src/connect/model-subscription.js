@@ -6,6 +6,7 @@
  * @param {func} callback - The callback to call on model update.
  * @param {string} eventName - The event name to subscribe to
  * @return {{subscribe: func, unsubscribe: func}} The subscription interface.
+ * @private
  */
 export default (model, callback, eventName) => {
   let isSubscribed = false;

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 /**
  * The prop type of a reacolo model.
+ * @private
  */
 export const modelPropType = PropTypes.shape({
   addListener: PropTypes.func.isRequired,
@@ -20,6 +21,7 @@ export const modelPropType = PropTypes.shape({
  * @param {Component} Component a React component.
  * @return {string} The display name of the component or 'Component' if it could
  * not be fetched.
+ * @private
  */
 export const getDisplayName = Component =>
   Component.displayName || Component.name || 'Component';

@@ -6,6 +6,7 @@ import connect from '../connect/connect.jsx';
 
 /**
  * Context component. Renders only if its value matches its match properties.
+ *
  * @param {object} props The component's properties.
  * @return {Element} A react element.
  */
