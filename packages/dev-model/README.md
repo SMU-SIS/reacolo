@@ -29,17 +29,23 @@ npm run build
 import React from 'react';
 import { render } from 'react-dom';
 import ReacoloDevModel from 'reacolo-dev-model';
-import { connect } from 'reacolo';
+import { Provider } from 'reacolo';
+import MyApp from './myApp'
 
 // Create the model sync, specifying the requested role for this client.
-const model = new ReacoloDevModel('http://my.reacolo.server:port/socket', 'thisClientRole');
+const model = new ReacoloDevModel(
+  'http://my.reacolo.server:port/socket',
+  'thisClientRole'
+);
 
-// Connect it to a component using Reacolo connect.
-const MyConnectedApp = connect(MyApp, model);
-
-// Render the component inside the root div using React.
-render(<MyConnectedApp />, document.getElementById('root'));
+// Provides it to the component tree using Reacolo's Provider.
+render(
+  <Provider model={model}>
+    <MyApp />
+  </Provider>,
+  document.getElementById('root')
+);
 
 // Start the synchronization.
-modelSync.start();
+model.start();
 ```
