@@ -226,14 +226,16 @@ export default ({
       data: dataMutation,
       metaData: metaDataMutation,
     }) {
+      // Use an array then a loop to avoid lazy evaluations and make sure all
+      // setters are called. Setters return true if the context must be updated.
       const mustUpdateContext = [
         statusMutation && setModelStatus(statusMutation.value),
         roleMutation && setRole(roleMutation.value),
         dataMutation && setData(dataMutation.value, dataMutation.revision),
         metaDataMutation &&
           setMetaData(metaDataMutation.value, metaDataMutation.revision),
-      ];
-      update(!mustUpdateContext.some(x => x));
+      ].some(x => x);
+      update(!mustUpdateContext);
       onUpdate(value);
     },
   };
