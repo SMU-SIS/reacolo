@@ -1,6 +1,6 @@
 /* eslint-disable react/no-multi-comp */
-import portalOrigin from './components/portal-origin.jsx';
-import portalOut from './components/portal-out.jsx';
+import portalOrigin from './portal-origin.jsx';
+import portalOut from './portal-out.jsx';
 
 const getDisplayName = Component => Component.displayName || Component.name;
 

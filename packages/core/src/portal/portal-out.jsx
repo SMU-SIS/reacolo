@@ -8,18 +8,18 @@ export default (WrappedComponent, portalId, callbackEvents) => {
 
       // Create the event listeners and mapped them with the corresponding
       // callback name.
-      this._listenerEntries = Object.entries(
-        callbackEvents,
-      ).map(([callbackName, eventName]) => [
-        eventName,
-        args => {
-          const callback = this.props[callbackName];
-          if (callback) {
-            // Unpack the arguments (that should be packed by origin).
-            callback(...args);
-          }
-        },
-      ]);
+      this._listenerEntries = Object.entries(callbackEvents).map(
+        ([callbackName, eventName]) => [
+          eventName,
+          args => {
+            const callback = this.props[callbackName];
+            if (callback) {
+              // Unpack the arguments (that should be packed by origin).
+              callback(...args);
+            }
+          },
+        ],
+      );
     }
     componentDidMount() {
       this._listenerEntries.forEach(([eventName, callback]) => {
