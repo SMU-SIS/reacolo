@@ -66,10 +66,12 @@ const connect = (
     render() {
       return (
         <WrappedComponent
-          {...(mapStoreToProps ? mapStoreToProps(this.state.store) : null)}
+          {...(mapStoreToProps
+            ? mapStoreToProps(this.state.store || {})
+            : null)}
           {...this.modelProps}
           {...(mapContextToProps
-            ? mapContextToProps(this.state.context)
+            ? mapContextToProps(this.state.context || {})
             : null)}
           {...this.props}
         />
