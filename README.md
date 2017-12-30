@@ -1,5 +1,5 @@
 This repository hosts the [Reacolo](./packages/reacolo) family:
-- [Reacolo](./packages/reacolo)
-- [Reacolo Dev Server](./packages/reacolo-dev-server)
-- [Reacolo Dev Model Sync](./packages/reacolo-dev-model-sync)
-- [Reacology Model Sync](./packages/reacology-model-sync)
+- [Reacolo](./packages/core)
+- [Reacolo Dev Server](./packages/dev-server)
+- [Reacolo Dev Model](./packages/dev-model)
+- [Reacology Model Sync](./packages/reacology-model-sync) (work in progress)
