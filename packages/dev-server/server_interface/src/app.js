@@ -9,9 +9,9 @@ import './app.scss';
 const TOAST_DURATION = 2200;
 const READONLY_CONTEXT_PROPERTIES = [
   'observers',
-  'roles',
-  'clientRole',
-  'modelStatus',
+  'availableRoles',
+  'role',
+  'status',
 ];
 
 window.addEventListener('load', () => {
