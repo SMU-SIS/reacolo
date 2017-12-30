@@ -2,11 +2,7 @@
   "name": "@reacolo/reacology-model",
   "main": "lib/reacology-model.js",
   "module": "src",
-  "files": [
-    "src",
-    "!src/**/__tests__",
-    "lib"
-  ],
+  "files": ["src", "!src/**/__tests__", "lib"],
   "scripts": {
     "build": "rollup -c --environment NODE_ENV:production",
     "prepublish": "in-publish && yarn run build || not-in-publish",
@@ -38,6 +34,7 @@
   },
   "author": "Quentin Roy <quentinroy@smu.edu.sg>",
   "license": "UNLICENSED",
+  "private": true,
   "publishConfig": {
     "registry": "http://localhost:4873",
     "access": "restricted"
