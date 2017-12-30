@@ -32,7 +32,7 @@ npm run build
 ## Context
 
 The main feature of Reacolo relies on one main component `<Context>`.
-These component is used to define the where and when of an adaptive cross-device application.
+the `<Context>` component is used to define the where and when of an adaptive cross-device application.
 
 Contexts are defined by a set of "matchers" compared to the properties of a context object.
 
