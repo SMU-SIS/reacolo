@@ -32,7 +32,7 @@
     "eventemitter3": "^3.0.0",
     "global": "^4.3.1"
   },
-  "author": "Quentin Roy <quentinroy@smu.edu.sg>",
+  "author": "Quentin Roy <quentin@quentinroy.fr>",
   "license": "UNLICENSED",
   "private": true,
   "publishConfig": {

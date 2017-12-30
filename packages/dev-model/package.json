@@ -28,7 +28,7 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "sockjs-client": "^1.1.1"
   },
-  "author": "Quentin Roy <quentinroy@smu.edu.sg>",
+  "author": "Quentin Roy <quentin@quentinroy.fr>",
   "license": "UNLICENSED",
   "publishConfig": {
     "registry": "http://localhost:4873",

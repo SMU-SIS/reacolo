@@ -41,7 +41,7 @@
     "ui distribution",
     "cross-devices"
   ],
-  "author": "Quentin Roy <quentinroy@smu.edu.sg>",
+  "author": "Quentin Roy <quentin@quentinroy.fr>",
   "license": "UNLICENSED",
   "publishConfig": {
     "registry": "http://localhost:4873",
