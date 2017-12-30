@@ -183,3 +183,7 @@ A context can be marked as default by adding the `default` property:
 ```
 
 If no context matches, the default context will be rendered (regardless of its own selectors).
+
+## Portal
+
+TODO
