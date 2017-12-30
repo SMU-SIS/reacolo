@@ -13,6 +13,7 @@ const READONLY_CONTEXT_PROPERTIES = [
   'role',
   'status',
 ];
+const SERVER_ADDRESS = `http://${window.location.host}/socket`;
 
 window.addEventListener('load', () => {
   // Fetch node elements.
@@ -20,7 +21,7 @@ window.addEventListener('load', () => {
 
   // Create the model sync.
   const reacoloModel = reacoloDevModel.create(
-    `http://${window.location.host}/socket`,
+    SERVER_ADDRESS,
     queryString.parse(window.location.search).role,
   );
 
