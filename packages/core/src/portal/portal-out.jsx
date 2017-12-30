@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import propTypes from 'prop-types';
+import { MODEL_CONTEXT_KEY } from '../constants.js';
 
 export default (WrappedComponent, portalId, callbackEvents) => {
   class PortalOut extends Component {
@@ -8,7 +9,7 @@ export default (WrappedComponent, portalId, callbackEvents) => {
 
       // Create the event listeners and mapped them with the corresponding
       // callback name.
-      this._listenerEntries = Object.entries(callbackEvents).map(
+      this.listenerEntries = Object.entries(callbackEvents).map(
         ([callbackName, eventName]) => [
           eventName,
           args => {
@@ -22,13 +23,13 @@ export default (WrappedComponent, portalId, callbackEvents) => {
       );
     }
     componentDidMount() {
-      this._listenerEntries.forEach(([eventName, callback]) => {
-        this.context.reacoloModel.addListener(eventName, callback);
+      this.listenerEntries.forEach(([eventName, callback]) => {
+        this.context[MODEL_CONTEXT_KEY].addListener(eventName, callback);
       });
     }
     componentWillUnmount() {
-      this._listenerEntries.forEach(([eventName, callback]) => {
-        this.context.reacoloModel.removeListener(eventName, callback);
+      this.listenerEntries.forEach(([eventName, callback]) => {
+        this.context[MODEL_CONTEXT_KEY].removeListener(eventName, callback);
       });
     }
     render() {
@@ -37,7 +38,7 @@ export default (WrappedComponent, portalId, callbackEvents) => {
     }
   }
   PortalOut.contextTypes = {
-    reacoloModel: propTypes.shape({
+    [MODEL_CONTEXT_KEY]: propTypes.shape({
       addListener: propTypes.func.isRequired,
       removeListener: propTypes.func.isRequired,
     }).isRequired,
