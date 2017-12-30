@@ -2,7 +2,11 @@
   "name": "@reacolo/reacology-model",
   "main": "lib/reacology-model.js",
   "module": "src",
-  "files": ["src", "!src/**/__tests__", "lib"],
+  "files": [
+    "src",
+    "!src/**/__tests__",
+    "lib"
+  ],
   "scripts": {
     "build": "rollup -c --environment NODE_ENV:production",
     "prepublish": "in-publish && yarn run build || not-in-publish",
@@ -39,5 +43,5 @@
     "registry": "http://localhost:4873",
     "access": "restricted"
   },
-  "version": "5.0.0-pre-alpha"
+  "version": "5.0.0-alpha.0"
 }

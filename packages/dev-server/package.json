@@ -32,7 +32,7 @@
     "access": "restricted"
   },
   "devDependencies": {
-    "@reacolo/dev-model": "^5.0.0-pre-alpha",
+    "@reacolo/dev-model": "^5.0.0-alpha.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.1",
     "babel-polyfill": "^6.26.0",
@@ -51,5 +51,5 @@
     "url-loader": "^0.6.2",
     "webpack": "^3.5.5"
   },
-  "version": "5.0.0-pre-alpha"
+  "version": "5.0.0-alpha.0"
 }

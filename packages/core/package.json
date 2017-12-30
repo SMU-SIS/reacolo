@@ -60,5 +60,5 @@
       "<rootDir>/jest-tools/raf-polyfill.js"
     ]
   },
-  "version": "5.0.0-pre-alpha"
+  "version": "5.0.0-alpha.0"
 }
