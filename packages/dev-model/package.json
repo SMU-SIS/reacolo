@@ -29,7 +29,7 @@
     "sockjs-client": "^1.1.1"
   },
   "author": "Quentin Roy <quentin@quentinroy.fr>",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "publishConfig": {
     "registry": "http://localhost:4873",
     "access": "restricted"

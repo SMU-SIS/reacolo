@@ -35,7 +35,7 @@
     "cross-devices"
   ],
   "author": "Quentin Roy <quentin@quentinroy.fr>",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "private": true,
   "repository": "https://github.com/SMU-SIS/reacolo.git",
   "config": {
