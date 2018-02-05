@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import propTypes from 'prop-types';
-import { modelPropType } from '../utils';
-import { MODEL_CONTEXT_KEY } from '../constants';
+import { modelPropType } from './utils';
+import { MODEL_CONTEXT_KEY } from './constants';
 
 /**
  * Provides the reacolo model as a context property. To be used with <Context>,

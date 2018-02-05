@@ -17,6 +17,7 @@ rules:
 overrides:
   - files:
       - "**/__tests__/**"
+      - "**.test.js"
     env:
       browser: false
       jest: true

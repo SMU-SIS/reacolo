@@ -1,6 +1,7 @@
 {
-  "name": "@reacolo/core",
-  "main": "lib/reacolo.js",
+  "name": "@reacolo/react",
+  "main": "lib/reacolo-react.js",
+  "files": ["lib"],
   "scripts": {
     "test": "jest",
     "build": "rollup -c --environment NODE_ENV:production",
@@ -9,9 +10,6 @@
   "peerDependencies": {
     "react": "^16.0.0"
   },
-  "files": [
-    "lib"
-  ],
   "devDependencies": {
     "babel-core": "^6.23.1",
     "babel-eslint": "^8.0.1",
@@ -35,12 +33,7 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-pegjs": "^2.1.3"
   },
-  "keywords": [
-    "ecology",
-    "adaptation",
-    "ui distribution",
-    "cross-devices"
-  ],
+  "keywords": ["ecology", "adaptation", "ui distribution", "cross-devices"],
   "author": "Quentin Roy <quentin@quentinroy.fr>",
   "license": "MIT",
   "publishConfig": {
@@ -48,17 +41,15 @@
     "access": "restricted"
   },
   "dependencies": {
+    "@reacolo/match": "^5.0.0-alpha.0",
     "object.omit": "^3.0.0",
     "prop-types": "^15.5.10"
   },
   "jest": {
     "transform": {
-      "\\.jsx?$": "babel-jest",
-      "\\.pegjs$": "<rootDir>/jest-tools/pegjs-transformer.js"
+      "\\.jsx?$": "babel-jest"
     },
-    "setupFiles": [
-      "<rootDir>/jest-tools/raf-polyfill.js"
-    ]
+    "setupFiles": ["<rootDir>/jest-tools/raf-polyfill.js"]
   },
   "version": "5.0.0-alpha.0"
 }

@@ -1,5 +1,5 @@
 import targetParser from './matcher-grammar.pegjs';
-import { WILD_CASE } from '../constants';
+import { WILD_CASE } from './constants';
 
 /**
  * @param {Object<string, number>} decodedContextProperty The decoded context

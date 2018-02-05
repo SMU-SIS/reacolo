@@ -1,0 +1,15 @@
+{
+  "presets": [["env", { "modules": false, "loose": true }], "react"],
+  "env": {
+    "test": {
+      "presets": [["env", { "node": "current" }]],
+      "plugins": ["transform-es2015-modules-commonjs", "transform-runtime"]
+    },
+    "production": {
+      "plugins": ["external-helpers"]
+    },
+    "development": {
+      "plugins": ["external-helpers"]
+    }
+  }
+}

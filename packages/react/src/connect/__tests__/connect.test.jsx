@@ -6,7 +6,7 @@ import TestUtils from 'react-dom/test-utils';
 import propTypes from 'prop-types';
 import connect from '../connect';
 import { MODEL_CONTEXT_KEY, MODEL_UPDATE_EVENT } from '../../constants';
-import Provider from '../../components/Provider';
+import Provider from '../../Provider';
 
 Enzyme.configure({ adapter: new Adapter() });
 

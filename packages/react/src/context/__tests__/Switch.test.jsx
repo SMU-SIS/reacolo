@@ -2,13 +2,13 @@
 
 import React from 'react';
 import renderer from 'react-test-renderer';
+import matchContext from '@reacolo/match';
 import { Switch } from '../Switch.jsx';
-import matchContext from '../../filtering/match-context.js';
-import createMatcher from '../../filtering/create-matcher.js';
+import createMatcher from '../create-matcher.js';
 import ConnectedContext, { Context } from '../Context.jsx';
 
-jest.mock('../../filtering/match-context.js');
-jest.mock('../../filtering/create-matcher.js');
+jest.mock('@reacolo/match');
+jest.mock('../create-matcher.js');
 jest.mock('../Context.jsx');
 
 describe('Switch', () => {

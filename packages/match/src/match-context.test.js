@@ -2,8 +2,8 @@ import matchContext, {
   matchContextProperty,
   matchContextPropertyTarget,
   decodeContextProperty,
-} from '../match-context';
-import { WILD_CASE } from '../../constants';
+} from './match-context';
+import { WILD_CASE } from './constants';
 
 describe('simple matchContextPropertyTarget', () => {
   it('returns true when there is one value > 0 corresponding to the sole provided target', () => {

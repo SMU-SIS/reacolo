@@ -1,5 +1,5 @@
-import targetParser from '../matcher-grammar.pegjs';
-import { WILD_CASE } from '../../constants';
+import targetParser from './matcher-grammar.pegjs';
+import { WILD_CASE } from './constants';
 
 const parseTargets = (...args) => targetParser.parse(...args);
 

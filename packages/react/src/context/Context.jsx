@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import matchContext from '../filtering/match-context.js';
-import createMatcher from '../filtering/create-matcher.js';
+import matchContext from '@reacolo/match';
+import createMatcher from './create-matcher.js';
 import connect from '../connect/connect.jsx';
 
 /**

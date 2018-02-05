@@ -2,12 +2,12 @@ import React from 'react';
 import Enzyme, { shallow } from 'enzyme';
 import EnzymeAdapter from 'enzyme-adapter-react-16';
 import toJSON from 'enzyme-to-json';
+import matchContext from '@reacolo/match';
 import { Context } from '../Context.jsx';
-import matchContext from '../../filtering/match-context.js';
-import createMatcher from '../../filtering/create-matcher.js';
+import createMatcher from '../create-matcher.js';
 
-jest.mock('../../filtering/match-context.js');
-jest.mock('../../filtering/create-matcher.js');
+jest.mock('../create-matcher.js');
+jest.mock('@reacolo/match');
 
 Enzyme.configure({ adapter: new EnzymeAdapter() });
 

@@ -6,13 +6,14 @@ import babel from 'rollup-plugin-babel';
 export default {
   input: 'src/index.js',
   output: {
-    file: 'lib/reacolo.js',
+    file: 'lib/reacolo-match.js',
     format: 'umd',
+    name: 'ReacoloMatch',
+    sourcemap: true,
   },
   amd: {
-    id: 'reacolo',
+    id: 'reacolo-match',
   },
-  name: 'Reacolo',
   plugins: [
     resolve(),
     commonjs(),
@@ -21,10 +22,4 @@ export default {
       exclude: 'node_modules/**', // only transpile our source code
     }),
   ],
-  external: ['react', 'prop-types'],
-  globals: {
-    'prop-types': 'PropTypes',
-    react: 'React',
-  },
-  sourcemap: true,
 };
