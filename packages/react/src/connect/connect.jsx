@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import shallowEqual from 'shallow-equal/objects';
 import { modelPropType, getDisplayName } from '../utils';
 import { MODEL_CONTEXT_KEY, MODEL_UPDATE_EVENT } from '../constants';
 import ModelSubscription from './model-subscription';
@@ -34,27 +35,61 @@ const connect = (
   mapModelToProps = defaultMapModelToProps,
   mapContextToProps = null,
 ) => WrappedComponent => {
+  const safeMapStoreToProps = mapStoreToProps
+    ? store => mapStoreToProps(store || {})
+    : () => null;
+  const safeMapContextToProps = mapContextToProps
+    ? context => mapContextToProps(context || {})
+    : () => null;
+
   class Connected extends Component {
     constructor(props, context) {
       super(props, context);
-      const model = context[MODEL_CONTEXT_KEY];
+      this.model = context[MODEL_CONTEXT_KEY];
+
+      // Handle subscription updates.
+      const updateFromModel = val => {
+        const storeProps = safeMapStoreToProps(val.store);
+        const contextProps = safeMapContextToProps(val.context);
+        // Only updates if mapped props have changed.
+        if (
+          !shallowEqual(storeProps, this.state.storeProps) ||
+          !shallowEqual(contextProps, this.state.contextProps)
+        ) {
+          this.setState({ storeProps, contextProps });
+        }
+      };
+
       // Create the subscription
       this.subscription = ModelSubscription(
-        model,
-        val => this.setState({ store: val.store, context: val.context }),
+        this.model,
+        updateFromModel,
         MODEL_UPDATE_EVENT,
       );
-      this.state = { store: model.getStore(), context: model.getContext() };
+      this.state = {
+        storeProps: safeMapStoreToProps(this.model.getStore()),
+        contextProps: safeMapContextToProps(this.model.getContext()),
+      };
       // Map the model to properties once and for all (because this typically
       // creates new functions and can be expensive, it is best to avoid
       // calling it on each render).
-      this.modelProps = mapModelToProps ? mapModelToProps(model) : null;
+      this.modelProps = mapModelToProps ? mapModelToProps(this.model) : null;
     }
 
     componentWillMount() {
       if (mapStoreToProps || mapContextToProps) {
         this.subscription.subscribe();
       }
+    }
+
+    componentWillReceiveProps() {
+      // Make sure we have the last store & context version. This update
+      // may come from a model update from ancestor, meaning that this component
+      // may be outdated even though the subscription did not kicked in yet.
+      this.setState({
+        storeProps: safeMapStoreToProps(this.model.getStore()),
+        contextProps: safeMapContextToProps(this.model.getContext()),
+      });
     }
 
     componentWillUnmount() {
@@ -66,13 +101,9 @@ const connect = (
     render() {
       return (
         <WrappedComponent
-          {...(mapStoreToProps
-            ? mapStoreToProps(this.state.store || {})
-            : null)}
+          {...this.state.storeProps}
           {...this.modelProps}
-          {...(mapContextToProps
-            ? mapContextToProps(this.state.context || {})
-            : null)}
+          {...this.state.contextProps}
           {...this.props}
         />
       );

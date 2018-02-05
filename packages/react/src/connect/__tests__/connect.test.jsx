@@ -348,7 +348,7 @@ describe('connect', () => {
   });
 
   // TODO: this is still failing: B is rendered twice
-  it.skip('Does not update a component more than once on model updates', () => {
+  it('Does not update a component more than once on model updates', () => {
     // Store the renders as strings.
     const renders = [];
 
@@ -432,7 +432,7 @@ describe('connect', () => {
     expect(renders).toEqual(['A', 'B', 'A']);
   });
 
-  it.skip('does not render the wrapped component when mapStore does not produce change', () => {
+  it('does not render the wrapped component when mapStore does not produce change', () => {
     // Count the number of times the component is rendered.
     let renders = 0;
 
