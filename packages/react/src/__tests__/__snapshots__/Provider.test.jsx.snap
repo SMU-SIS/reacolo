@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Provider should add the store to the child's context 1`] = `
+<Provider
+  model={
+    Object {
+      "addListener": [MockFunction],
+      "getContext": [MockFunction],
+      "getStore": [MockFunction],
+      "mockName": "mock-model",
+      "removeListener": [MockFunction],
+    }
+  }
+>
+  <Child>
+    <div>
+      reacolo model name: 
+      mock-model
+    </div>
+  </Child>
+</Provider>
+`;
+
+exports[`Provider should throw if the store is changed 1`] = `
+<Provider
+  model={
+    Object {
+      "addListener": [MockFunction],
+      "getContext": [MockFunction],
+      "getStore": [MockFunction],
+      "mockName": "mock-model-1",
+      "removeListener": [MockFunction],
+    }
+  }
+>
+  <Child>
+    <div>
+      reacolo model name: 
+      mock-model-1
+    </div>
+  </Child>
+</Provider>
+`;
