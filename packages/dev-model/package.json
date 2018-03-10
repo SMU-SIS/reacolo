@@ -11,7 +11,8 @@
     "build": "rollup -c --environment NODE_ENV:production",
     "prepublish": "in-publish && yarn run build || not-in-publish",
     "generate-docs": "jsdoc --configure jsdoc.config.js --verbose",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",
@@ -44,7 +45,10 @@
   "jest": {
     "transform": {
       "\\.js$": "babel-jest"
-    }
+    },
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ]
   },
   "version": "5.0.0-alpha.0"
 }

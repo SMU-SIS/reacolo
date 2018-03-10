@@ -3,6 +3,7 @@
   "main": "lib/reacolo-match.js",
   "scripts": {
     "test": "jest",
+    "coverage": "jest --coverage",
     "build": "rollup -c --environment NODE_ENV:production",
     "prepublish": "in-publish && yarn run build || not-in-publish"
   },
@@ -34,7 +35,10 @@
     "transform": {
       "\\.jsx?$": "babel-jest",
       "\\.pegjs$": "<rootDir>/jest-tools/pegjs-transformer.js"
-    }
+    },
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ]
   },
   "version": "5.0.0-alpha.0"
 }

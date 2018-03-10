@@ -5,3 +5,4 @@ docs
 lerna-debug.log
 .DS_Store
 yarn-error.log
+**/coverage

@@ -1,5 +1,6 @@
 {
   "name": "@reacolo/dev-server",
+  "version": "5.0.0-alpha.0",
   "main": "server/index.js",
   "description": "Small server for reacolo. It is meant to be used with reacolo-dev-model-sync.",
   "bin": {
@@ -14,7 +15,8 @@
     "node": ">=6"
   },
   "scripts": {
-    "test": "echo \"No test specified\"",
+    "test": "jest",
+    "coverage": "jest --coverage",
     "build": "webpack --config server_interface/webpack.config.js",
     "start": "node ./bin/start-server.js",
     "prepublish": "npm run build"
@@ -41,6 +43,7 @@
     "css-loader": "^0.28.4",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.5",
+    "jest": "^22.0.3",
     "jsoneditor": "^5.9.3",
     "lodash": "^4.17.4",
     "node-sass": "^4.5.3",
@@ -51,5 +54,7 @@
     "url-loader": "^0.6.2",
     "webpack": "^3.5.5"
   },
-  "version": "5.0.0-alpha.0"
+  "jest": {
+    "collectCoverageFrom": ["server/**/*.js", "server_interface/src/**/*.js"]
+  }
 }
