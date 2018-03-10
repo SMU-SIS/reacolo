@@ -295,8 +295,9 @@ export default class ReacoloSocket {
     } else {
       // eslint-disable-next-line no-console
       console.warn(
-        `Received unexpected acknowledgement for message: ${messageData.messageId}.` +
-          ' It may be a server error or because the request timed out.',
+        `Received unexpected acknowledgement for message: ${
+          messageData.messageId
+        }. It may be a server error or because the request timed out.`,
       );
     }
   }
