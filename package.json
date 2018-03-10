@@ -4,6 +4,7 @@
     "lint": "eslint 'packages/**/src/**/*.@(js|jsx)'",
     "commit": "git-cz",
     "test": "lerna run test",
+    "coverage": "lerna run coverage",
     "build": "lerna run build",
     "bootstrap": "lerna bootstrap",
     "postrewrite": "yarn git-hook",
