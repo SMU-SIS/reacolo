@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "test": "jest",
+    "coverage": "jest --coverage",
     "build": "rollup -c --environment NODE_ENV:production",
     "prepublish": "in-publish && yarn run build || not-in-publish"
   },
@@ -54,6 +55,9 @@
     "shallow-equal": "^1.0.0"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
     "transform": {
       "\\.jsx?$": "babel-jest"
     },
