@@ -1,4 +1,4 @@
-# Reacolo-React
+# @reacolo/react
 
 Reacolo is a React-based adaptive cross-device applications library.
 Reacolo enables you to define what should be displayed:
