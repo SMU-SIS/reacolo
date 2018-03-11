@@ -1,13 +1,14 @@
 /* eslint import/no-extraneous-dependencies: ["error", { "devDependencies": true }] */
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
+  mode: 'production',
   entry: {
-    app: ['babel-polyfill', './app'],
+    app: ['./app'],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -25,18 +26,17 @@ module.exports = {
       },
       {
         test: /\.s?css$/,
-        use: ExtractTextPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
-              options: { sourceMap: true },
-            },
-            {
-              loader: 'sass-loader',
-              options: { sourceMap: true }, // compiles Sass to CSS
-            },
-          ],
-        }),
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: { sourceMap: true },
+          },
+          {
+            loader: 'sass-loader',
+            options: { sourceMap: true }, // compiles Sass to CSS
+          },
+        ],
       },
       {
         test: /\.js$/,
@@ -55,10 +55,11 @@ module.exports = {
   },
 
   plugins: [
-    new ExtractTextPlugin({
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
       filename: '[name].css',
-      disable: false,
-      allChunks: true,
+      chunkFilename: '[id].css',
     }),
     new CopyWebpackPlugin([{ from: '**/*.html', to: './' }]),
     new webpack.optimize.ModuleConcatenationPlugin(),
