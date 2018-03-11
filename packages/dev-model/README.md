@@ -1,8 +1,8 @@
-# Reacolo Dev Model
+# @reacolo/dev-model
 
 The Reacolo dev model provides synchronization capabilities with [Reacolo Dev Server](../dev-server).
 
-It complies with the Reacolo Model API and thus, is usable with the [`connect` HOC](../core/README.md#connect).
+It complies with the Reacolo Model API and thus, is usable with the [`connect` HOC](../react/README.md#connect).
 
 ## Build
 
