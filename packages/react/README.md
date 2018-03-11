@@ -77,7 +77,7 @@ will match again the `cat` and the `ground` properties of the Reacolo context. N
 
 Alternatively, matchers can be provided as an object using the `match` property:
 ```html
-<Context match={{ mount: "cat", ground: "rainbow" }} component={Foo} />
+<Context match={{ mount: "cat | unicorn", ground: "rainbow" }} component={Foo} />
 ```
 
 #### Basics and operators `&` and `|`
@@ -98,7 +98,6 @@ Names are trimmed: `pony|cat` is equivalent to `pony | cat`.
 Parenthesis can be used as expected: `pony ( cat | pug )` is equivalent to `pony cat | pony pug`.
 
 Names can make use of any characters except from `&`, `|`, `(`, `)`, `?`, `*` and blank characters.
-They cannot be exactly `default` either.
 
 #### Optional matches: `?`
 
