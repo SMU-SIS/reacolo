@@ -142,7 +142,7 @@ Conventionally, Reacolo context always contains the three following properties:
 
 Often, the context will also contain the `status` property that provides information on the model synchronization state (e.g.  `'connecting'`, `'ready'`, `'disconnected'`, `'error'` ).
 
-[Reacolo Dev Model](../dev-model) respects these conventions.
+[@reacolo/dev-model](../dev-model) respects these conventions.
 
 ### Model API
 
@@ -150,7 +150,39 @@ TODO
 
 ## connect
 
-TODO
+`connect` is a
+[higher order component](https://reactjs.org/docs/higher-order-components.html)
+used to connect a component to the model. It requires the component to be under
+a `<Provider>`.
+It accepts tree arguments, all optionals:
+- `mapStoreToProps` (function): Map a synchronized store to component
+properties. Called on each model updates (hence it should be fast).
+- `mapModelToProps`: Map the model to component properties. Used
+to extract store setters. It is called only once per component (hence it cannot
+depend on anything dynamic). By default, this method will expose `patchStore`,
+`setStore` and `mergeStore` if the model implements them (see
+[@reacolo/dev-model](../dev-model)).
+- `mapContextToProps` (function): Map the (reacolo) context to component
+properties. Called on each model updates (hence it should be fast).
+
+This API is strongly inspired [react-redux's connect](https://github.com/reactjs/react-redux/blob/master/docs/api.md#connectmapstatetoprops-mapdispatchtoprops-mergeprops-options) and encourages
+the [same type of architecture](https://redux.js.org/basics/usage-with-react).
+
+### Example
+```js
+const ColorSwitcher = ({ color, setColor }) => (
+  /* Render colored things */
+);
+
+const ConnectedColorSwitcher = connect(
+  store => ({ color: store.color }),
+  model => ({
+    setColor(color) {
+      model.mergeStore({ color });
+    },
+  }),
+)(ColorSwitcher);
+```
 
 ## Switch
 
